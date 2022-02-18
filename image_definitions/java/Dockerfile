@@ -1,7 +1,7 @@
 # This image builds on the base image and installs Java SDK
 # for building applications
 
-FROM russellseymour/runner-pwsh
+FROM amidostacks/runner-pwsh
 
 ARG JAVA_VERSION=11.0.13
 ARG MAVEN_VERSION=3.8.4

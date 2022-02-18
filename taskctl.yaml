@@ -1,0 +1,40 @@
+import:
+- ./build/taskctl/contexts.yaml
+- ./build/taskctl/tasks.yaml
+
+pipelines:
+
+  setup:
+  - task: build:number
+
+  build:base:
+  - task: build:container
+    variables:
+      IMAGE_NAME: amidostacks/runner-pwsh
+      DOCKERFILE: ./image_definitions/base
+
+  build:dotnet:
+  - task: build:container
+    variables:
+      IMAGE_NAME: amidostacks/runner-pwsh-dotnet
+      DOCKERFILE: ./image_definitions/dotnet
+
+  build:java:
+  - task: build:container
+    variables:
+      IMAGE_NAME: amidostacks/runner-pwsh-java
+      DOCKERFILE: ./image_definitions/java
+
+  publish:
+  - task: update:dashboard
+
+  all: # Simulating a full run of the CI/CD tool.
+  - pipeline: setup
+  - pipeline: build:base
+    depends_on: [setup]
+  - pipeline: build:dotnet
+    depends_on: [build:base]
+  - pipeline: build:java
+    depends_on: [build:base]
+  - pipeline: publish
+    depends_on: [build:base, build:dotnet, build:java]

@@ -1,0 +1,30 @@
+  # Compilation tasks
+tasks:
+  build:container:
+    context: powershell
+    description: Create container image for application
+    command:
+      - Build-DockerImage -push -generic -Name {{ .IMAGE_NAME }} -buildargs {{ .DOCKERFILE }}
+    # Set variable IMAGE_NAME; i.e. stacks-api and DOCKERFILE path i.e. ./image_definitions/base
+
+  build:number:
+    context: powershell
+    description: Update the build number
+    command:
+      - Update-BuildNumber
+    # Set variable DOCKER_IMAGE_TAG; i.e. 0.2.1
+
+  update:dashboard:
+    context: powershell
+    description: Update the Deployment Dashboard
+    command:
+      - Update-InfluxDashboard
+    # TODO: Currently handled by ADO pipeline var, captured in Story 4122
+    # env: 
+    #  PUBLISH_RELEASE: $true
+
+  debug:
+    context: powershell
+    description: debugs env vars
+    command:
+      - Get-ChildItem env:/

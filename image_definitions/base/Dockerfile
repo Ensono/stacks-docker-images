@@ -4,6 +4,7 @@ ARG PWSH_VERSION=7.1.5
 ARG TASKFILE_VERSION=3.9.0
 ARG TASKCTL_VERSION=1.4.2
 ARG TERRAFORM_VERSION=1.0.10
+ARG AMIDOBUILD=v0.0.47
 
 ENV TZ="Europe/London"
 
@@ -41,10 +42,10 @@ RUN curl -L "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terra
     unzip /tmp/terraform.zip -d /usr/local/bin && \
     rm /tmp/terraform.zip
 
-# Install the Taskfile runner
-RUN curl -L "https://github.com/go-task/task/releases/download/v${TASKFILE_VERSION}/task_linux_amd64.deb" -o /tmp/taskfile.deb && \
-    dpkg -i /tmp/taskfile.deb && \
-    rm /tmp/taskfile.deb
+# Install the AmidoBuild module
+RUN mkdir -p /modules/AmidoBuild && \
+    curl -L "https://github.com/amido/independent-runner/releases/download/${AMIDOBUILD}/AmidoBuild.psd1" -o /modules/AmidoBuild/AmidoBuild.psd1 && \
+    curl -L "https://github.com/amido/independent-runner/releases/download/${AMIDOBUILD}/AmidoBuild.psm1" -o /modules/AmidoBuild/AmidoBuild.psm1
 
 # Install the Taskctl runner
 RUN curl -L "https://github.com/taskctl/taskctl/releases/download/${TASKCTL_VERSION}/taskctl_${TASKCTL_VERSION}_linux_amd64.deb" -o /tmp/taskctl.deb && \
@@ -52,7 +53,7 @@ RUN curl -L "https://github.com/taskctl/taskctl/releases/download/${TASKCTL_VERS
     rm /tmp/taskctl.deb
 
 # Install the necessary python modules
-COPY image_definitions/base/requirements.txt .
+COPY ./requirements.txt .
 RUN pip3 install -r ./requirements.txt
 
 # Install the PowerShell AZ module
