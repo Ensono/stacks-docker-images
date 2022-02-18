@@ -25,6 +25,12 @@ pipelines:
       IMAGE_NAME: amidostacks/runner-pwsh-java
       DOCKERFILE: ./image_definitions/java
 
+  build:pester:
+  - task: build:container
+    variables:
+      IMAGE_NAME: amidostacks/runner-pwsh-pester
+      DOCKERFILE: ./image_definitions/pester
+
   publish:
   - task: update:dashboard
 
@@ -36,5 +42,7 @@ pipelines:
     depends_on: [build:base]
   - pipeline: build:java
     depends_on: [build:base]
+  - pipeline: build:pester
+    depends_on: [build:base]
   - pipeline: publish
-    depends_on: [build:base, build:dotnet, build:java]
+    depends_on: [build:base, build:dotnet, build:java, build:pester]
