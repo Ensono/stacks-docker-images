@@ -70,6 +70,15 @@ stages:
             DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
 
         - task: Bash@3
+          displayName: Build Pester
+          inputs:
+            targetType: inline
+            script: |
+              taskctl build:pester
+          env:
+            DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
+
+        - task: Bash@3
           displayName: Publish to Dashboard
           inputs:
             targetType: inline
