@@ -16,7 +16,10 @@ RUN apt-get install -y java-common \
         libxi6 \
         libxrender1 \
         libxtst6 \
-        libfontconfig1
+        libfontconfig1 \
+        gnupg \
+        gnupg-agent
+
 
 RUN curl "https://cdn.azul.com/zulu/bin/zulu11.52.13-ca-jdk${JAVA_VERSION}-linux_amd64.deb" -o /tmp/java.deb && \
     dpkg -i /tmp/java.deb && \
