@@ -19,6 +19,8 @@ RUN apt-get update && \
         libxrender1 \
         libxtst6 \
         libfontconfig1 \
+        gnupg \
+        gnupg-agent \
         unzip \
         curl
 
