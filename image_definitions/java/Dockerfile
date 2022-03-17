@@ -6,8 +6,10 @@ FROM amidostacks/runner-pwsh
 ARG JAVA_VERSION=11.0.13
 ARG MAVEN_VERSION=3.8.4
 
-# Install Java dependencies
-RUN apt-get install -y java-common \
+
+# Install dependencies
+RUN apt-get update && \
+    apt-get install -y java-common \
         libasound2 \
         libx11-6 \
         libxcb1 \
@@ -18,8 +20,9 @@ RUN apt-get install -y java-common \
         libxtst6 \
         libfontconfig1 \
         gnupg \
-        gnupg-agent
-
+        gnupg-agent \
+        unzip \
+        curl
 
 RUN curl "https://cdn.azul.com/zulu/bin/zulu11.52.13-ca-jdk${JAVA_VERSION}-linux_amd64.deb" -o /tmp/java.deb && \
     dpkg -i /tmp/java.deb && \
@@ -32,3 +35,7 @@ RUN curl "https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apach
 
 # Update the path so maven can be found
 ENV PATH="/usr/local/apache-maven-${MAVEN_VERSION}/bin:$PATH"
+
+# Remove uncessary packages
+RUN apt-get -y remove curl unzip && \
+    apt-get -y autoremove

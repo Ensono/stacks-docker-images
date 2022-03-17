@@ -25,11 +25,17 @@ pipelines:
       IMAGE_NAME: amidostacks/runner-pwsh-java
       DOCKERFILE: ./image_definitions/java
 
-  build:pester:
+  build:python:
   - task: build:container
     variables:
-      IMAGE_NAME: amidostacks/runner-pwsh-pester
-      DOCKERFILE: ./image_definitions/pester
+      IMAGE_NAME: amidostacks/runner-pwsh-python
+      DOCKERFILE: ./image_definitions/python
+
+  build:golang:
+  - task: build:container
+    variables:
+      IMAGE_NAME: amidostacks/runner-pwsh-golang
+      DOCKERFILE: ./image_definitions/golang
 
   publish:
   - task: update:dashboard
@@ -42,7 +48,9 @@ pipelines:
     depends_on: [build:base]
   - pipeline: build:java
     depends_on: [build:base]
-  - pipeline: build:pester
+  - pipeline: build:python
+    depends_on: [build:base]
+  - pipeline: build:golang
     depends_on: [build:base]
   - pipeline: publish
-    depends_on: [build:base, build:dotnet, build:java, build:pester]
+    depends_on: [build:base, build:dotnet, build:java, build:python, build:golang]

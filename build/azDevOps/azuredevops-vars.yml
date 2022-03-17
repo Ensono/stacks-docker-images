@@ -6,7 +6,7 @@ variables:
   - name: TaskctlVersion
     value: 1.4.2
   - name: AmidoBuild
-    value: v0.0.47
+    value: v0.0.82
   
   # DEFAULT IMAGE RUNNER
   - name: pool_vm_image

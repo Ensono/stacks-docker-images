@@ -1,10 +1,9 @@
-FROM ubuntu:20.04
+FROM mcr.microsoft.com/powershell:7.2.1-ubuntu-20.04
 
-ARG PWSH_VERSION=7.1.5
-ARG TASKFILE_VERSION=3.9.0
+ARG PWSH_VERSION=7.2.1
+ARG TERRAFORM_VERSION=1.1.3
+ARG AMIDOBUILD=v0.0.82
 ARG TASKCTL_VERSION=1.4.2
-ARG TERRAFORM_VERSION=1.0.10
-ARG AMIDOBUILD=v0.0.47
 
 ENV TZ="Europe/London"
 
@@ -20,22 +19,13 @@ RUN apt-get update && \
         software-properties-common \
         apt-transport-https \
         ca-certificates \
-        python3 \
-        python3-pip \
-        libgssapi-krb5-2 \
-        liblttng-ust0 \
-        libicu66
+        git
 
 # Install Docker
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
     add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable" && \
     apt-cache policy docker-ce && \
     apt-get install -y docker-ce-cli
-
-# Install PowerShell
-RUN curl -L "https://github.com/PowerShell/PowerShell/releases/download/v${PWSH_VERSION}/powershell_${PWSH_VERSION}-1.ubuntu.20.04_amd64.deb" -o /tmp/pwsh.deb && \
-    dpkg -i /tmp/pwsh.deb && \
-    rm /tmp/pwsh.deb
 
 # Install Terraform
 RUN curl -L "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" -o /tmp/terraform.zip && \
@@ -52,9 +42,12 @@ RUN curl -L "https://github.com/taskctl/taskctl/releases/download/${TASKCTL_VERS
     dpkg -i /tmp/taskctl.deb && \
     rm /tmp/taskctl.deb
 
-# Install the necessary python modules
-COPY ./requirements.txt .
-RUN pip3 install -r ./requirements.txt
-
 # Install the PowerShell AZ module
 RUN pwsh -NoProfile -Command "Install-Module -Name Az -Scope AllUsers -Repository PSGallery -Force"
+
+# Install Pester for Unit testing
+RUN pwsh -NoProfile -Command "Install-Module -Name Pester -Scope AllUsers -Repository PSGallery -Force"
+
+# Remove uncessary packages
+RUN apt-get -y remove curl unzip software-properties-common apt-transport-https ca-certificates && \
+    apt-get -y autoremove
