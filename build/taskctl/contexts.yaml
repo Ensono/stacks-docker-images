@@ -22,10 +22,4 @@ contexts:
         - -NoProfile
         - -Command
     quote: "'"
-    before: |
-      env | grep -v PATH > envfile
-      >.envfile
-      for var in $(compgen -v | grep -Ev '^(BASH)'); do
-          var_fixed=$(printf "%s" "${!var}" | tr -d '\n' )
-          echo "$var=${var_fixed}" >>.envfile
-      done
+    before: env | grep -v PATH > envfile
