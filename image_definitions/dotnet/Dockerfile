@@ -22,7 +22,9 @@ RUN curl https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-p
     rm /tmp/packages-microsoft-prod.deb
 
 RUN apt-get update && \
-    apt-get install -y dotnet-sdk-${DOTNET_VERSION}
+    apt-get install -y \
+    dotnet-sdk-${DOTNET_VERSION} \
+    openjdk-11-jdk
 
 # Install necessary dotnet tools
 RUN dotnet tool install dotnet-sonarscanner --version ${SONARSCANNER_VERSION} --tool-path ${TOOLPATH} && \
