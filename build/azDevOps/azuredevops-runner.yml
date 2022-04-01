@@ -88,6 +88,15 @@ stages:
             DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
 
         - task: Bash@3
+          displayName: Build Asciidoctor
+          inputs:
+            targetType: inline
+            script: |
+              taskctl build:asciidoctor
+          env:
+            DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
+
+        - task: Bash@3
           displayName: Publish to Dashboard
           inputs:
             targetType: inline
