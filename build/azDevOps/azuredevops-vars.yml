@@ -5,8 +5,10 @@ variables:
   # Dependency versions
   - name: TaskctlVersion
     value: 1.4.2
+  - name: StacksEnvfileVersion
+    value: 0.0.13
   - name: AmidoBuild
-    value: v0.0.82
+    value: v0.0.113
   
   # DEFAULT IMAGE RUNNER
   - name: pool_vm_image
