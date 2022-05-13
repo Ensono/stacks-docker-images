@@ -15,7 +15,7 @@ ARG TOOLPATH="/usr/local/dotnet"
 # Upate the PATH environment variable so that the tool can be found
 ENV PATH="${TOOLPATH}:${PATH}"
 
-RUN apt-get -y install curl
+RUN apt-get update && apt-get -y install curl
 
 # Install the dotnet framework
 RUN curl -L https://dot.net/v1/dotnet-install.sh -o /tmp/dotnet-install.sh && \
