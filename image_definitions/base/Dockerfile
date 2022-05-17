@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/powershell:7.2.1-ubuntu-20.04
 
 ARG PWSH_VERSION=7.2.1
 ARG TERRAFORM_VERSION=1.1.3
-ARG AMIDOBUILD=v0.0.118
+ARG AMIDOBUILD=v0.0.130
 ARG TASKCTL_VERSION=1.4.2
 
 ENV TZ="Europe/London"
@@ -49,6 +49,12 @@ RUN curl -L "https://github.com/taskctl/taskctl/releases/download/${TASKCTL_VERS
 
 # Install the PowerShell AZ module
 RUN pwsh -NoProfile -Command "Install-Module -Name Az -Scope AllUsers -Repository PSGallery -Force"
+
+# Install AWSCLI
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+    ./aws/install && \
+    rm awscliv2.zip
 
 # Install Pester for Unit testing
 RUN pwsh -NoProfile -Command "Install-Module -Name Pester -Scope AllUsers -Repository PSGallery -Force"
