@@ -2,8 +2,9 @@ FROM mcr.microsoft.com/powershell:7.2.1-ubuntu-20.04
 
 ARG PWSH_VERSION=7.2.1
 ARG TERRAFORM_VERSION=1.1.3
-ARG AMIDOBUILD=v0.0.136
+ARG AMIDOBUILD=v0.0.139
 ARG TASKCTL_VERSION=1.4.2
+ARG INSPEC_VERSION=5.14.0
 
 ENV TZ="Europe/London"
 
@@ -56,8 +57,19 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
     ./aws/install && \
     rm awscliv2.zip
 
+# Install AZ CLI
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+
 # Install Pester for Unit testing
 RUN pwsh -NoProfile -Command "Install-Module -Name Pester -Scope AllUsers -Repository PSGallery -Force"
+
+# Install PowerShell-Yaml for parsing YAML in PowerShell
+RUN pwsh -NoProfile -Command "Install-Module -Name Powershell-Yaml -Scope AllUsers -Repository PSGallery -Force"
+
+# Install Inspec for infrastructure testing
+RUN curl "https://omnitruck.chef.io/install.sh" -o "install.sh" && \
+    bash -s ./install.sh -P inspec -v ${INSPEC_VERSION} && \
+    rm install.sh
 
 # Remove uncessary packages
 RUN apt-get -y remove curl unzip software-properties-common apt-transport-https ca-certificates && \
