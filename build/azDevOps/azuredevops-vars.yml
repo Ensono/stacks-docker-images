@@ -14,6 +14,13 @@ variables:
   - name: pool_vm_image
     value: ubuntu-20.04
 
+  # Determine the "stability" of the image
+  - name: stability
+    ${{ if or(eq(parameters.Build.SourceBranchName, 'master'), eq(parameters.Build.SourceBranchName, 'main'))}}:
+      value: stable
+    ${{ else }}:
+      value: unstable
+
   # Versioning
   - name: version_major
     value: 0
@@ -22,7 +29,7 @@ variables:
   - name: version_revision
     value: $[counter(join(variables['version_major'], join('-', variables['version_minor'])), 0)]
   - name: version_semver
-    value: "$(version_major).$(version_minor).$(version_revision)-$(Build.SourceBranchName)"
+    value: "$(version_major).$(version_minor).$(version_revision)-$(stability)"
 
   # Docker
   - name: DOCKER_IMAGE_TAG
