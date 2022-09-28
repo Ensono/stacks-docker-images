@@ -22,7 +22,8 @@ RUN apt-get update && \
         gnupg \
         gnupg-agent \
         unzip \
-        curl
+        curl \
+        xmlstarlet
 
 RUN curl "https://cdn.azul.com/zulu/bin/zulu11.52.13-ca-jdk${JAVA_VERSION}-linux_amd64.deb" -o /tmp/java.deb && \
     dpkg -i /tmp/java.deb && \
