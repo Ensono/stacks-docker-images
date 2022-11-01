@@ -1,13 +1,14 @@
-FROM golang:1.16.11
+FROM golang:1.19.2
 
-ARG POWERSHELL_VERSION=7.2.1
+ARG POWERSHELL_VERSION=7.2.6
+ARG AMIDOBUILD=v0.0.177
 
 COPY files/unittests.sh /usr/local/bin
 
-RUN go get github.com/jstemmer/go-junit-report && \
-    go get github.com/t-yuki/gocover-cobertura && \
-    go get github.com/axw/gocov/gocov && \
-    go get github.com/AlekSi/gocov-xml && \
+RUN go install github.com/jstemmer/go-junit-report@latest && \
+    go install github.com/t-yuki/gocover-cobertura@latest && \
+    go install github.com/axw/gocov/gocov@latest && \
+    go install github.com/AlekSi/gocov-xml@latest && \
     chmod +x /usr/local/bin/unittests.sh
     
 RUN apt-get update && \
@@ -21,6 +22,12 @@ RUN apt-get update && \
     dpkg -i /tmp/powershell.deb && \
     rm /tmp/powershell.deb 
 
+# Install the AmidoBuild module
+RUN mkdir -p /modules/AmidoBuild && \
+    curl -L "https://github.com/amido/independent-runner/releases/download/${AMIDOBUILD}/AmidoBuild.psd1" -o /modules/AmidoBuild/AmidoBuild.psd1 && \
+    curl -L "https://github.com/amido/independent-runner/releases/download/${AMIDOBUILD}/AmidoBuild.psm1" -o /modules/AmidoBuild/AmidoBuild.psm1
+
 # Remove uncessary packages
 RUN apt-get -y remove curl && \
     apt-get -y autoremove
+
