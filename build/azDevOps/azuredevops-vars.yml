@@ -16,7 +16,7 @@ variables:
 
   # Determine the "stability" of the image
   - name: stability
-    ${{ if or(eq(parameters.Build.SourceBranchName, 'master'), eq(parameters.Build.SourceBranchName, 'main'))}}:
+    ${{ if or(eq(variables['Build.SourceBranchName'], 'master'), eq(variables['Build.SourceBranchName'], 'main'))}}:
       value: stable
     ${{ else }}:
       value: unstable
