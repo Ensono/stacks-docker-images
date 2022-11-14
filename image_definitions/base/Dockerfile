@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/powershell:7.3-ubuntu-20.04
+FROM mcr.microsoft.com/powershell:7.2-ubuntu-20.04
 
 ARG PWSH_VERSION=7.2.1
 ARG TERRAFORM_VERSION=1.1.3
