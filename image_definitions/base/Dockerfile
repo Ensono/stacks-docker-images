@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/powershell:7.2.1-ubuntu-20.04
+FROM mcr.microsoft.com/powershell:7.3-ubuntu-20.04
 
 ARG PWSH_VERSION=7.2.1
 ARG TERRAFORM_VERSION=1.1.3
@@ -39,7 +39,8 @@ RUN curl -L "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terra
     rm /tmp/terraform.zip
 
 # Install the AmidoBuild module
-RUN mkdir -p /modules/AmidoBuild && \
+RUN echo "Downloading AmidoBuild version - ${AMIDBUILD}" && \
+    mkdir -p /modules/AmidoBuild && \
     curl -L "https://github.com/amido/independent-runner/releases/download/${AMIDOBUILD}/AmidoBuild.psd1" -o /modules/AmidoBuild/AmidoBuild.psd1 && \
     curl -L "https://github.com/amido/independent-runner/releases/download/${AMIDOBUILD}/AmidoBuild.psm1" -o /modules/AmidoBuild/AmidoBuild.psm1
 
