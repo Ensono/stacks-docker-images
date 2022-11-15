@@ -1,4 +1,4 @@
-FROM amidostacks/runner-pwsh:0.3.95-main
+FROM amidostacks/runner-pwsh
 
 ARG PANDOC_VERSION=2.17.1.1
 

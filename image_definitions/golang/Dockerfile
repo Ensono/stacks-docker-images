@@ -1,7 +1,7 @@
 FROM golang:1.19.2
 
 ARG POWERSHELL_VERSION=7.2.6
-ARG AMIDOBUILD=v0.0.177
+ARG AMIDOBUILD=v0.0.188
 
 COPY files/unittests.sh /usr/local/bin
 
