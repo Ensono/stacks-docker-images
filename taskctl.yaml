@@ -43,6 +43,12 @@ pipelines:
       IMAGE_NAME: amidostacks/runner-pwsh-asciidoctor
       DOCKERFILE: ./image_definitions/asciidoctor    
 
+  build:nx:
+  - task: build:container
+    variables:
+      IMAGE_NAME: amidostacks/runner-pwsh-nx
+      DOCKERFILE: ./image_definitions/nx
+
   publish:
   - task: update:dashboard
 
@@ -60,5 +66,7 @@ pipelines:
     depends_on: [build:base]
   - pipeline: build:asciidoctor
     depends_on: [build:base]
+  - pipeline: build:nx
+    depends_on: [build:base]    
   - pipeline: publish
-    depends_on: [build:base, build:dotnet, build:java, build:python, build:golang, build:asciidoctor]
+    depends_on: [build:base, build:dotnet, build:java, build:python, build:golang, build:asciidoctor, build:nx]
