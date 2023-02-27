@@ -1,6 +1,6 @@
 FROM amidostacks/runner-pwsh
 
-ARG PANDOC_VERSION=2.17.1.1
+ARG PANDOC_VERSION=3.0.1
 
 ENV GEM_FONTS_DIR=/usr/share/ruby-asciidoctor-pdf/data/fonts
 
@@ -14,7 +14,7 @@ RUN apt-get update && \
 RUN gem install --no-document asciidoctor-pdf
 
 # Install pandoc
-RUN wget https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-1-amd64.deb -O /tmp/pandoc.deb && \
+RUN wget https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-linux-amd64.tar.gz -O /tmp/pandoc.tar.gz && \
     dpkg -i /tmp/pandoc.deb && \
     rm -rf /tmp/pandoc.deb
 

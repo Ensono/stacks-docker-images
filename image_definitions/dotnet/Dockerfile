@@ -31,7 +31,7 @@ RUN dotnet tool install dotnet-sonarscanner --version ${SONARSCANNER_VERSION} --
 
 RUN apt-get update && \
     apt-get install -y \
-    openjdk-11-jdk
+    openjdk-11-jdk15.3.0
 
 RUN apt-get -y remove curl && \
     apt-get -y autoremove
