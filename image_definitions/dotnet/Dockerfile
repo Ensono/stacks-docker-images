@@ -9,7 +9,7 @@ FROM amidostacks/runner-pwsh
 
 ARG SONARSCANNER_VERSION=5.4.1
 ARG REPORTGENERATOR_VERSION=5.0.2
-ARG DOTNET_VERSION=6.0.200
+ARG DOTNET_VERSION=6.0.300
 ARG TOOLPATH="/usr/local/dotnet"
 
 # Upate the PATH environment variable so that the tool can be found
