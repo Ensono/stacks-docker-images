@@ -1,7 +1,7 @@
 FROM pwsh-base-alpine
 
 ARG JAVA_VERSION=11.0.18-r1
-ARG MAVEN_VERSION=3.8.7
+ARG MAVEN_VERSION=3.8.8
 
 # Install Zulu Java
 # Ref: https://docs.azul.com/core/zulu-openjdk/install/alpine-linux

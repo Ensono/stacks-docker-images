@@ -1,7 +1,8 @@
 FROM pwsh-java-alpine as base
 
-ARG PANDOC_VERSION=3.0.1
-
+ARG pandoc_version=3.1.2
+ARG hugo_version=0.111.3
+ARG go_version=1.19.2
 ARG asciidoctor_version=2.0.18
 ARG asciidoctor_confluence_version=0.0.2
 ARG asciidoctor_pdf_version=2.3.4
@@ -27,7 +28,9 @@ ENV ASCIIDOCTOR_VERSION=${asciidoctor_version} \
   ASCIIDOCTOR_BIBTEX_VERSION=${asciidoctor_bibtex_version} \
   ASCIIDOCTOR_KROKI_VERSION=${asciidoctor_kroki_version} \
   ASCIIDOCTOR_REDUCER_VERSION=${asciidoctor_reducer_version} \
-  PANDOC_VERSION=${PANDOC_VERSION}
+  PANDOC_VERSION=${pandoc_version} \
+  HUGO_VERSION=${hugo_version} \
+  GO_VERSION=${go_version}
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Minimal image with asciidoctor
@@ -92,7 +95,8 @@ RUN apk add --no-cache \
   which \
   font-noto-cjk \
   xz \
-  imagemagick
+  imagemagick \
+  gcompat
 
 RUN apk add --no-cache --virtual .rubymakedepends \
   build-base \
@@ -144,4 +148,15 @@ RUN wget https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pando
     tar zxf /tmp/pandoc.tar.gz -C /usr/bin pandoc-${PANDOC_VERSION}/bin/pandoc && \
     rm -rf /tmp/pandoc.tar.gz
 
-    
+# Install Go and Hugo
+ENV PATH="${PATH}:/usr/local/go/bin"
+RUN wget https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz -O /tmp/go.tar.gz && \
+    tar zxf /tmp/go.tar.gz -C /usr/local && \
+    rm -rf /tmp/go.tar.gz
+
+RUN wget https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz -O /tmp/hugo.tar.gz && \
+    tar zxf /tmp/hugo.tar.gz -C /usr/bin hugo && \
+    ln -sf /lib/libgcompat.so.0 /usr/lib/libresolv.so.2 && \
+    rm -rf /tmp/hugo.tar.gz
+
+EXPOSE 1313
