@@ -26,6 +26,9 @@ stages:
 
       steps:
 
+        - checkout: self
+          persistCredentials: true
+
         # Install Taskctl for the build to run
         - task: Bash@3
           displayName: Install Taskctl
