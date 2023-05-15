@@ -50,10 +50,10 @@ pipelines:
   - pipeline: setup
   - pipeline: build:base
     depends_on: [setup]
-  - pipeline: build:dotnet
-    depends_on: [build:base]
   - pipeline: build:java
     depends_on: [build:base]
+  - pipeline: build:dotnet
+    depends_on: [build:java]
   - pipeline: build:python
     depends_on: [build:base]
   - pipeline: build:golang
