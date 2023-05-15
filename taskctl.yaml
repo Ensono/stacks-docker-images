@@ -11,37 +11,37 @@ pipelines:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh
-      DOCKERFILE: ./image_definitions/base/Dockerfile.alpine
+      DOCKER_BUILD_ARGS: -f ./image_definitions/base/Dockerfile.alpine ./image_definitions/base
 
   build:dotnet:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-dotnet
-      DOCKERFILE: ./image_definitions/dotnet/Dockerfile.alpine
+      DOCKER_BUILD_ARGS: -f ./image_definitions/dotnet/Dockerfile.alpine ./image_definitions/dotnet
 
   build:java:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-java
-      DOCKERFILE: ./image_definitions/java/Dockerfile.alpine
+      DOCKER_BUILD_ARGS: -f ./image_definitions/java/Dockerfile.alpine ./image_definitions/java
 
   build:python:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-python
-      DOCKERFILE: ./image_definitions/python/Dockerfile.alpine
+      DOCKER_BUILD_ARGS: -f ./image_definitions/python/Dockerfile.alpine ./image_definitions/python
 
   build:golang:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-golang
-      DOCKERFILE: ./image_definitions/golang
+      DOCKER_BUILD_ARGS: -f ./image_definitions/golang/Dockerfile.alpine ./image_definitions/golang
 
   build:asciidoctor:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-asciidoctor
-      DOCKERFILE: ./image_definitions/asciidoctor/Dockerfile.alpine
+      DOCKER_BUILD_ARGS: -f ./image_definitions/asciidoctor/Dockerfile.alpine ./image_definitions/asciidoctor
 
   publish:
   - task: update:dashboard
