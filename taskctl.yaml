@@ -11,25 +11,25 @@ pipelines:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh
-      DOCKERFILE: ./image_definitions/base
+      DOCKERFILE: ./image_definitions/base/Dockerfile.alpine
 
   build:dotnet:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-dotnet
-      DOCKERFILE: ./image_definitions/dotnet
+      DOCKERFILE: ./image_definitions/dotnet/Dockerfile.alpine
 
   build:java:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-java
-      DOCKERFILE: ./image_definitions/java
+      DOCKERFILE: ./image_definitions/java/Dockerfile.alpine
 
   build:python:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-python
-      DOCKERFILE: ./image_definitions/python
+      DOCKERFILE: ./image_definitions/python/Dockerfile.alpine
 
   build:golang:
   - task: build:container
@@ -41,7 +41,7 @@ pipelines:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-asciidoctor
-      DOCKERFILE: ./image_definitions/asciidoctor    
+      DOCKERFILE: ./image_definitions/asciidoctor/Dockerfile.alpine
 
   publish:
   - task: update:dashboard

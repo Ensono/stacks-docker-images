@@ -1,0 +1,48 @@
+FROM golang:1.19.2-alpine3.16
+
+ARG POWERSHELL_VERSION=7.3.4
+ARG AMIDOBUILD=v0.0.188
+
+COPY files/unittests.sh /usr/local/bin
+
+RUN go install github.com/jstemmer/go-junit-report@latest && \
+    go install github.com/t-yuki/gocover-cobertura@latest && \
+    go install github.com/axw/gocov/gocov@latest && \
+    go install github.com/AlekSi/gocov-xml@latest && \
+    chmod +x /usr/local/bin/unittests.sh
+
+# Install PowerShell dependencies    
+RUN apk add --no-cache \
+    ca-certificates \
+    less \
+    ncurses-terminfo-base \
+    krb5-libs \
+    libgcc \
+    libintl \
+    libssl1.1 \
+    libstdc++ \
+    tzdata \
+    userspace-rcu \
+    zlib \
+    icu-libs \
+    curl
+
+RUN apk -X https://dl-cdn.alpinelinux.org/alpine/edge/main add --no-cache \
+    lttng-ust
+
+# Install PowerShell
+RUN curl -L "https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELL_VERSION}/powershell-${POWERSHELL_VERSION}-linux-alpine-x64.tar.gz" -o /tmp/powershell.tar.gz && \
+    mkdir -p /opt/microsoft/powershell/7 && \
+    tar zxf /tmp/powershell.tar.gz -C /opt/microsoft/powershell/7 && \
+    chmod +x /opt/microsoft/powershell/7/pwsh && \
+    ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh && \
+    rm -f /tmp/powershell.tar.gz
+
+# Install the AmidoBuild module
+RUN mkdir -p /modules/AmidoBuild && \
+    curl -L "https://github.com/amido/independent-runner/releases/download/${AMIDOBUILD}/AmidoBuild.psd1" -o /modules/AmidoBuild/AmidoBuild.psd1 && \
+    curl -L "https://github.com/amido/independent-runner/releases/download/${AMIDOBUILD}/AmidoBuild.psm1" -o /modules/AmidoBuild/AmidoBuild.psm1
+
+# Remove uncessary packages
+RUN apk del curl
+

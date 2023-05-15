@@ -33,7 +33,7 @@ variables:
 
   # Docker
   - name: DOCKER_IMAGE_TAG
-    value: $(version_semver)
+    value: $(version_semver)-alpine
   - name: DOCKER_CONTAINER_REGISTRY_NAME
     value: docker.io
   - group: amido-stacks-dockerhub-credentials
