@@ -61,20 +61,20 @@ stages:
             DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
 
         - task: Bash@3
-          displayName: Build DotNet
-          inputs:
-            targetType: inline
-            script: |
-              taskctl build:dotnet
-          env:
-            DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
-
-        - task: Bash@3
           displayName: Build Java
           inputs:
             targetType: inline
             script: |
               taskctl build:java
+          env:
+            DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
+
+        - task: Bash@3
+          displayName: Build DotNet
+          inputs:
+            targetType: inline
+            script: |
+              taskctl build:dotnet
           env:
             DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
 
