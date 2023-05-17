@@ -72,6 +72,11 @@ RUN curl "https://omnitruck.chef.io/install.sh" -o "install.sh" && \
     bash -s ./install.sh -P inspec -v ${INSPEC_VERSION} && \
     rm install.sh
 
+# Install Helm
+RUN curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list && \
+    apt-get install helm
+
 # Remove uncessary packages
 RUN apt-get -y remove curl unzip software-properties-common apt-transport-https ca-certificates && \
     apt-get -y autoremove
