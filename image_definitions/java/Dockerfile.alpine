@@ -1,4 +1,4 @@
-FROM pwsh-base-alpine
+FROM amidostacks/runner-pwsh
 
 ARG JAVA_VERSION=11.0.18-r1
 ARG MAVEN_VERSION=3.8.8

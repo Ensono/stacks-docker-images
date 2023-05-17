@@ -1,4 +1,4 @@
-FROM pwsh-java-alpine
+FROM amidostacks/runner-pwsh-java
 
 ARG SONARSCANNER_VERSION=5.11
 ARG REPORTGENERATOR_VERSION=5.1.16
