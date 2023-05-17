@@ -1,4 +1,4 @@
-FROM amidotstacks/runner-pwsh as base
+FROM amidostacks/runner-pwsh as base
 
 ARG pandoc_version=3.1.2
 ARG hugo_version=0.111.3
