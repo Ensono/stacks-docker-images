@@ -14,7 +14,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
 
 # Update the package repository and install wget and libraries
 # That are required for powershell
-RUN apt-get update && \
+RUN apt-get update --fix-missing && \
     apt-get install -y curl \
         unzip \
         software-properties-common \
@@ -71,6 +71,11 @@ RUN pwsh -NoProfile -Command "Install-Module -Name Powershell-Yaml -Scope AllUse
 RUN curl "https://omnitruck.chef.io/install.sh" -o "install.sh" && \
     bash -s ./install.sh -P inspec -v ${INSPEC_VERSION} && \
     rm install.sh
+
+# Install Helm
+RUN curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | tee /usr/share/keyrings/helm.gpg > /dev/null && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sources.list.d/helm-stable-debian.list && \
+    apt-get update --fix-missing && apt-get install helm
 
 # Remove uncessary packages
 RUN apt-get -y remove curl unzip software-properties-common apt-transport-https ca-certificates && \
