@@ -78,14 +78,14 @@ stages:
           env:
             DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
 
-        - task: Bash@3
-          displayName: Build Python
-          inputs:
-            targetType: inline
-            script: |
-              taskctl build:python
-          env:
-            DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
+        #- task: Bash@3
+        #  displayName: Build Python
+        #  inputs:
+        #    targetType: inline
+        #    script: |
+        #      taskctl build:python
+        #  env:
+        #    DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
 
         - task: Bash@3
           displayName: Build Golang

@@ -78,12 +78,13 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
 
 # -- AZ CLI
 # https://github.com/Azure/azure-cli/issues/8863dockerfile c
-#RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 COPY files/az /usr/bin
+COPY ./requirements.txt .
 RUN pip3 install --ignore-installed virtualenv \
  && python3 -m virtualenv /azure-cli \
  && /azure-cli/bin/python -m pip --no-cache-dir install azure-cli==${AZURE_CLI_VERSION} \
- && chmod +x /usr/bin/az
+ && chmod +x /usr/bin/az \
+ && pip3 install -r ./requirements.txt
 
 # -- Pester for Unit testing
 RUN pwsh -NoProfile -Command "Install-Module -Name Pester -Scope AllUsers -Repository PSGallery -Force"
