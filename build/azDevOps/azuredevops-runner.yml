@@ -59,6 +59,17 @@ stages:
               taskctl build:base
           env:
             DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
+            DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)-alpine
+
+        - task: Bash@3
+          displayName: Build Inspec
+          inputs:
+            targetType: inline
+            script: |
+              taskctl build:inspec
+          env:
+            DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
+            DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)-ubuntu
 
         - task: Bash@3
           displayName: Build Java
@@ -68,6 +79,7 @@ stages:
               taskctl build:java
           env:
             DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
+            DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)-alpine
 
         - task: Bash@3
           displayName: Build DotNet
@@ -77,6 +89,7 @@ stages:
               taskctl build:dotnet
           env:
             DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
+            DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)-alpine
 
         #- task: Bash@3
         #  displayName: Build Python
@@ -95,6 +108,7 @@ stages:
               taskctl build:golang
           env:
             DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
+            DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)-alpine
 
         - task: Bash@3
           displayName: Build Asciidoctor
@@ -104,6 +118,7 @@ stages:
               taskctl build:asciidoctor
           env:
             DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
+            DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)-alpine
 
         - task: Bash@3
           displayName: Publish to Dashboard

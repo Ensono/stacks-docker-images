@@ -13,6 +13,12 @@ pipelines:
       IMAGE_NAME: amidostacks/runner-pwsh
       DOCKER_BUILD_ARGS: -f ./image_definitions/base/Dockerfile.alpine ./image_definitions/base
 
+  build:inspec:
+  - task: build:container
+    variables:
+      IMAGE_NAME: amidostacks/runner-pwsh-inspec
+      DOCKER_BUILD_ARGS: -f ./image_definitions/inspec/Dockerfile ./image_definitions/inspec
+
   build:dotnet:
   - task: build:container
     variables:
