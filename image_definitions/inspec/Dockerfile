@@ -4,7 +4,7 @@ FROM mcr.microsoft.com/powershell:7.2-ubuntu-20.04 as posh
 FROM ubuntu:20.04
 
 ARG AMIDOBUILD=v0.0.196
-ARG INSPEC_VERSION=4.3.2
+ARG INSPEC_VERSION=5.22.3
 
 RUN apt-get update && \
     apt-get install -y curl libicu-dev
