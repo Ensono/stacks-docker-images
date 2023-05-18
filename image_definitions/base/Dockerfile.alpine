@@ -7,7 +7,6 @@ FROM mcr.microsoft.com/powershell:${IMAGE_TAG}
 ARG TERRAFORM_VERSION=1.4.6
 ARG AMIDOBUILD=v0.0.196
 ARG TASKCTL_VERSION=1.4.2
-ARG INSPEC_VERSION=4.3.2
 ARG KUBE_VERSION=v1.23.14
 ARG AZURE_CLI_VERSION=2.48.1
 ARG HELM_VERSION=3.12.0
@@ -91,12 +90,6 @@ RUN pwsh -NoProfile -Command "Install-Module -Name Pester -Scope AllUsers -Repos
 
 # -- PowerShell-Yaml for parsing YAML in PowerShell
 RUN pwsh -NoProfile -Command "Install-Module -Name Powershell-Yaml -Scope AllUsers -Repository PSGallery -Force"
-
-# -- Inspec for infrastructure testing
-RUN curl "https://omnitruck.chef.io/install.sh" -o "install.sh" && \
-    chmod +x ./install.sh && \
-    ./install.sh -P inspec -v ${INSPEC_VERSION} && \
-    rm install.sh
 
 # Remove packages that are no longer required
 RUN apk del --no-cache build-base linux-headers
