@@ -12,7 +12,6 @@ ENV TZ="Europe/London"
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     echo $TZ > /etc/timezone
 
-
 # Update the package repository and install wget and libraries
 # That are required for powershell
 RUN apt-get update --fix-missing && \
