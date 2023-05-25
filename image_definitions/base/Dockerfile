@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/powershell:7.2-ubuntu-20.04
 
 ARG PWSH_VERSION=7.2.1
 ARG TERRAFORM_VERSION=1.1.3
-ARG AMIDOBUILD=v0.0.196
+ARG AMIDOBUILD=v0.0.212
 ARG TASKCTL_VERSION=1.4.2
 ARG INSPEC_VERSION=5.14.0
 
@@ -23,7 +23,7 @@ RUN apt-get update --fix-missing && \
         git
 
 # Install KubeCTL
-RUN curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg && \
+RUN curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://dl.k8s.io/apt/doc/apt-key.gpg && \
     echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | tee /etc/apt/sources.list.d/kubernetes.list && \
     apt-get update && apt-get install -y kubectl
 
@@ -37,12 +37,6 @@ RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
 RUN curl -L "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" -o /tmp/terraform.zip && \
     unzip /tmp/terraform.zip -d /usr/local/bin && \
     rm /tmp/terraform.zip
-
-# Install the AmidoBuild module
-RUN echo "Downloading AmidoBuild version - ${AMIDBUILD}" && \
-    mkdir -p /modules/AmidoBuild && \
-    curl -L "https://github.com/amido/independent-runner/releases/download/${AMIDOBUILD}/AmidoBuild.psd1" -o /modules/AmidoBuild/AmidoBuild.psd1 && \
-    curl -L "https://github.com/amido/independent-runner/releases/download/${AMIDOBUILD}/AmidoBuild.psm1" -o /modules/AmidoBuild/AmidoBuild.psm1
 
 # Install the Taskctl runner
 RUN curl -L "https://github.com/taskctl/taskctl/releases/download/${TASKCTL_VERSION}/taskctl_${TASKCTL_VERSION}_linux_amd64.deb" -o /tmp/taskctl.deb && \
@@ -77,6 +71,13 @@ RUN curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | tee /usr/share/
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sources.list.d/helm-stable-debian.list && \
     apt-get update --fix-missing && apt-get install helm
 
+# Install the Independent Runner module
+RUN echo "Downloading AmidoBuild version - ${AMIDBUILD}" && \
+    mkdir -p /modules/AmidoBuild && \
+    curl -L "https://github.com/amido/independent-runner/releases/download/${AMIDOBUILD}/AmidoBuild.psd1" -o /modules/AmidoBuild/AmidoBuild.psd1 && \
+    curl -L "https://github.com/amido/independent-runner/releases/download/${AMIDOBUILD}/AmidoBuild.psm1" -o /modules/AmidoBuild/AmidoBuild.psm1
+
 # Remove uncessary packages
 RUN apt-get -y remove curl unzip software-properties-common apt-transport-https ca-certificates && \
     apt-get -y autoremove
+
