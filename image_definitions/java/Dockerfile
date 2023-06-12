@@ -4,7 +4,7 @@
 FROM amidostacks/runner-pwsh
 
 ARG JAVA_VERSION=11.0.13
-ARG MAVEN_VERSION=3.8.6
+ARG MAVEN_VERSION=3.8.8
 
 
 # Install dependencies
