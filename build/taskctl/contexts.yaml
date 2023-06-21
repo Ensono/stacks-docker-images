@@ -17,7 +17,7 @@ contexts:
         - PSModulePath=/modules
         - -w
         - /app
-        - amidostacks/runner-pwsh
+        - amidostacks/runner-pwsh:0.3.62-kubectl
         - pwsh
         - -NoProfile
         - -Command
