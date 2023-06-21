@@ -5,7 +5,7 @@ tasks:
     description: Create container image for application
     command:
       - Write-Host "Build-DockerImage -push -generic -Name {{ .IMAGE_NAME }} -buildargs `"{{ .DOCKER_BUILD_ARGS }}`""
-      - Build-DockerImage -generic -push -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}"
+      - Build-DockerImage -generic -push -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}" -latest
     # Set variable IMAGE_NAME; i.e. stacks-api and DOCKER_BUILD_ARGS path i.e. ./image_definitions/base
 
   build:number:
