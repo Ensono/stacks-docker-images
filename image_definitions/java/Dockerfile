@@ -1,6 +1,5 @@
-ARG orgname=amidostacks
-
-FROM ${orgname}/runner-pwsh
+ARG IMAGE_REF=amidostacks/runner-pwsh
+FROM $IMAGE_REF
 
 ARG JAVA_VERSION=11.0.18-r1
 ARG MAVEN_VERSION=3.8.8

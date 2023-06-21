@@ -17,37 +17,37 @@ pipelines:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-inspec
-      DOCKER_BUILD_ARGS: -f ./image_definitions/inspec/Dockerfile ./image_definitions/inspec
+      DOCKER_BUILD_ARGS: -f ./image_definitions/inspec/Dockerfile ./image_definitions/inspec --build-args IMAGE_REF=amidostacks/runner-pwsh
 
   build:dotnet:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-dotnet
-      DOCKER_BUILD_ARGS: -f ./image_definitions/dotnet/Dockerfile ./image_definitions/dotnet
+      DOCKER_BUILD_ARGS: -f ./image_definitions/dotnet/Dockerfile ./image_definitions/dotnet --build-args IMAGE_REF=amidostacks/runner-pwsh-java
 
   build:java:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-java
-      DOCKER_BUILD_ARGS: -f ./image_definitions/java/Dockerfile ./image_definitions/java
+      DOCKER_BUILD_ARGS: -f ./image_definitions/java/Dockerfile ./image_definitions/java --build-args IMAGE_REF=amidostacks/runner-pwsh
 
   build:golang:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-golang
-      DOCKER_BUILD_ARGS: -f ./image_definitions/golang/Dockerfile ./image_definitions/golang
+      DOCKER_BUILD_ARGS: -f ./image_definitions/golang/Dockerfile ./image_definitions/golang --build-args IMAGE_REF=amidostacks/runner-pwsh
 
   build:asciidoctor:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-asciidoctor
-      DOCKER_BUILD_ARGS: -f ./image_definitions/asciidoctor/Dockerfile ./image_definitions/asciidoctor
+      DOCKER_BUILD_ARGS: -f ./image_definitions/asciidoctor/Dockerfile ./image_definitions/asciidoctor--build-args IMAGE_REF=amidostacks/runner-pwsh
 
   build:data:
   - task:  build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-data
-      DOCKER_BUILD_ARGS: -f ./image_definitions/data/Dockerfile ./image_definitions/data
+      DOCKER_BUILD_ARGS: -f ./image_definitions/data/Dockerfile ./image_definitions/data --build-args IMAGE_REF=amidostacks/runner-pwsh
 
   publish:
   - task: update:dashboard

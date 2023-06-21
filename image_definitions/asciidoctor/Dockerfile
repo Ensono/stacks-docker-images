@@ -1,6 +1,5 @@
-ARG orgname=amidostacks
-
-FROM ${orgname}/runner-pwsh as base
+ARG IMAGE_REF=amidostacks/runner-pwsh
+FROM $IMAGE_REF as base
 
 ARG pandoc_version=3.1.2
 ARG hugo_version=0.111.3

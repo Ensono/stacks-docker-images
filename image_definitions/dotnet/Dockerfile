@@ -1,6 +1,6 @@
 ARG orgname=amidostacks
-
-FROM ${orgname}/runner-pwsh-java
+ARG IMAGE_REF=amidostacks/runner-pwsh-java
+FROM $IMAGE_REF
 
 ARG SONARSCANNER_VERSION=5.11
 ARG REPORTGENERATOR_VERSION=5.1.16

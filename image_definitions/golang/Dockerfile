@@ -1,6 +1,5 @@
-ARG orgname=amidostacks
-
-FROM ${orgname}/runner-pwsh:0.0.1-workstation as base
+ARG IMAGE_REF=amidostacks/runner-pwsh
+FROM $IMAGE_REF as base
 
 FROM golang:1.19.2-alpine3.16
 
