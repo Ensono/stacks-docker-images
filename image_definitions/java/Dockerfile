@@ -1,41 +1,20 @@
-# This image builds on the base image and installs Java SDK
-# for building applications
+ARG orgname=amidostacks
 
-FROM amidostacks/runner-pwsh
+FROM ${orgname}/runner-pwsh
 
-ARG JAVA_VERSION=11.0.13
+ARG JAVA_VERSION=11.0.18-r1
 ARG MAVEN_VERSION=3.8.8
 
-
-# Install dependencies
-RUN apt-get update && \
-    apt-get install -y java-common \
-        libasound2 \
-        libx11-6 \
-        libxcb1 \
-        libxdmcp6 \
-        libxext6 \
-        libxi6 \
-        libxrender1 \
-        libxtst6 \
-        libfontconfig1 \
-        gnupg \
-        gnupg-agent \
-        unzip \
-        curl
-
-RUN curl "https://cdn.azul.com/zulu/bin/zulu11.52.13-ca-jdk${JAVA_VERSION}-linux_amd64.deb" -o /tmp/java.deb && \
-    dpkg -i /tmp/java.deb && \
-    rm /tmp/java.deb
+# Install Zulu Java
+# Ref: https://docs.azul.com/core/zulu-openjdk/install/alpine-linux
+RUN curl https://cdn.azul.com/public_keys/alpine-signing@azul.com-5d5dc44c.rsa.pub -o /etc/apk/keys/alpine-signing@azul.com-5d5dc44c.rsa.pub \
+ && echo "https://repos.azul.com/zulu/alpine" | tee -a /etc/apk/repositories \
+ && apk update \
+ && apk add --no-cache zulu11-jdk=${JAVA_VERSION}
 
 # Install Maven
 RUN curl "https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.zip" -o /tmp/maven.zip && \
     unzip /tmp/maven.zip -d /usr/local && \
     rm /tmp/maven.zip
 
-# Update the path so maven can be found
-ENV PATH="/usr/local/apache-maven-${MAVEN_VERSION}/bin:$PATH"
-
-# Remove uncessary packages
-RUN apt-get -y remove curl unzip && \
-    apt-get -y autoremove
+ENV JAVA_HOME=/usr/bin/lib/jvm/default-jvm/jre

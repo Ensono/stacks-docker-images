@@ -11,7 +11,7 @@ pipelines:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh
-      DOCKER_BUILD_ARGS: -f ./image_definitions/base/Dockerfile.alpine ./image_definitions/base
+      DOCKER_BUILD_ARGS: -f ./image_definitions/base/Dockerfile ./image_definitions/base
 
   build:inspec:
   - task: build:container
@@ -23,31 +23,31 @@ pipelines:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-dotnet
-      DOCKER_BUILD_ARGS: -f ./image_definitions/dotnet/Dockerfile.alpine ./image_definitions/dotnet
+      DOCKER_BUILD_ARGS: -f ./image_definitions/dotnet/Dockerfile ./image_definitions/dotnet
 
   build:java:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-java
-      DOCKER_BUILD_ARGS: -f ./image_definitions/java/Dockerfile.alpine ./image_definitions/java
-
-  build:python:
-  - task: build:container
-    variables:
-      IMAGE_NAME: amidostacks/runner-pwsh-python
-      DOCKER_BUILD_ARGS: -f ./image_definitions/python/Dockerfile.alpine ./image_definitions/python
+      DOCKER_BUILD_ARGS: -f ./image_definitions/java/Dockerfile ./image_definitions/java
 
   build:golang:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-golang
-      DOCKER_BUILD_ARGS: -f ./image_definitions/golang/Dockerfile.alpine ./image_definitions/golang
+      DOCKER_BUILD_ARGS: -f ./image_definitions/golang/Dockerfile ./image_definitions/golang
 
   build:asciidoctor:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-asciidoctor
-      DOCKER_BUILD_ARGS: -f ./image_definitions/asciidoctor/Dockerfile.alpine ./image_definitions/asciidoctor
+      DOCKER_BUILD_ARGS: -f ./image_definitions/asciidoctor/Dockerfile ./image_definitions/asciidoctor
+
+  build:data:
+  - task:  build:container
+    variables:
+      IMAGE_NAME: amidostacks/runner-pwsh-data
+      DOCKER_BUILD_ARGS: -f ./image_definitions/data/Dockerfile ./image_definitions/data
 
   publish:
   - task: update:dashboard
@@ -60,11 +60,11 @@ pipelines:
     depends_on: [build:base]
   - pipeline: build:dotnet
     depends_on: [build:java]
-  - pipeline: build:python
-    depends_on: [build:base]
   - pipeline: build:golang
     depends_on: [build:base]
   - pipeline: build:asciidoctor
     depends_on: [build:base]
+  - pipeline: build:data
+    depends_on: [build:python]
   - pipeline: publish
-    depends_on: [build:base, build:dotnet, build:java, build:python, build:golang, build:asciidoctor]
+    depends_on: [build:base, build:dotnet, build:java, build:data, build:golang, build:asciidoctor]

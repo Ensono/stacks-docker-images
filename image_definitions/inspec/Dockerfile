@@ -1,28 +1,44 @@
-# Copy PowerShell from the relevant powershell image
-FROM mcr.microsoft.com/powershell:7.2-ubuntu-20.04 as posh
+FROM ubuntu:20.04 as base
 
-FROM ubuntu:20.04
-
-ARG AMIDOBUILD=v0.0.196
+ARG orgname=amidostacks
 ARG INSPEC_VERSION=5.22.3
 
-RUN apt-get update && \
-    apt-get install -y curl libicu-dev
-
-# Install the AmidoBuild module
-RUN echo "Downloading AmidoBuild version - ${AMIDBUILD}" && \
-    mkdir -p /modules/AmidoBuild && \
-    curl -L "https://github.com/amido/independent-runner/releases/download/${AMIDOBUILD}/AmidoBuild.psd1" -o /modules/AmidoBuild/AmidoBuild.psd1 && \
-    curl -L "https://github.com/amido/independent-runner/releases/download/${AMIDOBUILD}/AmidoBuild.psm1" -o /modules/AmidoBuild/AmidoBuild.psm1
-
-COPY --from=posh /opt/microsoft/powershell/7 /opt/microsoft/powershell/7
-RUN ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
+RUN apt-get update && apt-get install curl -y
 
 # -- Inspec for infrastructure testing
 RUN curl "https://omnitruck.chef.io/install.sh" -o "install.sh" && \
     chmod +x ./install.sh && \
     ./install.sh -P inspec -v ${INSPEC_VERSION} && \
     rm install.sh
+
+FROM ${orgname}/runner-pwsh
+
+ARG APK_GLIBC_VERSION=2.35-r1
+ARG APK_GLIBC_FILE="glibc-${APK_GLIBC_VERSION}.apk"
+ARG APK_GLIBC_BIN_FILE="glibc-bin-${APK_GLIBC_VERSION}.apk"
+ARG APK_GLIBC_BASE_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${APK_GLIBC_VERSION}"
+
+# Install necessary packages
+RUN apk --no-cache add \
+    wget \
+    ca-certificates \
+    libstdc++ \
+    gcompat \
+    libc-dev
+
+# Get and install Glibc
+RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
+    && wget "${APK_GLIBC_BASE_URL}/${APK_GLIBC_FILE}"       \
+    && apk --force-overwrite --no-cache add "${APK_GLIBC_FILE}"               \
+    && wget "${APK_GLIBC_BASE_URL}/${APK_GLIBC_BIN_FILE}"   \
+    && apk --no-cache add "${APK_GLIBC_BIN_FILE}"           \
+    && rm glibc-*
+
+ENV PATH="${PATH}:/opt/inspec/bin"
+
+# Copy the inspec directory from the base image
+COPY --from=base /opt/inspec /opt/inspec
+
 
 
 
