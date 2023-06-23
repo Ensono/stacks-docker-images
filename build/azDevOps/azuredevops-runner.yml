@@ -50,10 +50,9 @@ stages:
           inputs:
             targetType: inline
             script: |
-              $env:PSModulePath -split ";"
-              New-Item -Type directory -Path /modules/AmidoBuild
-              Invoke-WebRequest -Uri "https://github.com/amido/independent-runner/releases/download/${{ variables.AmidoBuild }}/AmidoBuild.psd1" -OutFile /modules/AmidoBuild/AmidoBuild.psd1
-              Invoke-WebRequest -Uri "https://github.com/amido/independent-runner/releases/download/${{ variables.AmidoBuild }}/AmidoBuild.psm1" -OutFile /modules/AmidoBuild/AmidoBuild.psm1
+              New-Item -Type directory -Path /usr/local/share/powershell/Modules/AmidoBuild
+              Invoke-WebRequest -Uri "https://github.com/amido/independent-runner/releases/download/${{ variables.AmidoBuild }}/AmidoBuild.psd1" -OutFile /usr/local/share/powershell/Modules/AmidoBuild/AmidoBuild.psd1
+              Invoke-WebRequest -Uri "https://github.com/amido/independent-runner/releases/download/${{ variables.AmidoBuild }}/AmidoBuild.psm1" -OutFile /usr/local/share/powershell/Modules/AmidoBuild/AmidoBuild.psm1
 
         - task: Bash@3
           displayName: Setup
