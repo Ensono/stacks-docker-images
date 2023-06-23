@@ -50,7 +50,7 @@ stages:
           inputs:
             targetType: inline
             script: |
-              dir env:
+              $env:PsModulePath -split ";"
               New-Item -Type directory -Path /modules/AmidoBuild
               Invoke-WebRequest -Uri "https://github.com/amido/independent-runner/releases/download/${{ variables.AmidoBuild }}/AmidoBuild.psd1" -OutFile /modules/AmidoBuild/AmidoBuild.psd1
               Invoke-WebRequest -Uri "https://github.com/amido/independent-runner/releases/download/${{ variables.AmidoBuild }}/AmidoBuild.psm1" -OutFile /modules/AmidoBuild/AmidoBuild.psm1
