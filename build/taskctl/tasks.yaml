@@ -1,22 +1,32 @@
   # Compilation tasks
 tasks:
   build:container:
-    context: powershell
+    context: powershell_docker
     description: Create container image for application
     command:
       - Write-Host "Build-DockerImage -push -generic -Name {{ .IMAGE_NAME }} -buildargs `"{{ .DOCKER_BUILD_ARGS }}`""
-      - Build-DockerImage -generic -push -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}" -latest
+      - Build-DockerImage -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}" -latest
     # Set variable IMAGE_NAME; i.e. stacks-api and DOCKER_BUILD_ARGS path i.e. ./image_definitions/base
 
-  build:number:
+  build:container:base:
     context: powershell
+    description: Create Base image
+    command:
+      # - Write-Host "Build-DockerImage -push -generic -Name {{ .IMAGE_NAME }} -buildargs `"{{ .DOCKER_BUILD_ARGS }}`""
+      # - Build-DockerImage -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}" -latest
+      - |
+        Import-Module AmidoBuild
+        Build-DockerImage -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}" -latest
+
+  build:number:
+    context: powershell_docker
     description: Update the build number
     command:
       - Update-BuildNumber
     # Set variable DOCKER_IMAGE_TAG; i.e. 0.2.1
 
   update:dashboard:
-    context: powershell
+    context: powershell_docker
     description: Update the Deployment Dashboard
     command:
       - Update-InfluxDashboard
@@ -25,7 +35,7 @@ tasks:
     #  PUBLISH_RELEASE: $true
 
   debug:
-    context: powershell
+    context: powershell_docker
     description: debugs env vars
     command:
       - Get-ChildItem env:/

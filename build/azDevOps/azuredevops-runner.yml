@@ -44,6 +44,16 @@ stages:
               wget https://github.com/amido/stacks-envfile/releases/download/v${{ variables.StacksEnvfileVersion }}/stacks-envfile-linux-amd64-${{ variables.StacksEnvfileVersion }} -O /usr/local/bin/envfile
               chmod +x /usr/local/bin/envfile
 
+        # Install the Independent Runner module for the base build
+        - task: PowerShell@2
+          displayName: Install Independent Runner
+          inputs:
+            targetType: inline
+            script: |
+              New-Item -Type directory -Path /modules/AmidoBuild
+              Invoke-WebRequest -Uri "https://github.com/amido/independent-runner/releases/download/${{ variables.AmidoBuild }}/AmidoBuild.psd1" -OutFile /modules/AmidoBuild/AmidoBuild.psd1
+              Invoke-WebRequest -Uri "https://github.com/amido/independent-runner/releases/download/${{ variables.AmidoBuild }}/AmidoBuild.psm1" -OutFile /modules/AmidoBuild/AmidoBuild.psm1
+
         - task: Bash@3
           displayName: Setup
           inputs:
