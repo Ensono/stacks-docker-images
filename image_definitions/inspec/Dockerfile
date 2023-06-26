@@ -1,3 +1,4 @@
+ARG IMAGETAG=latest
 ARG IMAGE_REF=amidostacks/runner-pwsh
 FROM ubuntu:20.04 as base
 
@@ -15,7 +16,7 @@ RUN curl "https://omnitruck.chef.io/install.sh" -o "install.sh" && \
 # The ARG is repeated here because it needs to be refreshed from the initial setting
 # The behaviour of FROM and ARG is explained here - https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
 ARG IMAGE_REF
-FROM $IMAGE_REF
+FROM $IMAGE_REF:$IMAGE_TAG
 
 ARG APK_GLIBC_VERSION=2.35-r1
 ARG APK_GLIBC_FILE="glibc-${APK_GLIBC_VERSION}.apk"
