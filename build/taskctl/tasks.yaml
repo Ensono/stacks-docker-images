@@ -15,6 +15,7 @@ tasks:
       # - Write-Host "Build-DockerImage -push -generic -Name {{ .IMAGE_NAME }} -buildargs `"{{ .DOCKER_BUILD_ARGS }}`""
       # - Build-DockerImage -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}" -latest
       - |
+        $env:PSModulePath += ":/home/vsts/modules"
         Import-Module AmidoBuild
         Build-DockerImage -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}" -latest
 
