@@ -23,31 +23,31 @@ pipelines:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-dotnet
-      DOCKER_BUILD_ARGS: -f ./image_definitions/dotnet/Dockerfile ./image_definitions/dotnet --build-arg IMAGE_REF=amidostacks/runner-pwsh-java
+      DOCKER_BUILD_ARGS: -f ./image_definitions/dotnet/Dockerfile ./image_definitions/dotnet --build-arg IMAGE_REF=amidostacks/runner-pwsh-java:${env:DOCKER_IMAGE_TAG}
 
   build:java:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-java
-      DOCKER_BUILD_ARGS: -f ./image_definitions/java/Dockerfile ./image_definitions/java --build-arg IMAGE_REF=amidostacks/runner-pwsh
+      DOCKER_BUILD_ARGS: -f ./image_definitions/java/Dockerfile ./image_definitions/java --build-arg IMAGE_REF=amidostacks/runner-pwsh:${env:DOCKER_IMAGE_TAG}
 
   build:golang:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-golang
-      DOCKER_BUILD_ARGS: -f ./image_definitions/golang/Dockerfile ./image_definitions/golang --build-arg IMAGE_REF=amidostacks/runner-pwsh
+      DOCKER_BUILD_ARGS: -f ./image_definitions/golang/Dockerfile ./image_definitions/golang --build-arg IMAGE_REF=amidostacks/runner-pwsh:${env:DOCKER_IMAGE_TAG}
 
   build:asciidoctor:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-asciidoctor
-      DOCKER_BUILD_ARGS: -f ./image_definitions/asciidoctor/Dockerfile ./image_definitions/asciidoctor--build-arg IMAGE_REF=amidostacks/runner-pwsh
+      DOCKER_BUILD_ARGS: -f ./image_definitions/asciidoctor/Dockerfile ./image_definitions/asciidoctor--build-arg IMAGE_REF=amidostacks/runner-pwsh:${env:DOCKER_IMAGE_TAG}
 
   build:data:
   - task:  build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-data
-      DOCKER_BUILD_ARGS: -f ./image_definitions/data/Dockerfile ./image_definitions/data --build-arg IMAGE_REF=amidostacks/runner-pwsh
+      DOCKER_BUILD_ARGS: -f ./image_definitions/data/Dockerfile ./image_definitions/data --build-arg IMAGE_REF=amidostacks/runner-pwsh:${env:DOCKER_IMAGE_TAG}
 
   publish:
   - task: update:dashboard
