@@ -76,6 +76,7 @@ stages:
           inputs:
             targetType: inline
             script: |
+              taskctl debug
               taskctl build:inspec
           env:
             DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
