@@ -17,7 +17,7 @@ pipelines:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-inspec
-      DOCKER_BUILD_ARGS: -f ./image_definitions/inspec/Dockerfile ./image_definitions/inspec --build-arg IMAGE_REF=amidostacks/runner-pwsh:$(env:DOCKER_IMAGE_TAG)
+      DOCKER_BUILD_ARGS: -f ./image_definitions/inspec/Dockerfile ./image_definitions/inspec --build-arg IMAGE_REF=amidostacks/runner-pwsh:${env:DOCKER_IMAGE_TAG}
 
   build:dotnet:
   - task: build:container
