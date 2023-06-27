@@ -65,6 +65,6 @@ pipelines:
   - pipeline: build:asciidoctor
     depends_on: [build:base]
   - pipeline: build:data
-    depends_on: [build:python]
+    depends_on: [build:base]
   - pipeline: publish
     depends_on: [build:base, build:dotnet, build:java, build:data, build:golang, build:asciidoctor]
