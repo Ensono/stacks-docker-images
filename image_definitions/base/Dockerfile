@@ -4,8 +4,8 @@ ARG IMAGE_TAG=7.3-alpine-3.14
 FROM mcr.microsoft.com/powershell:${IMAGE_TAG}
 
 # Add the arguments for the apps to install in the base image
-ARG TERRAFORM_VERSION=1.4.6
-ARG AMIDOBUILD=v0.0.217
+ARG TERRAFORM_VERSION=1.5.1
+ARG AMIDOBUILD=v0.0.221
 ARG TASKCTL_VERSION=1.4.2
 ARG KUBE_VERSION=v1.23.14
 ARG AZURE_CLI_VERSION=2.48.1
