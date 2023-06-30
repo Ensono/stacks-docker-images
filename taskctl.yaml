@@ -54,6 +54,8 @@ pipelines:
 
   all: # Simulating a full run of the CI/CD tool.
   - pipeline: setup
+  - task: _docs
+    depends_on: [setup]
   - pipeline: build:base
     depends_on: [setup]
   - pipeline: build:java
@@ -68,3 +70,8 @@ pipelines:
     depends_on: [build:base]
   - pipeline: publish
     depends_on: [build:base, build:dotnet, build:java, build:data, build:golang, build:asciidoctor]
+
+  docs:
+    - pipeline: setup
+    - task: _docs
+      depends_on: setup

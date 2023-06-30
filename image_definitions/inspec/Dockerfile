@@ -1,5 +1,5 @@
 ARG IMAGE_REF=amidostacks/runner-pwsh
-FROM ubuntu:20.04 as base
+FROM ubuntu:22.04 as base
 
 # ARG orgname=amidostacks
 ARG INSPEC_VERSION=5.22.3
@@ -24,14 +24,12 @@ ARG APK_GLIBC_BASE_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases/do
 
 # Install necessary packages
 RUN apk --no-cache add \
-    wget \
     ca-certificates \
     libstdc++ \
-    gcompat \
     libc-dev
 
 # Get and install Glibc
-RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
+RUN curl -o /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
     && wget "${APK_GLIBC_BASE_URL}/${APK_GLIBC_FILE}"       \
     && apk --force-overwrite --no-cache add "${APK_GLIBC_FILE}"               \
     && wget "${APK_GLIBC_BASE_URL}/${APK_GLIBC_BIN_FILE}"   \

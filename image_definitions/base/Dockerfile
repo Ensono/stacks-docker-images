@@ -9,6 +9,9 @@ ARG AMIDOBUILD=v0.0.221
 ARG TASKCTL_VERSION=1.4.2
 ARG KUBE_VERSION=v1.23.14
 ARG AZURE_CLI_VERSION=2.48.1
+ARG AZURE_AZ_MODULE_VERSON=10.0.0
+ARG AWS_CLI_VERSION=2.12.4
+ARG PESTER_VERSION=5.4.1
 ARG HELM_VERSION=3.12.0
 ARG ARM_TTK_VERSION="20221215"
 
@@ -62,10 +65,10 @@ RUN export ARCH="$(uname -m)" \
  && chmod +x /usr/bin/taskctl
 
 # -- PowerShell AZ module
-RUN pwsh -NoProfile -Command "Install-Module -Name Az -Scope AllUsers -Repository PSGallery -Force"
+RUN pwsh -NoProfile -Command "Install-Module -Name Az -Scope AllUsers -Repository PSGallery -Force -RequiredVersion ${AZURE_AZ_MODULE_VERSON}"
 
 # -- AWSCLI
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWS_CLI_VERSION}.zip" -o "awscliv2.zip" && \
     unzip awscliv2.zip && \
     aws/install && \
     rm awscliv2.zip && \
@@ -82,7 +85,7 @@ RUN pip3 install --ignore-installed virtualenv \
  && pip3 install -r ./requirements.txt
 
 # -- Pester for Unit testing
-RUN pwsh -NoProfile -Command "Install-Module -Name Pester -Scope AllUsers -Repository PSGallery -Force"
+RUN pwsh -NoProfile -Command "Install-Module -Name Pester -Scope AllUsers -Repository PSGallery -Force -RequiredVersion ${PESTER_VERSION}"
 
 # -- PowerShell-Yaml for parsing YAML in PowerShell
 RUN pwsh -NoProfile -Command "Install-Module -Name Powershell-Yaml -Scope AllUsers -Repository PSGallery -Force"

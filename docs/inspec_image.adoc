@@ -1,0 +1,18 @@
+=== {name} Image
+
+Inspec is on the of the tools that we are working with to perform Infrastructure testing. Inspec is not easy to install in Alpine, because the main installer for it will not work with Alpine.
+
+To install an Ubuntu 22.04 image is used to install Inspec from using the installer script from Chef. The `amnidostacks/runner-pwsh` base image is then used and the `/opt/inspec` directory is copied from the Ubuntu image.
+
+In order to support this a GLIBC library is required and this has to be installed from an Alpine repo.
+
+NOTE: Alpine has been specifically built to have less moving parts and one of them the GLIBC library, musl is used instead as it is much smaller. It needs to be installed here to support Ruby.
+
+.OS Packages
+[cols="1,4",options="header",stripes=even]
+|===
+| Name | Description
+| ca-certificates | Common CA certificates
+| libstdc++ | GNU Standard C++ Library
+| libc-dev | Linux Kernel Headers for development
+|===

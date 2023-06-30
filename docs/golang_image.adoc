@@ -1,0 +1,26 @@
+=== {name} Image
+
+We have a few applications in the Stacks ecosystem that are based on Go, thus the Independent Runner needs to support these applications. To do this we need to create an image with the Go language installed.
+
+To keep the image clean, the an Alpine image for Go is used as the main image. The `amidostacks/runner-pwsh` base image is used to copy PowerShell and the AmidoBuild PowerShell module to the image. In order to achieve this some extra tools are required in order to support PowerShell.
+
+.OS Packages
+[cols="1,4",options="header",stripes=even]
+|===
+| Name | Description
+| ca-certificates | Common CA certificates
+| less | Pager program similar to more
+| ncurses-terminfo-base | Basic terminal type definitions
+| krb5-libs | MIT Kerberos runtime libraries
+| libgcc | GCC Support Library
+| libintl | Uniform message translations system compatible i18n library
+| libssl1.1 | Secure Sockets Layer toolkit - shared libraries
+| libstdc++ | GNU Standard C++ Library
+| tzdata | Timezone and daylight-saving time data
+| userspace-rcu | Data synchronization library provides read-side access which scales linearly with the number of cores.
+| zlib | Compression library - runtime
+| icu-libs | International Components for Unicode
+| lttng-ust | LTTng 2.0 Userspace Tracer
+|===
+
+Once everything has been installed the environment variable, `PATH`, is updated with the path to PowerShell.

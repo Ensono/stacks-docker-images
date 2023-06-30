@@ -1,4 +1,4 @@
-ARG IMAGE_REF=amidostacks/runner-pwsh
+ARG IMAGE_REF=amidostacks/runner-pwsh-java
 FROM $IMAGE_REF as base
 
 ARG pandoc_version=3.1.2
@@ -6,12 +6,12 @@ ARG hugo_version=0.111.3
 ARG go_version=1.19.2
 ARG asciidoctor_version=2.0.18
 ARG asciidoctor_confluence_version=0.0.2
-ARG asciidoctor_pdf_version=2.3.4
-ARG asciidoctor_diagram_version=2.2.1
+ARG asciidoctor_pdf_version=2.3.9
+ARG asciidoctor_diagram_version=2.2.9
 ARG asciidoctor_epub3_version=1.5.1
 ARG asciidoctor_fb2_version=0.7.0
 ARG asciidoctor_mathematical_version=0.3.5
-ARG asciidoctor_revealjs_version=4.1.0
+ARG asciidoctor_revealjs_version=5.0.1
 ARG kramdown_asciidoc_version=2.1.0
 ARG asciidoctor_bibtex_version=0.8.0
 ARG asciidoctor_kroki_version=0.7.0

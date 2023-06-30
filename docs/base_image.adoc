@@ -1,0 +1,53 @@
+=== {name} Image
+
+The base image is built from a Alpine based image from Microsoft that has PowerShell installed. This is helps to keep the images as small as possible and has PowerShell installed for the Independent Runner module.
+
+The following table shows the packages that are installed by the Alpine Package Manager (APK). These apps are installed to assist with the installation of other applications that are not in the Alpine application repositories.
+
+.OS Packages
+[cols="1,4",options="header",stripes=even]
+|===
+| Name | Description
+| bash | Required to run commands during the build of the image
+| curl | Used to download archives of applications to be installed
+| unzip | Required to unpack downloaded applications
+| git | Required by all images when working with the Independent Runner
+| tar | Tool to assist with the unpacking of applications
+| python3 
+.3+| The AZ CLI is built using Python. If installed using the script provided by Microsoft Python is installed. As we need Python for parts of the build the decision has been made to install it here so that we do
+not end up with multiple versions of it.
+| python3-dev |
+| py3-pip |
+| build-base 
+.2+| Includes the gcc compiler needed for some installations
+| linux-headers |
+| docker-cli | Used to build Docker images within the Independent Runner
+|===
+
+After these packages are installed the additional tools required in the base image are installed.
+
+.Independent Runner Packages
+[cols="1,1,3,1",options="header",stripes=even]
+|===
+| Name | Version | Description | Reference 
+| Kubectl | 1.23.14 | Primarily used to deploy manifests to Kubernetes | https://kubernetes.io/docs/tasks/tools/
+| Helm | 3.12.0 | Used to deploy charts in the pipeline | https://helm.sh/
+| Terraform | 1.5.1 | Required to deploy infrastructure into the target cloud, e.g. Azure or AWS | https://www.terraform.io/
+| Taskctl | 1.4.2 | Tool that provides the pipeline functionality for the Independent Runner | https://github.com/taskctl/taskctl
+| PowerShell AZ Module | 10.0.0 | PowerShell module for working with Azure | https://learn.microsoft.com/en-us/powershell/azure/new-azureps-module-az?view=azps-10.0.0
+| AWS CLI | 2.12.4 | AWS CLI required by Terraform for authentication etc | https://aws.amazon.com/cli/
+| AZ CLI | 2.48.1 | AZ CLI required by Terraform | https://learn.microsoft.com/en-us/cli/azure/ 
+| Pester | 5.4.1 | Testing tool for PowerShell to run unit tests for PowerShell scripts | https://pester.dev
+| AmidoBuild | 0.0.221 | PowerShell module that is the Independent Runner | https://github.com/amido/independent-runner
+|===
+
+==== Application Notes
+
+===== AZ CLI
+
+As we are installing the AZ CLI as a package from PIP, it will not not setup the `az` command in the PATH. A shim, called `az`, is installed in the image and placed in `/usr/bin/`. This means that it is in a directory that is in the PATH so can be easily called from the command line.
+
+[source,bash]
+----
+include::../image_definitions/base/files/az[]
+----
