@@ -1,7 +1,7 @@
 # independent-runner
 contexts:
 
-  powershell:
+  powershell_docker:
     executable:
       bin: docker
       args:
@@ -23,3 +23,31 @@ contexts:
         - -Command
     quote: "'"
     before: envfile -e home,path
+
+  powershell:
+    executable:
+      bin: pwsh
+      args:
+        - -NoProfile
+        - -Command
+    quote: "'"
+
+  docsenv:
+    executable:
+      bin: docker
+      args:
+        - run
+        - --rm
+        - -v
+        - ${PWD}:/app
+        - -e
+        - PSModulePath=/modules        
+        - -w
+        - /app
+        - --env-file
+        - envfile        
+        - amidostacks/runner-pwsh-asciidoctor:latest
+        - pwsh
+        - -NoProfile
+        - -Command
+    before: envfile -e home,path    

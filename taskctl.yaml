@@ -8,57 +8,70 @@ pipelines:
   - task: build:number
 
   build:base:
-  - task: build:container
+  - task: build:container:base
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh
-      DOCKERFILE: ./image_definitions/base
+      DOCKER_BUILD_ARGS: -f ./image_definitions/base/Dockerfile ./image_definitions/base
+
+  build:inspec:
+  - task: build:container
+    variables:
+      IMAGE_NAME: amidostacks/runner-pwsh-inspec
+      DOCKER_BUILD_ARGS: -f ./image_definitions/inspec/Dockerfile ./image_definitions/inspec --build-arg IMAGE_REF=amidostacks/runner-pwsh:${env:DOCKER_IMAGE_TAG}
 
   build:dotnet:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-dotnet
-      DOCKERFILE: ./image_definitions/dotnet
+      DOCKER_BUILD_ARGS: -f ./image_definitions/dotnet/Dockerfile ./image_definitions/dotnet --build-arg IMAGE_REF=amidostacks/runner-pwsh-java:${env:DOCKER_IMAGE_TAG}
 
   build:java:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-java
-      DOCKERFILE: ./image_definitions/java
-
-  build:python:
-  - task: build:container
-    variables:
-      IMAGE_NAME: amidostacks/runner-pwsh-python
-      DOCKERFILE: ./image_definitions/python
+      DOCKER_BUILD_ARGS: -f ./image_definitions/java/Dockerfile ./image_definitions/java --build-arg IMAGE_REF=amidostacks/runner-pwsh:${env:DOCKER_IMAGE_TAG}
 
   build:golang:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-golang
-      DOCKERFILE: ./image_definitions/golang
+      DOCKER_BUILD_ARGS: -f ./image_definitions/golang/Dockerfile ./image_definitions/golang --build-arg IMAGE_REF=amidostacks/runner-pwsh:${env:DOCKER_IMAGE_TAG}
 
   build:asciidoctor:
   - task: build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-asciidoctor
-      DOCKERFILE: ./image_definitions/asciidoctor    
+      DOCKER_BUILD_ARGS: -f ./image_definitions/asciidoctor/Dockerfile ./image_definitions/asciidoctor --build-arg IMAGE_REF=amidostacks/runner-pwsh:${env:DOCKER_IMAGE_TAG}
+
+  build:data:
+  - task:  build:container
+    variables:
+      IMAGE_NAME: amidostacks/runner-pwsh-data
+      DOCKER_BUILD_ARGS: -f ./image_definitions/data/Dockerfile ./image_definitions/data --build-arg IMAGE_REF=amidostacks/runner-pwsh:${env:DOCKER_IMAGE_TAG}
 
   publish:
   - task: update:dashboard
 
   all: # Simulating a full run of the CI/CD tool.
   - pipeline: setup
+  - task: _docs
+    depends_on: [setup]
   - pipeline: build:base
     depends_on: [setup]
-  - pipeline: build:dotnet
-    depends_on: [build:base]
   - pipeline: build:java
     depends_on: [build:base]
-  - pipeline: build:python
-    depends_on: [build:base]
+  - pipeline: build:dotnet
+    depends_on: [build:java]
   - pipeline: build:golang
     depends_on: [build:base]
   - pipeline: build:asciidoctor
     depends_on: [build:base]
+  - pipeline: build:data
+    depends_on: [build:base]
   - pipeline: publish
-    depends_on: [build:base, build:dotnet, build:java, build:python, build:golang, build:asciidoctor]
+    depends_on: [build:base, build:dotnet, build:java, build:data, build:golang, build:asciidoctor]
+
+  docs:
+    - pipeline: setup
+    - task: _docs
+      depends_on: setup

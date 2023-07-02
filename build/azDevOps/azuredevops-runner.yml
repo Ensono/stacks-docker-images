@@ -44,6 +44,16 @@ stages:
               wget https://github.com/amido/stacks-envfile/releases/download/v${{ variables.StacksEnvfileVersion }}/stacks-envfile-linux-amd64-${{ variables.StacksEnvfileVersion }} -O /usr/local/bin/envfile
               chmod +x /usr/local/bin/envfile
 
+        # Install the Independent Runner module for the base build
+        - task: PowerShell@2
+          displayName: Install Independent Runner
+          inputs:
+            targetType: inline
+            script: |
+              New-Item -Type directory -Path /home/vsts/modules/AmidoBuild
+              Invoke-WebRequest -Uri "https://github.com/amido/independent-runner/releases/download/${{ variables.AmidoBuild }}/AmidoBuild.psd1" -OutFile /home/vsts/modules/AmidoBuild/AmidoBuild.psd1
+              Invoke-WebRequest -Uri "https://github.com/amido/independent-runner/releases/download/${{ variables.AmidoBuild }}/AmidoBuild.psm1" -OutFile /home/vsts/modules/AmidoBuild/AmidoBuild.psm1
+
         - task: Bash@3
           displayName: Setup
           inputs:
@@ -59,15 +69,18 @@ stages:
               taskctl build:base
           env:
             DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
+            DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)
 
         - task: Bash@3
-          displayName: Build DotNet
+          displayName: Build Inspec
           inputs:
             targetType: inline
             script: |
-              taskctl build:dotnet
+              taskctl debug
+              taskctl build:inspec
           env:
             DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
+            DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)
 
         - task: Bash@3
           displayName: Build Java
@@ -77,13 +90,24 @@ stages:
               taskctl build:java
           env:
             DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
+            DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)
 
         - task: Bash@3
-          displayName: Build Python
+          displayName: Build DotNet
           inputs:
             targetType: inline
             script: |
-              taskctl build:python
+              taskctl build:dotnet
+          env:
+            DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
+            DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)
+
+        - task: Bash@3
+          displayName: Build Data
+          inputs:
+            targetType: inline
+            script: |
+              taskctl build:data
           env:
             DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
 
@@ -95,6 +119,7 @@ stages:
               taskctl build:golang
           env:
             DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
+            DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)
 
         - task: Bash@3
           displayName: Build Asciidoctor
@@ -104,6 +129,7 @@ stages:
               taskctl build:asciidoctor
           env:
             DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
+            DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)
 
         - task: Bash@3
           displayName: Publish to Dashboard
@@ -115,17 +141,18 @@ stages:
             ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}: # On main branch runs
               PUBLISH_RELEASE: $true
             DASHBOARD_INFLUX_TOKEN: $(DASHBOARD_INFLUX_TOKEN) # requires explicit mapping to be used as an env var
-        # # Generate the documentation
-        # - task: Bash@3
-        #   displayName: Generate Documentation
-        #   inputs:
-        #     targetType: inline
-        #     script: |
-        #       taskctl docs
 
-        # # Upload the documentation
-        # - task: PublishBuildArtifacts@1
-        #   displayName: Publish Documentation
-        #   inputs:
-        #     pathToPublish: $(Build.SourcesDirectory)/outputs/docs
-        #     artifactName: docs
+        # Generate the documentation
+        - task: Bash@3
+          displayName: Generate Documentation
+          inputs:
+            targetType: inline
+            script: |
+              taskctl docs
+
+        # Upload the documentation
+        - task: PublishBuildArtifacts@1
+          displayName: Publish Documentation
+          inputs:
+            pathToPublish: $(Build.SourcesDirectory)/outputs/docs
+            artifactName: docs
