@@ -33,13 +33,21 @@ The following diagram shows the dependencies of the images.
 [blockdiag]
 ....
 blockdiag {
-    base -> java -> dotnet
+    powershell [label = "mcr.microsoft.com/powershell:7.3-alpine-3.14", style = dotted, width = 175, shape = "roundedbox" ]
+    golang_base [label = "golang:1.19.2-alpine3.16", style = dotted, shape = "roundedbox", width = 175]
+    ubuntu [label = "ubuntu:20.04", style = dotted, shape = "roundedbox", width = 175]
+
+    powershell -> base -> java -> dotnet
     base -> java -> asciidoctor
-    base -> golang
-    base -> inspec
+    
+    base -> ubuntu -> inspec
+   
     base -> data
+    base -> golang_base -> golang
 }
 ....
+
+The rounded box show the images that are pulled in from vendors to assist with the build of the container images here.
 
 <<<
 

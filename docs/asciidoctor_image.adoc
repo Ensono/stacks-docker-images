@@ -1,3 +1,7 @@
+---
+linkTitle: {name} Image
+---
+
 === {name} Image
 
 AsciiDoctor is used to generate the documents in many projects in Stacks. It is akin to Markdown but provides many more features that allow the use of cross-referencing and contents tables to name but two.
@@ -5,6 +9,8 @@ AsciiDoctor is used to generate the documents in many projects in Stacks. It is 
 AsciiDoctor is another tool that is based on Ruby and as a result it is kept isolated in containers. The base image used is Java, this is because there are some tools that require Java to provide additional functionality in AsciiDoctor.
 
 NOTE: Hugo is a static site generator that understands AsciiDoc files. However Hugo requires Go to operate correctly. As it does not require additional libraries to work, the Go binary for Alpine is installed.
+
+NOTE: This image is heavily influenced by this https://github.com/asciidoctor/docker-asciidoctor repo
 
 .OS Packages
 [cols="1,4",options="header",stripes=even]

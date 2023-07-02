@@ -1,3 +1,7 @@
+---
+linkTitle: {name} Image
+---
+
 === {name} Image
 
 The Java image uses the Base image as the image to build from. It installs Java and Maven.

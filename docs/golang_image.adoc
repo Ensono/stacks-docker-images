@@ -1,3 +1,7 @@
+---
+linkTitle: {name} Image
+---
+
 === {name} Image
 
 We have a few applications in the Stacks ecosystem that are based on Go, thus the Independent Runner needs to support these applications. To do this we need to create an image with the Go language installed.

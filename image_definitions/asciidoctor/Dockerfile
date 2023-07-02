@@ -64,7 +64,8 @@ RUN apk add --no-cache \
   font-noto-cjk \
   xz \
   imagemagick \
-  gcompat
+  gcompat \
+  npm
 
 ARG PANDOC_VERSION=3.1.2
 ARG HUGO_VERSION=0.111.3
@@ -135,12 +136,18 @@ RUN apk add --no-cache --virtual .pythonmakedepends \
   seqdiag \
   && apk del -r --no-cache .pythonmakedepends
 
+# Add in an NPM libraries
+WORKDIR /usr/app
+RUN npm i @asciidoctor/core @asciidoctor/docbook-converter
+
 COPY --from=erd-builder /app/erd-go /usr/local/bin/
 # for backward compatibility
 RUN ln -snf /usr/local/bin/erd-go /usr/local/bin/erd
 
 RUN curl -L https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-linux-amd64.tar.gz -o /tmp/pandoc.tar.gz && \
-    tar zxf /tmp/pandoc.tar.gz -C /usr/bin pandoc-${PANDOC_VERSION}/bin/pandoc && \
+    tar zxf /tmp/pandoc.tar.gz -C /tmp pandoc-${PANDOC_VERSION}/bin/pandoc && \
+    mv /tmp/pandoc-${PANDOC_VERSION}/bin/pandoc /usr/bin && \
+    rm -rf /tmp/pandoc-${PANDOC_VERSION} && \
     rm -rf /tmp/pandoc.tar.gz
 
 # Install Go and Hugo

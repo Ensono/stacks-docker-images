@@ -1,3 +1,7 @@
+---
+linkTitle: {name} Image
+---
+
 === {name} Image
 
 This image is to provide support for data engineering projects. Currently it only has an extension for the AZ CLI tool, however more tools are required for pipelines to handle data they will be added here.

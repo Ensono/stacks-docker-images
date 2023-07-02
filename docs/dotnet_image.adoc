@@ -1,3 +1,7 @@
+---
+linkTitle: {name} Image
+---
+
 === {name} Image
 
 The DotNet image is based off the Java image. This is because we use Sonarqube to run tests for the .NET apps. Sonarqube has a dependency in Java when it performs the tests. Originally OpenJDK was installed, however we made the decision to use the Java image so that we have consistency across the images.

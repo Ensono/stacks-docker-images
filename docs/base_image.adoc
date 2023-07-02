@@ -1,3 +1,7 @@
+---
+linkTitle: {name} Image
+---
+
 === {name} Image
 
 The base image is built from a Alpine based image from Microsoft that has PowerShell installed. This is helps to keep the images as small as possible and has PowerShell installed for the Independent Runner module.

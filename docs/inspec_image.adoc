@@ -1,3 +1,7 @@
+---
+linkTitle: {name} Image
+---
+
 === {name} Image
 
 Inspec is on the of the tools that we are working with to perform Infrastructure testing. Inspec is not easy to install in Alpine, because the main installer for it will not work with Alpine.
