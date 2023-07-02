@@ -3,3 +3,4 @@ outputs
 support
 envfile
 .DS_Store
+node_modules

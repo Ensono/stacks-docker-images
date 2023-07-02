@@ -1,12 +1,9 @@
-# This image builds on the base image and installs Python
-# for linting YAML
+ARG orgname=amidostacks
 
-FROM amidostacks/runner-pwsh
+FROM ${orgname}/runner-pwsh
 
-# Install python3 and pip3
-RUN apt-get update && \
-    apt-get install -y python3 \
-    python3-pip
+# Install python3 and pip
+RUN apk add --nocache --update python3 py3-pip
 
 # Install the necessary python modules
 COPY ./requirements.txt .
