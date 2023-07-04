@@ -17,7 +17,7 @@ contexts:
         - PSModulePath=/modules
         - -w
         - /app
-        - amidostacks/runner-pwsh:0.3.62-kubectl
+        - amidostacks/runner-pwsh:0.4.1-unstable
         - pwsh
         - -NoProfile
         - -Command
@@ -46,7 +46,7 @@ contexts:
         - /app
         - --env-file
         - envfile        
-        - amidostacks/runner-pwsh-asciidoctor:latest
+        - amidostacks/runner-pwsh-asciidoctor
         - pwsh
         - -NoProfile
         - -Command
