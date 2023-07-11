@@ -11,4 +11,5 @@ This image is to provide support for data engineering projects. Currently it onl
 |===
 | Name | Version | Description | Reference 
 | datafactory | | Datafactory extension for the AWS CLI | https://learn.microsoft.com/en-us/cli/azure/datafactory?view=azure-cli-latest
+| databricks-cli | | Databricks CLI | https://docs.databricks.com/archive/dev-tools/cli/index.html
 |===
