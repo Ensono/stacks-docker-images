@@ -6,7 +6,8 @@ ARG INSPEC_VERSION=5.22.3
 
 # Update apk and install ruby
 RUN apk update && \
-    apk add ruby \
+    apk add gcompat \
+            ruby \
             build-base \
             ruby-dev
 
