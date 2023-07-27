@@ -4,9 +4,6 @@ FROM $IMAGE_REF
 # Install the data extension for the Az command
 RUN /azure-cli/bin/python -m azure.cli extension add --name datafactory
 
-# Install the databricks CLI
-RUN pip install databricks-cli
-
 # Remove old python and pip versions
 RUN  apk del py-pip \  
      && apk del  python3-dev py3-pip \
@@ -21,3 +18,6 @@ RUN apk update
 # Add latest version of python  and poetry
 RUN apk add --update python3 py3-pip  python3-dev
 RUN pip install pytest pylint pylint-exit pytest-azurepipelines pytest-cov poetry
+
+# Install the databricks CLI
+RUN pip install databricks-cli
