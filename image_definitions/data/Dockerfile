@@ -16,7 +16,7 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.18/community" >> /etc/apk/rep
 RUN apk update
 
 # Add latest version of python  and poetry
-RUN apk add --update python3 py3-pip gcc musl-dev python3-dev
+RUN apk add --update python3 py3-pip gcc musl-dev linux-headers python3-dev
 RUN pip install pytest pylint pylint-exit pytest-azurepipelines pytest-cov poetry
 
 # Install the databricks CLI
