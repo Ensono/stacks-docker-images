@@ -11,8 +11,8 @@ RUN  apk del py-pip \
      && apk del  python3
 
 # Add new updated repositry 
-RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.18/main" > /etc/apk/repositories 
-RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.18/community" >> /etc/apk/repositories 
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.17/main" > /etc/apk/repositories 
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.17/community" >> /etc/apk/repositories 
 RUN apk update
 
 # Add latest version of python  and poetry
