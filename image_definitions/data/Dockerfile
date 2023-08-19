@@ -18,6 +18,7 @@ RUN apk update
 # Add latest version of python  and poetry
 RUN apk add --update python3 py3-pip gcc musl-dev linux-headers python3-dev
 RUN pip install pytest pylint pylint-exit pytest-azurepipelines pytest-cov poetry
+RUN pip install pandas==2.0.3
 
 # Install the databricks CLI
 RUN pip install databricks-cli
