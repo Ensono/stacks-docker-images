@@ -97,10 +97,9 @@ RUN curl -L https://github.com/Azure/arm-ttk/releases/download/${ARM_TTK_VERSION
 
 # -- AmidoBuild module
 RUN echo "Downloading AmidoBuild version - ${AMIDBUILD}" && \
-    mkdir -p /modules/AmidoBuild
-
-# Remove only for testing purposes
-COPY ./AmidoBuild.psd1 ./AmidoBuild.psm1 /modules/AmidoBuild/
+    mkdir -p /modules/AmidoBuild && \
+    curl -L "https://github.com/amido/independent-runner/releases/download/${AMIDOBUILD}/AmidoBuild.psd1" -o /modules/AmidoBuild/AmidoBuild.psd1 && \
+    curl -L "https://github.com/amido/independent-runner/releases/download/${AMIDOBUILD}/AmidoBuild.psm1" -o /modules/AmidoBuild/AmidoBuild.psm1
 
 # Remove packages that are no longer required
 RUN apk del --no-cache build-base linux-headers
