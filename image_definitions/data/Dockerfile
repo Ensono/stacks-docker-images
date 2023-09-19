@@ -19,5 +19,5 @@ RUN apk update
 RUN apk add --update python3 py3-pip gcc musl-dev linux-headers python3-dev
 RUN pip install pytest pylint pylint-exit pytest-azurepipelines pytest-cov poetry
 
-# Install the databricks CLI
-RUN pip install databricks-cli
+# Install the databricks CLI, precommit and tomli
+RUN pip install databricks-cli pre-commit tomli
