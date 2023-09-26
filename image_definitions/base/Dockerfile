@@ -91,9 +91,9 @@ RUN export ARCH="$(uname -m)" \
 # -- Terraform
 RUN export ARCH="$(uname -m)" \
     && if [[ ${ARCH} == "x86_64" ]]; then export ARCH="amd64"; elif [[ ${ARCH} == "aarch64" ]]; then export ARCH="arm64"; fi \
-    curl -L "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${ARCH}.zip" -o /tmp/terraform.zip && \
-    unzip /tmp/terraform.zip -d /usr/local/bin && \
-    rm /tmp/terraform.zip
+    && curl -L "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${ARCH}.zip" -o /tmp/terraform.zip \
+    && unzip /tmp/terraform.zip -d /usr/local/bin \
+    && rm /tmp/terraform.zip
 
 # -- Taskctl runner
 RUN export ARCH="$(uname -m)" \

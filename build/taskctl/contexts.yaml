@@ -17,7 +17,7 @@ contexts:
         - PSModulePath=/modules
         - -w
         - /app
-        - amidostacks/runner-pwsh:0.4.1-unstable
+        - amidostacks/runner-pwsh:0.4.20-stable
         - pwsh
         - -NoProfile
         - -Command
@@ -41,13 +41,13 @@ contexts:
         - -v
         - ${PWD}:/app
         - -e
-        - PSModulePath=/modules        
+        - PSModulePath=/modules
         - -w
         - /app
         - --env-file
-        - envfile        
+        - envfile
         - amidostacks/runner-pwsh-asciidoctor
         - pwsh
         - -NoProfile
         - -Command
-    before: envfile -e home,path    
+    before: envfile -e home,path
