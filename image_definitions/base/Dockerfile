@@ -13,7 +13,7 @@ ARG ALPINE_VERSION=3.17
 ARG IMAGE_TAG=7.3-alpine-${ALPINE_VERSION}
 
 # -- AWSCLI
-# See: https://stackoverflow.com/questions/60298619/awscli-version-2-on-alpine-linux
+# See: https://stackoverflow.com/a/61268529/2604915
 FROM python:3.10-alpine${ALPINE_VERSION} as awscli
 
 ARG AWS_CLI_VERSION=2.11.11
@@ -83,14 +83,15 @@ RUN export ARCH="$(uname -m)" \
 RUN export ARCH="$(uname -m)" \
     && if [[ ${ARCH} == "x86_64" ]]; then export ARCH="amd64"; elif [[ ${ARCH} == "aarch64" ]]; then export ARCH="arm64"; fi \
     && curl -L https://get.helm.sh/helm-v${HELM_VERSION}-linux-${ARCH}.tar.gz -o /tmp/helm.tar.gz \
-    && cat /tmp/helm.tar.gz \
     && tar zxf /tmp/helm.tar.gz \
     && mv linux-${ARCH}/helm /usr/bin/helm \
     && chmod +x /usr/bin/helm \
     && rm -rf /tmp/helm.tar.gz linux-${ARCH}
 
 # -- Terraform
-RUN curl -L "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" -o /tmp/terraform.zip && \
+RUN export ARCH="$(uname -m)" \
+    && if [[ ${ARCH} == "x86_64" ]]; then export ARCH="amd64"; elif [[ ${ARCH} == "aarch64" ]]; then export ARCH="arm64"; fi \
+    curl -L "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${ARCH}.zip" -o /tmp/terraform.zip && \
     unzip /tmp/terraform.zip -d /usr/local/bin && \
     rm /tmp/terraform.zip
 
