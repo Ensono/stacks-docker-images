@@ -21,3 +21,4 @@ RUN pip install pytest pylint pylint-exit pytest-azurepipelines pytest-cov poetr
 
 # Install the databricks CLI, precommit, tomli and azure-cli
 RUN pip install databricks-cli pre-commit tomli azure-cli
+
