@@ -4,19 +4,26 @@ linkTitle: {name} Image
 
 === {name} Image
 
-Inspec is on the of the tools that we are working with to perform Infrastructure testing. Inspec is not easy to install in Alpine, because the main installer for it will not work with Alpine.
-
-To install an Ubuntu 22.04 image is used to install Inspec from using the installer script from Chef. The `amnidostacks/runner-pwsh` base image is then used and the `/opt/inspec` directory is copied from the Ubuntu image.
-
-In order to support this a GLIBC library is required and this has to be installed from an Alpine repo.
-
-NOTE: Alpine has been specifically built to have less moving parts and one of them the GLIBC library, musl is used instead as it is much smaller. It needs to be installed here to support Ruby.
+Inspec is on the of the tools that we are working with to perform Infrastructure testing. The official installer for Inspec will not work with Alpine OS, so to get around this the image installs Ruby and then installs the necessary packages and Gems to be able to install Inspec from a Gem.
 
 .OS Packages
+[cols="1,4,1",options="header",stripes=even]
+|===
+| Name | Description | Removed
+| ruby | Programming language used by Inspec | icon:times[]
+| ruby-dev | Development libraries required to build the native gems | icon:check[]
+| build-base | GCC and other tools required to build the native gems for Inspec | icon:check[]
+|===
+
+To install Inspec a number of Gem files are required. These are Inspec requirements and not ones that we have defined.
+
+.Gem Packages
 [cols="1,4",options="header",stripes=even]
 |===
 | Name | Description
-| ca-certificates | Common CA certificates
-| libstdc++ | GNU Standard C++ Library
-| libc-dev | Linux Kernel Headers for development
+| etc | Provides access to information typically stored in UNIX /etc directory.
+| bigdecimal | This library provides arbitrary-precision decimal floating-point number class.
+| io-console | Add console capabilities to IO instances.
 |===
+
+Once all of the necessary packages have been installed, those that have been installed just too compile certain libraries, are removed. Such packages are denoted as "Removed" in the OS Packages table.
