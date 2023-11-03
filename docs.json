@@ -11,7 +11,8 @@
             "pdf-theme={{ basepath }}/build/conf/pdf/theme.yml",
             "pdf-fontsdir=\"{{ basepath }}/docs/styles/fonts;GEM_FONTS_DIR\"",
             "allow-uri-read",
-            "blockdiag=/usr/bin/blockdiag"
+            "blockdiag=/usr/bin/blockdiag",
+            "skip-front-matter"
         ]
     },
     "html": {
@@ -20,7 +21,8 @@
             "allow-uri-read",
             "toc=left",
             "java=/usr/bin/java",
-            "graphvizdot=/usr/bin/dot"
+            "graphvizdot=/usr/bin/dot",
+            "skip-front-matter"
         ]
     }
 }
