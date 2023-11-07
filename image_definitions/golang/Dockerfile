@@ -33,7 +33,7 @@ RUN apk -X https://dl-cdn.alpinelinux.org/alpine/edge/main add --no-cache \
 COPY --from=base /opt/microsoft /opt/microsoft
 COPY --from=base /modules/AmidoBuild /modules/AmidoBuild
 
-ENV PATH="${PATH}:/opt/microsoft/powershell/7/pwsh"
+ENV PATH="${PATH}:/opt/microsoft/powershell/7"
 
 
 
