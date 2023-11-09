@@ -20,7 +20,7 @@ RUN curl "https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apach
     unzip /tmp/maven.zip -d /usr/local && \
     rm /tmp/maven.zip
 
-ENV JAVA_HOME=/usr/bin/lib/jvm/default-jvm/jre
+ENV JAVA_HOME=/usr/lib/jvm/default-jvm/jre
 
 # Copy node into the image
 COPY --from=node /usr/lib /usr/lib
