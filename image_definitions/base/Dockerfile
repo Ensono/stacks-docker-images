@@ -1,4 +1,8 @@
+ARG NODE_VERSION=14
 ARG IMAGE_TAG=7.3-alpine-3.14
+
+# Pull in the Node image so Node can be copied
+FROM node:${NODE_VERSION}-alpine AS node
 
 # Pull the base image to use
 FROM mcr.microsoft.com/powershell:${IMAGE_TAG}
@@ -33,6 +37,9 @@ RUN apk add --update --no-cache ca-certificates \
     build-base \
     linux-headers \
     docker-cli \
+    sudo \
+    shadow \
+    gnupg \
  && apk del --purge deps
 
 # Install other required packages
@@ -103,3 +110,14 @@ RUN echo "Downloading AmidoBuild version - ${AMIDBUILD}" && \
 
 # Remove packages that are no longer required
 RUN apk del --no-cache build-base linux-headers
+
+# Copy node from the image and set label
+COPY --from=node /usr/lib /usr/lib
+COPY --from=node /usr/local/lib /usr/local/lib
+COPY --from=node /usr/local/include /usr/local/include
+COPY --from=node /usr/local/bin /usr/local/bin
+
+LABEL "com.azure.dev.pipelines.agent.handler.node.path"="/usr/local/bin/node"
+
+# Set the default command to use on the image, if one has not been specified
+CMD ["node"]
