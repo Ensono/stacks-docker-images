@@ -1,7 +1,7 @@
 ARG IMAGE_REF=amidostacks/runner-pwsh
 FROM $IMAGE_REF as base
 
-FROM golang:1.19.2-alpine3.16
+FROM golang:1.21.3-alpine3.18
 
 COPY files/unittests.sh /usr/local/bin
 
@@ -33,7 +33,7 @@ RUN apk -X https://dl-cdn.alpinelinux.org/alpine/edge/main add --no-cache \
 COPY --from=base /opt/microsoft /opt/microsoft
 COPY --from=base /modules/AmidoBuild /modules/AmidoBuild
 
-ENV PATH="${PATH}:/opt/microsoft/powershell/7/pwsh"
+ENV PATH="${PATH}:/opt/microsoft/powershell/7"
 
 
 
