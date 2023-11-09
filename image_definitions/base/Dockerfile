@@ -16,7 +16,7 @@ ARG IMAGE_TAG=7.3-alpine-${ALPINE_VERSION}
 # See: https://stackoverflow.com/a/61268529/2604915
 FROM python:3.10-alpine${ALPINE_VERSION} as awscli
 
-ARG AWS_CLI_VERSION=2.11.11
+ARG AWS_CLI_VERSION
 RUN apk add --no-cache git unzip groff build-base libffi-dev cmake
 RUN git clone --single-branch --depth 1 -b ${AWS_CLI_VERSION} https://github.com/aws/aws-cli.git
 
