@@ -76,7 +76,7 @@ RUN apk add --update --no-cache ca-certificates \
 # -- Install ref: https://github.com/lachie83/k8s-kubectl/blob/v1.23.14/Dockerfile
 RUN export ARCH="$(uname -m)" \
     && if [[ ${ARCH} == "x86_64" ]]; then export ARCH="amd64"; elif [[ ${ARCH} == "aarch64" ]]; then export ARCH="arm64"; fi \
-    && curl https://dl.k8s.io/release/${KUBE_VERSION}/bin/linux/${ARCH}/kubectl -o /usr/bin/kubectl \
+    && curl -L https://dl.k8s.io/release/${KUBE_VERSION}/bin/linux/${ARCH}/kubectl -o /usr/bin/kubectl \
     && chmod +x /usr/bin/kubectl
 
 # -- Helm
