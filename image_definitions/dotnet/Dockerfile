@@ -4,7 +4,7 @@ FROM $IMAGE_REF
 
 ARG SONARSCANNER_VERSION=5.14
 ARG REPORTGENERATOR_VERSION=5.1.26
-ARG DOTNET_VERSION=6.0.405
+ARG DOTNET_VERSION=6.0.300
 ARG TOOLPATH="/usr/local/dotnet"
 
 # Upate the PATH environment variable so that the tool can be found
