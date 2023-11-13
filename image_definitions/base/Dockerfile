@@ -5,28 +5,11 @@ ARG IMAGE_TAG=7.3-alpine-${ALPINE_VERSION}
 # Pull in the Node image so Node can be copied
 FROM node:${NODE_VERSION}-alpine AS node
 
-# Pull the base image to use
-FROM mcr.microsoft.com/powershell:${IMAGE_TAG}
-
-# Add the arguments for the apps to install in the base image
-ARG TERRAFORM_VERSION=1.5.1
-ARG AMIDOBUILD=v0.0.252
-ARG TASKCTL_VERSION=1.4.2
-ARG KUBE_VERSION=v1.23.14
-ARG AZURE_CLI_VERSION=2.48.1
-ARG AZURE_AZ_MODULE_VERSON=10.0.0
-ARG AWS_CLI_VERSION=2.13.21
-ARG PESTER_VERSION=5.4.1
-ARG HELM_VERSION=3.12.0
-ARG ARM_TTK_VERSION="20221215"
-ARG KLUCTL_VERSION=v2.22.1
-ARG KUSTOMIZE_VERSION=v5.2.1
-
 # -- AWSCLI
 # See: https://stackoverflow.com/a/61268529/2604915
 FROM python:3.10-alpine${ALPINE_VERSION} as awscli
 
-ARG AWS_CLI_VERSION
+ARG AWS_CLI_VERSION=2.13.21
 RUN apk add --no-cache git unzip groff build-base libffi-dev cmake
 RUN git clone --single-branch --depth 1 -b ${AWS_CLI_VERSION} https://github.com/aws/aws-cli.git
 
@@ -49,19 +32,18 @@ RUN (cd /usr/local/lib/aws-cli; for a in *.so*; do test -f /lib/$a && rm $a; don
 # Pull the base image to use
 FROM mcr.microsoft.com/powershell:${IMAGE_TAG}
 
-ARG TERRAFORM_VERSION
-ARG AMIDOBUILD
-ARG TASKCTL_VERSION
-ARG KUBE_VERSION
-ARG AZURE_CLI_VERSION
-ARG AZURE_AZ_MODULE_VERSON
-ARG AWS_CLI_VERSION
-ARG PESTER_VERSION
-ARG HELM_VERSION
-ARG ARM_TTK_VERSION
-ARG ALPINE_VERSION
-ARG KLUCTL_VERSION
-ARG KUSTOMIZE_VERSION
+# Add the arguments for the apps to install in the base image
+ARG TERRAFORM_VERSION=1.5.1
+ARG AMIDOBUILD=v0.0.252
+ARG TASKCTL_VERSION=1.4.2
+ARG KUBE_VERSION=v1.23.14
+ARG AZURE_CLI_VERSION=2.48.1
+ARG AZURE_AZ_MODULE_VERSON=10.0.0
+ARG PESTER_VERSION=5.4.1
+ARG HELM_VERSION=3.12.0
+ARG ARM_TTK_VERSION="20221215"
+ARG KLUCTL_VERSION=v2.22.1
+ARG KUSTOMIZE_VERSION=v5.2.1
 
 # Configure environment variables
 ENV TZ="Europe/London"
@@ -144,8 +126,8 @@ RUN curl -L https://github.com/Azure/arm-ttk/releases/download/${ARM_TTK_VERSION
 # -- AmidoBuild module
 RUN echo "Downloading AmidoBuild version - ${AMIDBUILD}" && \
     mkdir -p /modules/AmidoBuild && \
-    curl -L "https://github.com/amido/independent-runner/releases/download/${AMIDOBUILD}/AmidoBuild.psd1" -o /modules/AmidoBuild/AmidoBuild.psd1 && \
-    curl -L "https://github.com/amido/independent-runner/releases/download/${AMIDOBUILD}/AmidoBuild.psm1" -o /modules/AmidoBuild/AmidoBuild.psm1
+    curl -L "https://github.com/Ensono/independent-runner/releases/download/${AMIDOBUILD}/AmidoBuild.psd1" -o /modules/AmidoBuild/AmidoBuild.psd1 && \
+    curl -L "https://github.com/Ensono/independent-runner/releases/download/${AMIDOBUILD}/AmidoBuild.psm1" -o /modules/AmidoBuild/AmidoBuild.psm1
 
 # -- AWSCLI COPY FILES
 COPY --from=awscli /usr/local/lib/aws-cli/ /usr/local/lib/aws-cli/
