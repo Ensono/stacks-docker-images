@@ -1,4 +1,5 @@
 ARG IMAGE_REF=amidostacks/runner-pwsh
+
 FROM $IMAGE_REF
 
 ARG JAVA_VERSION=17.0.9-r1
@@ -16,4 +17,6 @@ RUN curl "https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apach
     unzip /tmp/maven.zip -d /usr/local && \
     rm /tmp/maven.zip
 
-ENV JAVA_HOME=/usr/bin/lib/jvm/default-jvm/jre
+ENV JAVA_HOME=/usr/lib/jvm/default-jvm/jre
+
+
