@@ -2,9 +2,9 @@ ARG orgname=amidostacks
 ARG IMAGE_REF=amidostacks/runner-pwsh-java
 FROM $IMAGE_REF
 
-ARG SONARSCANNER_VERSION=5.11
-ARG REPORTGENERATOR_VERSION=5.1.16
-ARG DOTNET_VERSION=6.0.405
+ARG SONARSCANNER_VERSION=5.14
+ARG REPORTGENERATOR_VERSION=5.1.26
+ARG DOTNET_VERSION=6.0.300
 ARG TOOLPATH="/usr/local/dotnet"
 
 # Upate the PATH environment variable so that the tool can be found

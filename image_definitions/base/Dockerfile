@@ -1,24 +1,15 @@
-# Add the arguments for the apps to install in the base image
-ARG TERRAFORM_VERSION=1.5.1
-ARG AMIDOBUILD=v0.0.249
-ARG TASKCTL_VERSION=1.4.2
-ARG KUBE_VERSION=v1.23.14
-ARG AZURE_CLI_VERSION=2.48.1
-ARG AZURE_AZ_MODULE_VERSON=10.0.0
-ARG AWS_CLI_VERSION=2.13.21
-ARG PESTER_VERSION=5.4.1
-ARG HELM_VERSION=3.12.0
-ARG ARM_TTK_VERSION="20221215"
+ARG NODE_VERSION=14
 ARG ALPINE_VERSION=3.17
 ARG IMAGE_TAG=7.3-alpine-${ALPINE_VERSION}
-ARG KLUCTL_VERSION=v2.22.1
-ARG KUSTOMIZE_VERSION=v5.2.1
+
+# Pull in the Node image so Node can be copied
+FROM node:${NODE_VERSION}-alpine AS node
 
 # -- AWSCLI
 # See: https://stackoverflow.com/a/61268529/2604915
 FROM python:3.10-alpine${ALPINE_VERSION} as awscli
 
-ARG AWS_CLI_VERSION
+ARG AWS_CLI_VERSION=2.13.21
 RUN apk add --no-cache git unzip groff build-base libffi-dev cmake
 RUN git clone --single-branch --depth 1 -b ${AWS_CLI_VERSION} https://github.com/aws/aws-cli.git
 
@@ -41,39 +32,41 @@ RUN (cd /usr/local/lib/aws-cli; for a in *.so*; do test -f /lib/$a && rm $a; don
 # Pull the base image to use
 FROM mcr.microsoft.com/powershell:${IMAGE_TAG}
 
-ARG TERRAFORM_VERSION
-ARG AMIDOBUILD
-ARG TASKCTL_VERSION
-ARG KUBE_VERSION
-ARG AZURE_CLI_VERSION
-ARG AZURE_AZ_MODULE_VERSON
-ARG AWS_CLI_VERSION
-ARG PESTER_VERSION
-ARG HELM_VERSION
-ARG ARM_TTK_VERSION
-ARG ALPINE_VERSION
-ARG KLUCTL_VERSION
-ARG KUSTOMIZE_VERSION
+# Add the arguments for the apps to install in the base image
+ARG TERRAFORM_VERSION=1.5.1
+ARG AMIDOBUILD=v0.0.252
+ARG TASKCTL_VERSION=1.4.2
+ARG KUBE_VERSION=v1.23.14
+ARG AZURE_CLI_VERSION=2.48.1
+ARG AZURE_AZ_MODULE_VERSON=10.0.0
+ARG PESTER_VERSION=5.4.1
+ARG HELM_VERSION=3.12.0
+ARG ARM_TTK_VERSION="20221215"
+ARG KLUCTL_VERSION=v2.22.1
+ARG KUSTOMIZE_VERSION=v5.2.1
 
 # Configure environment variables
 ENV TZ="Europe/London"
 
 # Install the necessary OS packages
 RUN apk add --update --no-cache ca-certificates \
-    && apk add -t deps \
-    && apk add --no-cache --update tzdata \
-        bash \
-        curl \
-        unzip \
-        git \
-        tar \
-        python3 \
-        python3-dev \
-        py3-pip \
-        build-base \
-        linux-headers \
-        docker-cli \
-    && apk del --purge deps
+ && apk add -t deps \
+ && apk add --no-cache --update tzdata \
+    bash \
+    curl \
+    unzip \
+    git \
+    tar \
+    python3 \
+    python3-dev \
+    py3-pip \
+    build-base \
+    linux-headers \
+    docker-cli \
+    sudo \
+    shadow \
+    gnupg \
+ && apk del --purge deps
 
 # Install other required packages
 # -- Kubectl
@@ -133,8 +126,8 @@ RUN curl -L https://github.com/Azure/arm-ttk/releases/download/${ARM_TTK_VERSION
 # -- AmidoBuild module
 RUN echo "Downloading AmidoBuild version - ${AMIDBUILD}" && \
     mkdir -p /modules/AmidoBuild && \
-    curl -L "https://github.com/amido/independent-runner/releases/download/${AMIDOBUILD}/AmidoBuild.psd1" -o /modules/AmidoBuild/AmidoBuild.psd1 && \
-    curl -L "https://github.com/amido/independent-runner/releases/download/${AMIDOBUILD}/AmidoBuild.psm1" -o /modules/AmidoBuild/AmidoBuild.psm1
+    curl -L "https://github.com/Ensono/independent-runner/releases/download/${AMIDOBUILD}/AmidoBuild.psd1" -o /modules/AmidoBuild/AmidoBuild.psd1 && \
+    curl -L "https://github.com/Ensono/independent-runner/releases/download/${AMIDOBUILD}/AmidoBuild.psm1" -o /modules/AmidoBuild/AmidoBuild.psm1
 
 # -- AWSCLI COPY FILES
 COPY --from=awscli /usr/local/lib/aws-cli/ /usr/local/lib/aws-cli/
@@ -156,3 +149,14 @@ RUN export ARCH="$(uname -m)" \
 
 # Remove packages that are no longer required
 RUN apk del --no-cache build-base linux-headers
+
+# Copy node from the image and set label
+COPY --from=node /usr/lib /usr/lib
+COPY --from=node /usr/local/lib /usr/local/lib
+COPY --from=node /usr/local/include /usr/local/include
+COPY --from=node /usr/local/bin /usr/local/bin
+
+LABEL "com.azure.dev.pipelines.agent.handler.node.path"="/usr/local/bin/node"
+
+# Set the default command to use on the image, if one has not been specified
+CMD ["node"]
