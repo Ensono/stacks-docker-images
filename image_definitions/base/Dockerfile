@@ -11,6 +11,8 @@ ARG HELM_VERSION=3.12.0
 ARG ARM_TTK_VERSION="20221215"
 ARG ALPINE_VERSION=3.17
 ARG IMAGE_TAG=7.3-alpine-${ALPINE_VERSION}
+ARG KLUCTL_VERSION=v2.22.1
+ARG KUSTOMIZE_VERSION=v5.2.1
 
 # -- AWSCLI
 # See: https://stackoverflow.com/a/61268529/2604915
@@ -50,6 +52,8 @@ ARG PESTER_VERSION
 ARG HELM_VERSION
 ARG ARM_TTK_VERSION
 ARG ALPINE_VERSION
+ARG KLUCTL_VERSION
+ARG KUSTOMIZE_VERSION
 
 # Configure environment variables
 ENV TZ="Europe/London"
@@ -135,6 +139,20 @@ RUN echo "Downloading AmidoBuild version - ${AMIDBUILD}" && \
 # -- AWSCLI COPY FILES
 COPY --from=awscli /usr/local/lib/aws-cli/ /usr/local/lib/aws-cli/
 RUN ln -s /usr/local/lib/aws-cli/aws /usr/local/bin/aws
+
+# Install Kluctl
+RUN export ARCH="$(uname -m)" \
+    && if [[ ${ARCH} == "x86_64" ]]; then export ARCH="amd64"; elif [[ ${ARCH} == "aarch64" ]]; then export ARCH="arm64"; fi \
+    && curl -L "https://github.com/kluctl/kluctl/releases/download/${KLUCTL_VERSION}/kluctl_${KLUCTL_VERSION}_linux_${ARCH}.tar.gz" -o /tmp/kluctl.tar.gz \
+    && tar zxf /tmp/kluctl.tar.gz -C /usr/bin kluctl \
+    && chmod +x /usr/bin/kluctl
+    
+# Install Kustomize
+RUN export ARCH="$(uname -m)" \
+    && if [[ ${ARCH} == "x86_64" ]]; then export ARCH="amd64"; elif [[ ${ARCH} == "aarch64" ]]; then export ARCH="arm64"; fi \
+    && curl -L "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/${KUSTOMIZE_VERSION}/kustomize_${KUSTOMIZE_VERSION}_linux_amd64.tar.gz" -o /tmp/kustomize.tar.gz \
+    && tar zxf /tmp/kustomize.tar.gz -C /usr/bin kustomize \
+    && chmod +x /usr/bin/kustomize
 
 # Remove packages that are no longer required
 RUN apk del --no-cache build-base linux-headers
