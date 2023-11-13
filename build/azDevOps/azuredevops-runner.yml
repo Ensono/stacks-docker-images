@@ -1,7 +1,7 @@
 name: "$(Build.SourceBranchName)-init"
 
 pr:
-  - master
+  - main
 
 trigger:
   branches:
