@@ -14,9 +14,15 @@ ENV PATH="${TOOLPATH}:${PATH}"
 ENV DOTNET_ROOT="${TOOLPATH}"
 
 # Install the dotnet framework
-RUN curl -L https://dot.net/v1/dotnet-install.sh -o /tmp/dotnet-install.sh && \
-    chmod +x /tmp/dotnet-install.sh && \
-    /tmp/dotnet-install.sh --install-dir ${TOOLPATH} --version ${DOTNET_VERSION}
+#RUN curl -L https://dot.net/v1/dotnet-install.sh -o /tmp/dotnet-install.sh && \
+#    chmod +x /tmp/dotnet-install.sh && \
+#    /tmp/dotnet-install.sh --install-dir ${TOOLPATH} --version ${DOTNET_VERSION}
+
+# Download and install the .NET framework
+RUN curl -L https://download.visualstudio.microsoft.com/download/pr/40a3227f-0d20-4c23-b1a5-ecd659e3faef/fa59541ab3a35a50172ea5f81070e075/dotnet-sdk-8.0.100-linux-musl-x64.tar.gz -o /tmp/dotnet.tar.gz && \
+    mkdir -p /usr/local/dotnet && \
+    tar zxf /tmp/dotnet.tar.gz -C /usr/local/dotnet
+
 
 # Install necessary dotnet tools
 RUN dotnet tool install dotnet-sonarscanner --version ${SONARSCANNER_VERSION} --tool-path ${TOOLPATH} && \
