@@ -1,0 +1,13 @@
+ARG UBUNTU_VERSION=22.04
+
+FROM ubuntu:${UBUNTU_VERSION}
+
+ARG POWERSHELL_VERSION=7.3.10
+
+COPY scripts/install.sh /tmp/install.sh
+
+# Install Powershell into the image
+RUN apt-get update && \
+    apt-get install -y curl && \
+    chmod +x /tmp/install.sh && POWERSHELL_VERSION=${POWERSHELL_VERSION} /tmp/install.sh
+
