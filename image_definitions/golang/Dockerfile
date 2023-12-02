@@ -1,7 +1,7 @@
 ARG IMAGE_REF=amidostacks/runner-pwsh
 FROM $IMAGE_REF as base
 
-FROM golang:1.21.3-alpine3.18
+FROM golang:alpine
 
 COPY files/unittests.sh /usr/local/bin
 
