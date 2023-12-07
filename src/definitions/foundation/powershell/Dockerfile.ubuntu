@@ -8,6 +8,6 @@ COPY scripts/install.sh /tmp/install.sh
 
 # Install Powershell into the image
 RUN apt-get update && \
-    apt-get install -y curl && \
-    chmod +x /tmp/install.sh && POWERSHELL_VERSION=${POWERSHELL_VERSION} /tmp/install.sh
+    apt-get install -y bash curl && \
+    chmod +x /tmp/install.sh && /tmp/install.sh ${POWERSHELL_VERSION}
 

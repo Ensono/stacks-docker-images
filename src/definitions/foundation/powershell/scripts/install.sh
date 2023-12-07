@@ -1,5 +1,7 @@
 #!/bin/bash
 
+POWERSHELL_VERSION=$1
+
 # Get the ARCH of the enviornment
 ARCH="$(uname -m)"
 if [[ ${ARCH} == "x86_64" ]];

@@ -1,0 +1,30 @@
+# Dockerfile that creates an image containing the AZCLI, this is so that it can be
+# copied into any image that requires it and is not part of the foundation build image
+ARG PYTHON_VERSION=3.10-bookworm
+
+FROM python:${PYTHON_VERSION}
+
+ARG AZURE_CLI_VERSION=2.48.1
+
+# Install necessary components to build the CLI
+RUN apt-get update && \
+    apt-get install -y git \
+        bash \
+        unzip \
+        build-essential \
+        libffi-dev
+
+# Create a directory for the azcli
+RUN mkdir -p /usr/local/azcli/bin
+
+# Copy over required files
+COPY files/az /usr/local/azcli/bin
+COPY files/requirements.txt /usr/local/azcli
+
+# Create python virtual environment and install the Azure CLI
+RUN pip3 install --ignore-installed virtualenv && \
+    python3 -m virtualenv /usr/local/azcli/venv && \
+    /usr/local/azcli/venv/bin/python -m pip --no-cache-dir install azure-cli==${AZURE_CLI_VERSION} && \
+    chmod +x /usr/local/azcli/bin/az && \
+    pip3 install -r /usr/local/azcli/requirements.txt \
+    rm -f /usr/local/azcli/requirements.txt

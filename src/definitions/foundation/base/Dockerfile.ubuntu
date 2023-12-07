@@ -1,0 +1,41 @@
+ARG NODE_VERSION=14
+ARG POWERSHELL_IMAGE=0.0.1-workstation
+
+# Pull in the Node image so Node can be copied
+FROM node:${NODE_VERSION}-bullseye AS node
+
+FROM ensonostacks/foundation-powershell:${POWERSHELL_IMAGE}
+
+# Set the values for the applications to install
+ARG TERRAFORM_VERSION=1.5.1
+ARG AMIDOBUILD=v0.0.252
+ARG TASKCTL_VERSION="1.5.0"
+ARG KUBE_VERSION=v1.23.14
+ARG AZURE_AZ_MODULE_VERSON=10.0.0
+ARG PESTER_VERSION=5.4.1
+ARG HELM_VERSION=3.12.0
+ARG ARM_TTK_VERSION="20221215"
+ARG KLUCTL_VERSION=v2.22.1
+ARG KUSTOMIZE_VERSION=v5.2.1
+ARG TIMEZONE="Europe/London"
+
+# Install necessary linux packages
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata unzip curl && \
+    unlink /etc/localtime && \
+    ln -s /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
+
+# Copy the install script over and then run it
+COPY files/install_tools.sh /usr/local/bin/install_tools.sh
+RUN chmod +x /usr/local/bin/install_tools.sh && /usr/local/bin/install_tools.sh
+
+# Copy node from the image and set label
+COPY --from=node /usr/lib /usr/lib
+COPY --from=node /usr/local/lib /usr/local/lib
+COPY --from=node /usr/local/include /usr/local/include
+COPY --from=node /usr/local/bin /usr/local/bin
+
+LABEL "com.azure.dev.pipelines.agent.handler.node.path"="/usr/local/bin/node"
+
+# Set the default command to use on the image, if one has not been specified
+CMD ["node"]
