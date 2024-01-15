@@ -33,7 +33,7 @@ stages:
             targetType: inline
             script: |
               wget https://github.com/taskctl/taskctl/releases/download/${{ variables.TaskctlVersion }}/taskctl_${{ variables.TaskctlVersion }}_linux_amd64.tar.gz -O /tmp/taskctl.tar.gz
-              tar zxf /tmp/taskctl.tar.gz -C /usr/local/bin taskctl 
+              tar zxf /tmp/taskctl.tar.gz -C /usr/local/bin taskctl
 
         # Install the stacks envfile
         - task: Bash@3
@@ -41,7 +41,7 @@ stages:
           inputs:
             targetType: inline
             script: |
-              wget https://github.com/amido/stacks-envfile/releases/download/v${{ variables.StacksEnvfileVersion }}/stacks-envfile-linux-amd64-${{ variables.StacksEnvfileVersion }} -O /usr/local/bin/envfile
+              wget https://github.com/Ensono/stacks-envfile/releases/download/v${{ variables.StacksEnvfileVersion }}/stacks-envfile-linux-amd64-${{ variables.StacksEnvfileVersion }} -O /usr/local/bin/envfile
               chmod +x /usr/local/bin/envfile
 
         # Install the Independent Runner module for the base build
@@ -50,9 +50,9 @@ stages:
           inputs:
             targetType: inline
             script: |
-              New-Item -Type directory -Path /home/vsts/modules/AmidoBuild
-              Invoke-WebRequest -Uri "https://github.com/amido/independent-runner/releases/download/${{ variables.AmidoBuild }}/AmidoBuild.psd1" -OutFile /home/vsts/modules/AmidoBuild/AmidoBuild.psd1
-              Invoke-WebRequest -Uri "https://github.com/amido/independent-runner/releases/download/${{ variables.AmidoBuild }}/AmidoBuild.psm1" -OutFile /home/vsts/modules/AmidoBuild/AmidoBuild.psm1
+              New-Item -Type directory -Path /home/vsts/modules/EnsonoBuild
+              Invoke-WebRequest -Uri "https://github.com/Ensono/independent-runner/releases/download/${{ variables.EnsonoBuild }}/EnsonoBuild.psd1" -OutFile /home/vsts/modules/EnsonoBuild/EnsonoBuild.psd1
+              Invoke-WebRequest -Uri "https://github.com/Ensono/independent-runner/releases/download/${{ variables.EnsonoBuild }}/EnsonoBuild.psm1" -OutFile /home/vsts/modules/EnsonoBuild/EnsonoBuild.psm1
 
         - task: Bash@3
           displayName: Setup

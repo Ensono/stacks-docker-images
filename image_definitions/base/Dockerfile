@@ -34,7 +34,7 @@ FROM mcr.microsoft.com/powershell:${IMAGE_TAG}
 
 # Add the arguments for the apps to install in the base image
 ARG TERRAFORM_VERSION=1.5.1
-ARG AMIDOBUILD=v0.0.265
+ARG ENSONOBUILD=v1.0.11
 ARG TASKCTL_VERSION=1.4.2
 ARG KUBE_VERSION=v1.23.14
 ARG AZURE_CLI_VERSION=2.48.1
@@ -50,23 +50,23 @@ ENV TZ="Europe/London"
 
 # Install the necessary OS packages
 RUN apk add --update --no-cache ca-certificates \
- && apk add -t deps \
- && apk add --no-cache --update tzdata \
-    bash \
-    curl \
-    unzip \
-    git \
-    tar \
-    python3 \
-    python3-dev \
-    py3-pip \
-    build-base \
-    linux-headers \
-    docker-cli \
-    sudo \
-    shadow \
-    gnupg \
- && apk del --purge deps
+    && apk add -t deps \
+    && apk add --no-cache --update tzdata \
+        bash \
+        curl \
+        unzip \
+        git \
+        tar \
+        python3 \
+        python3-dev \
+        py3-pip \
+        build-base \
+        linux-headers \
+        docker-cli \
+        sudo \
+        shadow \
+        gnupg \
+    && apk del --purge deps
 
 # Install other required packages
 # -- Kubectl
@@ -123,11 +123,11 @@ RUN curl -L https://github.com/Azure/arm-ttk/releases/download/${ARM_TTK_VERSION
     unzip -d /modules ./arm-ttk.zip && \
     rm -rf arm-ttk.zip
 
-# -- AmidoBuild module
-RUN echo "Downloading AmidoBuild version - ${AMIDBUILD}" && \
-    mkdir -p /modules/AmidoBuild && \
-    curl -L "https://github.com/Ensono/independent-runner/releases/download/${AMIDOBUILD}/AmidoBuild.psd1" -o /modules/AmidoBuild/AmidoBuild.psd1 && \
-    curl -L "https://github.com/Ensono/independent-runner/releases/download/${AMIDOBUILD}/AmidoBuild.psm1" -o /modules/AmidoBuild/AmidoBuild.psm1
+# -- EnsonoBuild module
+RUN echo "Downloading EnsonoBuild version - ${ENSONOBUILD}" && \
+    mkdir -p /modules/EnsonoBuild && \
+    curl -L "https://github.com/Ensono/independent-runner/releases/download/${ENSONOBUILD}/EnsonoBuild.psd1" -o /modules/EnsonoBuild/EnsonoBuild.psd1 && \
+    curl -L "https://github.com/Ensono/independent-runner/releases/download/${ENSONOBUILD}/EnsonoBuild.psm1" -o /modules/EnsonoBuild/EnsonoBuild.psm1
 
 # -- AWSCLI COPY FILES
 COPY --from=awscli /usr/local/lib/aws-cli/ /usr/local/lib/aws-cli/
@@ -139,7 +139,7 @@ RUN export ARCH="$(uname -m)" \
     && curl -L "https://github.com/kluctl/kluctl/releases/download/${KLUCTL_VERSION}/kluctl_${KLUCTL_VERSION}_linux_${ARCH}.tar.gz" -o /tmp/kluctl.tar.gz \
     && tar zxf /tmp/kluctl.tar.gz -C /usr/bin kluctl \
     && chmod +x /usr/bin/kluctl
-    
+
 # Install Kustomize
 RUN export ARCH="$(uname -m)" \
     && if [[ ${ARCH} == "x86_64" ]]; then export ARCH="amd64"; elif [[ ${ARCH} == "aarch64" ]]; then export ARCH="arm64"; fi \

@@ -7,9 +7,9 @@ variables:
     value: 1.4.2
   - name: StacksEnvfileVersion
     value: 0.0.13
-  - name: AmidoBuild
-    value: v0.0.252
-  
+  - name: EnsonoBuild
+    value: v1.0.11
+
   # DEFAULT IMAGE RUNNER
   - name: pool_vm_image
     value: ubuntu-20.04
@@ -37,7 +37,7 @@ variables:
   - name: DOCKER_CONTAINER_REGISTRY_NAME
     value: docker.io
   - group: amido-stacks-dockerhub-credentials
-    # Group should contain: 
+    # Group should contain:
       # DOCKER_PASSWORD
       # DOCKER_USERNAME
 
@@ -49,7 +49,7 @@ variables:
   - name: DASHBOARD_MEASUREMENT
     value: deployment # Static definition within Influx Config
   - group: amido-stacks-influx-credentials-prod
-    # Group should contain: 
+    # Group should contain:
       # DASHBOARD_INFLUX_ORG
       # DASHBOARD_INFLUX_BUCKET
       # DASHBOARD_INFLUX_TOKEN
