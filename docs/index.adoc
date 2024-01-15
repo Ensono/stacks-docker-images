@@ -1,4 +1,4 @@
-:project_name: Amido Stacks
+:project_name: Ensono Stacks
 :cr_repo_name: amidostacks
 
 :icons: font
@@ -21,7 +21,7 @@ and tools that are required by each build. | <<Base Image>>
 
 It is based on Java because of the Sonarqube requirement | <<Dotnet Image>>
 | golang | `{cr_repo_name}/runner-pwsh-golang` | `{cr_repo_name}/runner-pwsh`
-`golang:1.192.2-alpine3.16` | Used to build our Go based applications, such as https://github.com/amido/stacls-cli[Stacks CLI] | <<Golang Image>>
+`golang:1.192.2-alpine3.16` | Used to build our Go based applications, such as https://github.com/Ensono/stacls-cli[Stacks CLI] | <<Golang Image>>
 | inspec | `{cr_repo_name}/runner-pwsh-inspec` | `{cr_repo_name}/runner-pwsh` | Image used when running infrastructure tests against deployments | <<Inspec Image>>
 | data | `{cr_repo_name}/runner-pwsh-data` | `{cr_repo_name}/runner-pwsh` | Used for Data Engineering projects, contains specific tools for such projects | <<Data Image>>
 | ascidoctor | `{cr_repo_name}/runner-pwsh-asciidoctor` | `{cr_repo_name}/runner-pwsh-java` | Image used for building documentation that has been written in the `adoc` format | <<Asciidoctor Image>>
@@ -39,9 +39,9 @@ blockdiag {
 
     powershell -> base -> java -> dotnet
     base -> java -> asciidoctor
-    
+
     base -> ubuntu -> inspec
-   
+
     base -> data
     base -> golang_base -> golang
 }
@@ -55,7 +55,7 @@ The rounded box show the images that are pulled in from vendors to assist with t
 
 The Independent Runner is used to create the images for the Independent Runner, but to avoid a circular dependency the base image is built without using a container.
 
-This is the case if running in ADO or on a local machine. The only dependency that needs to be installed beforehand is the AmidoBuild PowerShell module and it needs to be added to your `PSModulePath` environment variable.
+This is the case if running in ADO or on a local machine. The only dependency that needs to be installed beforehand is the EnsonoBuild PowerShell module and it needs to be added to your `PSModulePath` environment variable.
 
 NOTE: In the ADO pipeline the initial steps install the module to setup the environment.
 
@@ -99,5 +99,3 @@ include::data_image.adoc[]
 
 :name: AsciiDoctor
 include::asciidoctor_image.adoc[]
-
-

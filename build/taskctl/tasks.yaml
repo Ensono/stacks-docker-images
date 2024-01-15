@@ -16,7 +16,7 @@ tasks:
       # - Build-DockerImage -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}" -latest
       - |
         $env:PSModulePath += ":/home/vsts/modules"
-        Import-Module AmidoBuild
+        Import-Module EnsonoBuild
         Build-DockerImage -push -provider generic -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}" -latest
 
   build:number:
@@ -32,7 +32,7 @@ tasks:
     command:
       - Update-InfluxDashboard
     # TODO: Currently handled by ADO pipeline var, captured in Story 4122
-    # env: 
+    # env:
     #  PUBLISH_RELEASE: $true
 
   debug:

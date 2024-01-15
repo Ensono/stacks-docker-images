@@ -11,7 +11,7 @@ RUN go install github.com/jstemmer/go-junit-report@latest && \
     go install github.com/AlekSi/gocov-xml@latest && \
     chmod +x /usr/local/bin/unittests.sh
 
-# Install PowerShell dependencies    
+# Install PowerShell dependencies
 RUN apk add --no-cache \
     ca-certificates \
     less \
@@ -24,16 +24,13 @@ RUN apk add --no-cache \
     tzdata \
     userspace-rcu \
     zlib \
-    icu-libs 
+    icu-libs
 
 RUN apk -X https://dl-cdn.alpinelinux.org/alpine/edge/main add --no-cache \
     lttng-ust
 
 # Copy PowerShell and required modules from the base image
 COPY --from=base /opt/microsoft /opt/microsoft
-COPY --from=base /modules/AmidoBuild /modules/AmidoBuild
+COPY --from=base /modules/EnsonoBuild /modules/EnsonoBuild
 
 ENV PATH="${PATH}:/opt/microsoft/powershell/7"
-
-
-
