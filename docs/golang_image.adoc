@@ -6,7 +6,7 @@ linkTitle: {name} Image
 
 We have a few applications in the Stacks ecosystem that are based on Go, thus the Independent Runner needs to support these applications. To do this we need to create an image with the Go language installed.
 
-To keep the image clean, the an Alpine image for Go is used as the main image. The `amidostacks/runner-pwsh` base image is used to copy PowerShell and the AmidoBuild PowerShell module to the image. In order to achieve this some extra tools are required in order to support PowerShell.
+To keep the image clean, the an Alpine image for Go is used as the main image. The `amidostacks/runner-pwsh` base image is used to copy PowerShell and the EnsonoBuild PowerShell module to the image. In order to achieve this some extra tools are required in order to support PowerShell.
 
 .OS Packages
 [cols="1,4",options="header",stripes=even]
