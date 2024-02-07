@@ -72,6 +72,16 @@ stages:
             DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)
 
         - task: Bash@3
+          displayName: Build Kong Dev Tools
+          inputs:
+            targetType: inline
+            script: |
+              taskctl build:kong
+          env:
+            DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
+            DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)
+
+        - task: Bash@3
           displayName: Build Inspec
           inputs:
             targetType: inline
