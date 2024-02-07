@@ -49,6 +49,12 @@ pipelines:
       IMAGE_NAME: amidostacks/runner-pwsh-data
       DOCKER_BUILD_ARGS: -f ./image_definitions/data/Dockerfile ./image_definitions/data --build-arg IMAGE_REF=amidostacks/runner-pwsh:${env:DOCKER_IMAGE_TAG}
 
+  build:kong:
+  - task:  build:container
+    variables:
+      IMAGE_NAME: amidostacks/runner-pwsh-data
+      DOCKER_BUILD_ARGS: -f ./image_definitions/kong/Dockerfile ./image_definitions/kong --build-arg IMAGE_REF=amidostacks/kong-dev-tools:${env:DOCKER_IMAGE_TAG}
+
   publish:
   - task: update:dashboard
 
@@ -58,8 +64,10 @@ pipelines:
     depends_on: [setup]
   - pipeline: build:base
     depends_on: [setup]
-  - pipeline: build:java
+  - pipeline: build:kong
     depends_on: [build:base]
+  - pipeline: build:java
+    depends_on: [build:kong]
   - pipeline: build:dotnet
     depends_on: [build:java]
   - pipeline: build:golang
@@ -69,7 +77,7 @@ pipelines:
   - pipeline: build:data
     depends_on: [build:base]
   - pipeline: publish
-    depends_on: [build:base, build:dotnet, build:java, build:data, build:golang, build:asciidoctor]
+    depends_on: [build:base, build:dotnet, build:java, build:data, build:golang, build:asciidoctor, build:kong]
 
   docs:
     - pipeline: setup
