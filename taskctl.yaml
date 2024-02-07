@@ -64,10 +64,8 @@ pipelines:
     depends_on: [setup]
   - pipeline: build:base
     depends_on: [setup]
-  - pipeline: build:kong
-    depends_on: [build:base]
   - pipeline: build:java
-    depends_on: [build:kong]
+    depends_on: [build:base]
   - pipeline: build:dotnet
     depends_on: [build:java]
   - pipeline: build:golang
@@ -76,6 +74,8 @@ pipelines:
     depends_on: [build:base]
   - pipeline: build:data
     depends_on: [build:base]
+  - pipeline: build:kong
+    depends_on: [build:data]
   - pipeline: publish
     depends_on: [build:base, build:dotnet, build:java, build:data, build:golang, build:asciidoctor, build:kong]
 
