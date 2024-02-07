@@ -53,7 +53,7 @@ pipelines:
   - task:  build:container
     variables:
       IMAGE_NAME: amidostacks/runner-pwsh-data
-      DOCKER_BUILD_ARGS: -f ./image_definitions/kong/Dockerfile ./image_definitions/kong --build-arg IMAGE_REF=amidostacks/kong-dev-tools:${env:DOCKER_IMAGE_TAG}
+      DOCKER_BUILD_ARGS: -f ./image_definitions/kong/Dockerfile ./image_definitions/kong --build-arg IMAGE_REF=amidostacks/runner-pwsh:${env:DOCKER_IMAGE_TAG}
 
   publish:
   - task: update:dashboard
