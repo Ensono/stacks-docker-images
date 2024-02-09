@@ -1,0 +1,16 @@
+ARG IMAGE_TAG=0.0.1-workkstation
+
+FROM ensono/eir-foundation-powershell:${IMAGE_TAG}
+
+ARG GOLANG_VERSION=1.21.5
+
+# Copy the install script over and then run it
+COPY files/unittests.sh /usr/local/bin/unittests.sh
+COPY files/install.sh /usr/local/bin/install.sh
+
+RUN chmod +x /usr/local/bin/unittests.sh && \
+    chmod +x /usr/local/bin/install.sh && \
+    /usr/local/bin/install.sh
+
+# Update the path to include the go binary
+ENV PATH="$PATH:/usr/local/go/bin"

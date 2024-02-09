@@ -1,0 +1,10 @@
+ARG IMAGE_TAG=0.0.1-workstation
+
+FROM ensono/eir-foundation-powershell:${IMAGE_TAG}
+
+# Set the version of Inspec to install
+ARG INSPEC_VERSION=5.22.29
+
+# Install Inspec
+COPY files/install.sh /usr/local/bin/install.sh
+RUN chmod +x /usr/local/bin/install.sh && /usr/local/bin/install.sh

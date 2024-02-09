@@ -1,0 +1,23 @@
+ARG IMAGE_TAG=0.0.1-workstation
+
+FROM ensono/eir-foundation-powershell:${IMAGE_TAG}
+
+# Set the values for the applications to install
+ARG TERRAFORM_VERSION=1.5.1
+ARG KUBE_VERSION=v1.23.14
+ARG AZURE_AZ_MODULE_VERSON=10.0.0
+ARG PESTER_VERSION=5.4.1
+ARG HELM_VERSION=3.12.0
+ARG ARM_TTK_VERSION="20221215"
+ARG KLUCTL_VERSION=v2.22.1
+ARG KUSTOMIZE_VERSION=v5.2.1
+ARG GHCLI_VERSION="2.40.1"
+ARG DOCKER_VERSION="24.0.7"
+ARG DOCKER_BUILDX_VERSION="0.12.0"
+
+# Copy the install script over and then run it
+COPY files/install.sh /usr/local/bin/install.sh
+RUN chmod +x /usr/local/bin/install.sh && /usr/local/bin/install.sh
+
+# Setup the Path variable so that the tools can be found
+ENV PATH="$PATH:/usr/local/docker/bin"

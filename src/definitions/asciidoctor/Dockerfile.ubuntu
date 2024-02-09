@@ -1,0 +1,44 @@
+ARG IMAGE_TAG=0.0.1-workstation
+ARG ERD_GOLANG_VERSION=1.20
+ARG ERD_VERSION=v2.0.0
+
+# Install and build erd-go in image -------------------------------
+FROM golang:${ERD_GOLANG_VERSION}-alpine as erd-builder
+
+# go install or go get cannot be used the go.mod syntax of erd-go is not following the Golang semver properties,
+# leading to errors whatever method is used.
+# This fixes it by using a go build method to generate the binary instead.
+# hadolint ignore=DL3018
+RUN apk add --no-cache git \
+  && git clone https://github.com/kaishuu0123/erd-go -b "${ERD_VERSION}" /app
+WORKDIR /app
+RUN CGO_ENABLED=0 GOOS=linux go build
+
+# -----------------------------------------------------------------
+
+FROM ensono/eir-java:${IMAGE_TAG}
+
+ARG PANDOC_VERSION=3.1.2
+ARG HUGO_VERSION=0.111.3
+ARG GO_VERSION=1.19.2
+ARG ASCIIDOCTOR_VERSION=2.0.20
+ARG ASCIIDOCTOR_PDF_VERSION=2.3.9
+ARG ASCIIDOCTOR_CONFLUENCE_VERSION=0.0.2
+ARG ASCIIDOCTOR_DIAGRAM_VERSION=2.2.9
+ARG ASCIIDOCTOR_EPUB3_VERSION=1.5.1
+ARG ASCIIDOCTOR_FB2_VERSION=0.7.0 
+ARG ASCIIDOCTOR_MATHEMATICAL_VERSION=0.3.5
+ARG ASCIIDOCTOR_REVEALJS_VERSION=5.0.1
+ARG KRAMDOWN_ASCIIDOC_VERSION=2.1.0
+ARG ASCIIDOCTOR_BIBTEX_VERSION=0.8.0
+ARG ASCIIDOCTOR_KROKI_VERSION=0.8.0
+ARG ASCIIDOCTOR_REDUCER_VERSION=1.0.2
+
+# Copy the install script over and then run it
+COPY files/install.sh /usr/local/bin/install.sh
+RUN chmod +x /usr/local/bin/install.sh && /usr/local/bin/install.sh
+
+
+
+
+

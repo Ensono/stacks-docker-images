@@ -1,6 +1,5 @@
 # independent-runner
 contexts:
-
   powershell_docker:
     executable:
       bin: docker
@@ -13,16 +12,22 @@ contexts:
         - ${PWD}:/app
         - -v
         - /var/run/docker.sock:/var/run/docker.sock
+        - -v
+        - /mnt/c/Users/rseymour/workspaces/stacks/independent-runner/src/modules:/dev-modules
         - -e
-        - PSModulePath=/modules
+        - PSModulePath=/dev-modules:/modules
         - -w
         - /app
-        - amidostacks/runner-pwsh:0.4.20-stable
+        - ensono/eir-foundation-tools:0.0.1-workstation
         - pwsh
         - -NoProfile
         - -Command
     quote: "'"
-    before: envfile -e home,path
+    envfile:
+      exclude:
+        - home
+        - path
+      generate: true
 
   powershell:
     executable:
