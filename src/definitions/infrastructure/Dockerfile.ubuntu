@@ -1,0 +1,33 @@
+
+ARG IMAGE_TAG=0.0.1-workstation
+
+# Bring in other images to copy necessary tools from them
+FROM ensono/eir-foundation-tools:${IMAGE_TAG} as tools
+
+FROM ensono/eir-foundation-powershell:${IMAGE_TAG}
+
+ARG AZURE_CLI_VERSION=2.48.1
+ARG AWS_CLI_VERSION=2.15.8
+
+# Install necessary linux packages
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata unzip curl apt-transport-https lsb-release gnupg && \
+    unlink /etc/localtime && \
+    ln -s /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
+
+# Copy the required tools from the tools image
+COPY --from=tools /usr/local/kubectl /usr/local/kubectl
+COPY --from=tools /usr/local/helm /usr/local/helm
+COPY --from=tools /usr/local/terraform /usr/local/terraform
+COPY --from=tools /usr/local/ghcli /usr/local/ghcli
+COPY --from=tools /usr/local/kluctl /usr/local/kluctl
+COPY --from=tools /usr/local/kustomize /usr/local/kustomize
+
+# Install the Cloud CLI applications
+COPY files/install.sh /usr/local/bin/install.sh
+RUN chmod +x /usr/local/bin/install.sh && /usr/local/bin/install.sh
+
+# Create a directory for the azcli
+RUN mkdir -p /usr/local/azcli/bin
+
+

@@ -1,0 +1,7 @@
+== Troubleshooting
+
+=== When using the `--load` command the error "docker exporter does not currently support exporting manifest lists" is output.
+
+This happens when the default mode of creating multiple architectures is used with the `--load` command. When using `--push` this is not an issue, however when push is disabled this error will be thrown.
+
+https://github.com/docker/buildx/issues/59

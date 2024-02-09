@@ -2,12 +2,17 @@ ARG UBUNTU_VERSION=22.04
 
 FROM ubuntu:${UBUNTU_VERSION}
 
-ARG POWERSHELL_VERSION=7.3.10
+ARG POWERSHELL_VERSION=7.4.1
+ARG ENSONOBUILD_VERSION=1.0.43
+ARG TASKCTL_VERSION=1.5.3
 
-COPY scripts/install.sh /tmp/install.sh
+ARG TIMEZONE="Europe/London"
+
+COPY files/install.sh /tmp/install.sh
 
 # Install Powershell into the image
 RUN apt-get update && \
     apt-get install -y bash curl && \
-    chmod +x /tmp/install.sh && /tmp/install.sh ${POWERSHELL_VERSION}
+    chmod +x /tmp/install.sh && \
+    /tmp/install.sh
 

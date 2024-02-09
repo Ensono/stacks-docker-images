@@ -1,0 +1,26 @@
+ARG IMAGE_TAG=0.0.1-workstation
+
+# After updating the Java version, ensure that the major version is set in
+# the PATH environment update on ine 19
+# This is done so that all the Java comands are available on the path without
+# having to setup lots of symbolic links
+ARG JAVA_VERSION=21.0.1
+
+# Pull in Azul Java from image
+FROM azul/zulu-openjdk:${JAVA_VERSION} as java
+
+FROM ensono/eir-foundation-powershell:${IMAGE_TAG}
+
+ARG MAVEN_VERSION=3.8.8
+
+# Copy Java from the java image into this image
+COPY --from=java /usr/lib/jvm /usr/lib/jvm
+
+# Update PATH to include the java binary
+ENV PATH="$PATH:/usr/lib/jvm/zulu21/bin"
+
+ENV JAVA_HOME=/usr/local/java
+
+# Install Maven
+COPY files/install.sh /usr/local/bin/install.sh
+RUN chmod +x /usr/local/bin/install.sh && /usr/local/bin/install.sh
