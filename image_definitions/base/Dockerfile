@@ -43,7 +43,7 @@ ARG PESTER_VERSION=5.4.1
 ARG HELM_VERSION=3.12.0
 ARG ARM_TTK_VERSION="20221215"
 ARG KLUCTL_VERSION=v2.22.1
-ARG KUSTOMIZE_VERSION=v5.2.1
+ARG KUSTOMIZE_VERSION=v5.3.0
 
 # Configure environment variables
 ENV TZ="Europe/London"
@@ -52,20 +52,20 @@ ENV TZ="Europe/London"
 RUN apk add --update --no-cache ca-certificates \
     && apk add -t deps \
     && apk add --no-cache --update tzdata \
-        bash \
-        curl \
-        unzip \
-        git \
-        tar \
-        python3 \
-        python3-dev \
-        py3-pip \
-        build-base \
-        linux-headers \
-        docker-cli \
-        sudo \
-        shadow \
-        gnupg \
+    bash \
+    curl \
+    unzip \
+    git \
+    tar \
+    python3 \
+    python3-dev \
+    py3-pip \
+    build-base \
+    linux-headers \
+    docker-cli \
+    sudo \
+    shadow \
+    gnupg \
     && apk del --purge deps
 
 # Install other required packages
