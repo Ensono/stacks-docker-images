@@ -16,8 +16,8 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.17/community" >> /etc/apk/rep
 RUN apk update
 
 # Add latest version of python  and poetry
-RUN apk add --update python3 py3-pip gcc musl-dev linux-headers python3-dev
+RUN apk add --update python3 py3-pip gcc musl-dev linux-headers python3-dev jq
 RUN pip install pytest pylint pylint-exit pytest-azurepipelines pytest-cov poetry
 
-# Install the databricks CLI, precommit and tomli
-RUN pip install databricks-cli pre-commit tomli
+# Install the databricks CLI, precommit, tomli and azure-cli
+RUN pip install databricks-cli pre-commit tomli azure-cli
