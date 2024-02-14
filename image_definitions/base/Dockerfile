@@ -52,21 +52,21 @@ ENV TZ="Europe/London"
 RUN apk add --update --no-cache ca-certificates \
     && apk add -t deps \
     && apk add --no-cache --update tzdata \
-    bash \
-    curl \
-    unzip \
-    git \
-    tar \
-    python3 \
-    python3-dev \
-    py3-pip \
-    build-base \
-    linux-headers \
-    docker-cli \
-    sudo \
-    shadow \
-    gnupg \
-    && apk del --purge deps
+        bash \
+        curl \
+        unzip \
+        git \
+        tar \
+        python3 \
+        python3-dev \
+        py3-pip \
+        build-base \
+        linux-headers \
+        docker-cli \
+        sudo \
+        shadow \
+        gnupg \
+        && apk del --purge deps
 
 # Install other required packages
 # -- Kubectl
