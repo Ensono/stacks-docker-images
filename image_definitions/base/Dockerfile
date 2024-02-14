@@ -66,7 +66,7 @@ RUN apk add --update --no-cache ca-certificates \
         sudo \
         shadow \
         gnupg \
-        && apk del --purge deps
+    && apk del --purge deps
 
 # Install other required packages
 # -- Kubectl
