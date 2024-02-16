@@ -62,13 +62,13 @@ stages:
               targetType: inline
               script: |
                 taskctl infrastructure_vars
-              env:
-                TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
-                TF_FILE_LOCATION: /app/deploy/azure/infra
+            env:
+              TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
+              TF_FILE_LOCATION: /app/deploy/azure/infra
 
-                TF_VAR_name_company: ensono
-                TF_VAR_name_component: stacks
-                TF_VAR_name_project: eir
+              TF_VAR_name_company: ensono
+              TF_VAR_name_component: stacks
+              TF_VAR_name_project: eir
 
           # Upload the Terraform variables file and the plan for debugging
           - ${{ if eq(parameters.upload, true) }}:
@@ -80,9 +80,9 @@ stages:
               targetType: inline
               script: |
                 taskctl infrastructure
-              env:
-                TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
-                TF_FILE_LOCATION: /app/deploy/azure/infra
+            env:
+              TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
+              TF_FILE_LOCATION: /app/deploy/azure/infra
 
           - task: Bash@3
             displayName: Foundation - PowerShell
