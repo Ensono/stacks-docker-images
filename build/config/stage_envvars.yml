@@ -1,0 +1,27 @@
+stages:
+  - variables:
+      - description: Additional attributes for tagging
+        required: false
+        name: TF_VAR_attributes
+      - required: true
+        name: TF_VAR_name_company
+      - required: true
+        name: TF_VAR_name_component
+      - required: true
+        name: TF_VAR_name_project
+      - required: false
+        name: TF_VAR_tags
+      - description: " (Default: westeurope)"
+        required: false
+        name: TF_VAR_location
+      - description: " (Default: True)"
+        required: false
+        name: TF_VAR_registry_admin_enabled
+      - description: " (Default: standard)"
+        required: false
+        name: TF_VAR_registry_sku
+      - description: " (Default: stacks-docker-images)"
+        required: false
+        name: TF_VAR_resource_group_name
+
+    name: acr

@@ -9,7 +9,7 @@ variables:
 
   # DEFAULT IMAGE RUNNER
   - name: pool_vm_image
-    value: ubuntu-20.04
+    value: ubuntu-22.04
 
   # Determine the "stability" of the image
   - name: stability
@@ -33,7 +33,7 @@ variables:
     value: $(version_semver)
   - name: DOCKER_CONTAINER_REGISTRY_NAME
     value: docker.io
-  - group: amido-stacks-dockerhub-credentials
+  - group: ensono-stacks-acr-creds
     # Group should contain:
     # DOCKER_PASSWORD
     # DOCKER_USERNAME

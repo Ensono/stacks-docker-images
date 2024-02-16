@@ -1,6 +1,9 @@
 local
 outputs
 support
-envfile
+envfile*
 .DS_Store
+.terraform*
 node_modules
+*tfplan
+*.tfvars
