@@ -5,6 +5,10 @@ parameters:
     displayName: Upload generated files
     type: boolean
     default: false
+  - name: debug
+    displayName: Turn on debug for the Independent Runner
+    type: boolean
+    default: false
 
 pr:
   - main
