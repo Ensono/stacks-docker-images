@@ -65,7 +65,7 @@ stages:
             inputs:
               targetType: inline
               script: |
-                taskctl infrastructure_vars
+                taskctl infrastructure_variables
             env:
               TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
               TF_FILE_LOCATION: /app/deploy/azure/infra
