@@ -69,7 +69,7 @@ stages:
             env:
               STAGE: acr
               TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
-              TF_FILE_LOCATION: /app/deploy/azure/acr
+              TF_FILE_LOCATION: /app/deploy/terraform/azure/acr
 
               TF_VAR_name_company: ensono
               TF_VAR_name_component: stacks
@@ -87,7 +87,7 @@ stages:
                 taskctl infrastructure
             env:
               TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
-              TF_FILE_LOCATION: /app/deploy/azure/acr
+              TF_FILE_LOCATION: /app/deploy/terraform/azure/acr
 
           - task: Bash@3
             displayName: Foundation - PowerShell
