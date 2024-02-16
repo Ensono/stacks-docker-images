@@ -117,3 +117,18 @@ pipelines:
     - pipeline: setup
     - task: _docs
       depends_on: setup
+
+  # Pipeline to ensure that the infrastructure is valid
+  infrastructure:
+    - task: setup:environment
+    - task: infra:init
+      depends_on: setup:environment
+    - task: infra:plan
+      depends_on: infra:init
+    - task: infra:apply
+      depends_on: infra:plan
+
+  infrastructure_variables:
+    - task: setup:environment
+    - task: infra:vars
+      depends_on: setup:environment

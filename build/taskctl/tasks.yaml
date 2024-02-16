@@ -1,5 +1,48 @@
 # Compilation tasks
 tasks:
+  infra:init:
+    context: powershell_docker
+    description: Initialise Terraform for chosen templates
+    command:
+      - Invoke-Terraform -Init -Path $env:TF_FILE_LOCATION -Arguments $env:TF_BACKEND_INIT -debug
+      - Invoke-Terraform -Workspace -Arguments $env:ENV_NAME -Path $env:TF_FILE_LOCATION
+
+  infra:vars:
+    context: powershell_docker
+    description: Create Terraform variables file
+    command:
+      - /app/build/scripts/Set-TFVars.ps1 | Tee-Object -FilePath "${env:TF_FILE_LOCATION}/terraform.tfvars"
+
+  infra:plan:
+    context: powershell_docker
+    description: Plan Terraform
+    command:
+      - Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-input=false","-out=tfplan" -Debug
+
+  infra:apply:
+    context: powershell_docker
+    description: Apply Terraform
+    command:
+      - Invoke-Terraform -Apply -Path "${env:TF_FILE_LOCATION}/tfplan"
+
+  infra:destroy:plan:
+    context: powershell_docker
+    description: Destroy Environment.ShortName
+    command:
+      - Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-destroy","-input=false","-out=destroy-tfplan" -debug | Out-Null
+
+  infra:destroy:apply:
+    context: powershell_docker
+    description: Destroy Environment.ShortName
+    command:
+      - Invoke-Terraform -Apply -Path "${env:TF_FILE_LOCATION}/destroy-tfplan" -Arguments @("-destroy") -debug
+
+  setup:environment:
+    context: powershell_docker
+    description: Ensure that the environment is configured correctly
+    command:
+      - Confirm-Environment -Path /app/build/config/stage_envvars.yml
+
   build:image:local:
     context: powershell
     description: Build the foundation image on the machine without using a container
@@ -8,7 +51,8 @@ tasks:
         $sep = (Test-Path -Path "C:\") ? ";" : ":"
         $env:PSModulePath += "${sep}/home/vsts/modules"
         Import-Module EnsonoBuild
-        Build-DockerImage -push -provider generic  -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}" -platforms "linux/amd64","linux/arm64"
+        Build-DockerImage  -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}" -platforms "linux/amd64","linux/arm64"
+        docker push $env:DOCKER_CONTAINER_REGISTRY_NAME/{{ .IMAGE_NAME }}:$env:DOCKER_IMAGE_TAG
 
   build:image:container:
     context: powershell_docker

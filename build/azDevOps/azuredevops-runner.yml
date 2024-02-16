@@ -1,5 +1,11 @@
 name: "$(Build.SourceBranchName)-init"
 
+parameters:
+  - name: upload
+    displayName: Upload generated files
+    type: boolean
+    default: false
+
 pr:
   - main
 
@@ -15,6 +21,7 @@ variables:
   - template: azuredevops-vars.yml
   - name: DebugPreference
     value: "Continue"
+
 # Configure the stages
 stages:
   - stage: Build
@@ -50,37 +57,67 @@ stages:
                 taskctl setup
 
           - task: Bash@3
+            displayName: Terraform Variables
+            inputs:
+              targetType: inline
+              script: |
+                taskctl infrastructure_vars
+              env:
+                TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
+                TF_FILE_LOCATION: /app/deploy/azure/infra
+
+                TF_VAR_name_company: ensono
+                TF_VAR_name_component: stacks
+                TF_VAR_name_project: eir
+
+          # Upload the Terraform variables file and the plan for debugging
+          - ${{ if eq(parameters.upload, true) }}:
+              - template: ../templates/upload.yml
+
+          - task: Bash@3
+            displayName: Infrastructure
+            inputs:
+              targetType: inline
+              script: |
+                taskctl infrastructure
+              env:
+                TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
+                TF_FILE_LOCATION: /app/deploy/azure/infra
+
+          - task: Bash@3
             displayName: Foundation - PowerShell
             inputs:
               targetType: inline
               script: |
                 taskctl build:foundation:powershell
             env:
-              DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
-              DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)
+              DOCKER_USERNAME: $(DOCKER_USERNAME)
+              DOCKER_PASSWORD: $(DOCKER_PASSWORD)
+              DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+              DOCKER_CONTAINER_REGISTRY_NAME: $(DOCKER_CONTAINER_REGISTRY_NAME)
 
-          - task: Bash@3
-            displayName: Publish to Dashboard
-            inputs:
-              targetType: inline
-              script: |
-                taskctl publish
-            env:
-              ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}: # On main branch runs
-                PUBLISH_RELEASE: $true
-              DASHBOARD_INFLUX_TOKEN: $(DASHBOARD_INFLUX_TOKEN) # requires explicit mapping to be used as an env var
+          # - task: Bash@3
+          #   displayName: Publish to Dashboard
+          #   inputs:
+          #     targetType: inline
+          #     script: |
+          #       taskctl publish
+          #   env:
+          #     ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}: # On main branch runs
+          #       PUBLISH_RELEASE: $true
+          #     DASHBOARD_INFLUX_TOKEN: $(DASHBOARD_INFLUX_TOKEN) # requires explicit mapping to be used as an env var
 
-          # Generate the documentation
-          - task: Bash@3
-            displayName: Generate Documentation
-            inputs:
-              targetType: inline
-              script: |
-                taskctl docs
+          # # Generate the documentation
+          # - task: Bash@3
+          #   displayName: Generate Documentation
+          #   inputs:
+          #     targetType: inline
+          #     script: |
+          #       taskctl docs
 
-          # Upload the documentation
-          - task: PublishBuildArtifacts@1
-            displayName: Publish Documentation
-            inputs:
-              pathToPublish: $(Build.SourcesDirectory)/outputs/docs
-              artifactName: docs
+          # # Upload the documentation
+          # - task: PublishBuildArtifacts@1
+          #   displayName: Publish Documentation
+          #   inputs:
+          #     pathToPublish: $(Build.SourcesDirectory)/outputs/docs
+          #     artifactName: docs

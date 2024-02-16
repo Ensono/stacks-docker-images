@@ -12,13 +12,14 @@ contexts:
         - ${PWD}:/app
         - -v
         - /var/run/docker.sock:/var/run/docker.sock
-        - -v
-        - /mnt/c/Users/rseymour/workspaces/stacks/independent-runner/src/modules:/dev-modules
+        #- -v
+        #- /mnt/c/Users/rseymour/workspaces/stacks/independent-runner/src/modules:/dev-modules
         - -e
-        - PSModulePath=/dev-modules:/modules
+        - PSModulePath=/modules
         - -w
         - /app
-        - ensono/eir-foundation-tools:0.0.1-workstation
+        #- ensono/eir-foundation-tools:0.0.1-workstation
+        - amidostacks/runner-pwsh:0.4.60-stable
         - pwsh
         - -NoProfile
         - -Command
