@@ -59,6 +59,8 @@ stages:
               targetType: inline
               script: |
                 taskctl setup
+            env:
+              STAGE: acr
 
           - task: Bash@3
             displayName: Terraform Variables
