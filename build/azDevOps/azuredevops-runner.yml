@@ -49,12 +49,9 @@ stages:
             inputs:
               targetType: inline
               script: |
-                New-Item -Type directory -Path /home/vsts/modules/EnsonoBuild
-                Invoke-WebRequest -Uri "https://github.com/Ensono/independent-runner/releases/download/v${{ variables.EnsonoBuild }}/EnsonoBuild.psd1" -OutFile /home/vsts/modules/EnsonoBuild/EnsonoBuild.psd1
-                Invoke-WebRequest -Uri "https://github.com/Ensono/independent-runner/releases/download/v${{ variables.EnsonoBuild }}/EnsonoBuild.psm1" -OutFile /home/vsts/modules/EnsonoBuild/EnsonoBuild.psm1
-                ls /home/vsts/modules/EnsonoBuild
-                Write-Output $env:PSModulePath
-                Get-Module -listavailable
+                New-Item -Type directory -Path /home/vsts/.local/share/powershell/Modules/EnsonoBuild
+                Invoke-WebRequest -Uri "https://github.com/Ensono/independent-runner/releases/download/v${{ variables.EnsonoBuild }}/EnsonoBuild.psd1" -OutFile /home/vsts/.local/share/powershell/Modules/EnsonoBuild/EnsonoBuild.psd1
+                Invoke-WebRequest -Uri "https://github.com/Ensono/independent-runner/releases/download/v${{ variables.EnsonoBuild }}/EnsonoBuild.psm1" -OutFile /home/vsts/.local/share/powershell/Modules/EnsonoBuild/EnsonoBuild.psm1
 
           - task: Bash@3
             displayName: Setup
