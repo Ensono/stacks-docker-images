@@ -86,8 +86,11 @@ stages:
               script: |
                 taskctl infrastructure
             env:
+              CLOUD_PLATFORM: azure
               TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
+              TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
               TF_FILE_LOCATION: /app/deploy/terraform/azure/acr
+              STAGE: acr
 
           - task: Bash@3
             displayName: Foundation - PowerShell

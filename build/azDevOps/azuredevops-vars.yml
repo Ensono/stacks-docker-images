@@ -11,6 +11,16 @@ variables:
   - name: pool_vm_image
     value: ubuntu-22.04
 
+  # Terraform state storage
+  - name: tf_state_key
+    value: eir
+  - name: tf_state_rg
+    value: stacks-terraform-state
+  - name: tf_state_storage
+    value: stacksstatehjfis
+  - name: tf_state_container
+    value: tfstate
+
   # Determine the "stability" of the image
   - name: stability
     ${{ if or(eq(variables['Build.SourceBranchName'], 'master'), eq(variables['Build.SourceBranchName'], 'main'))}}:
