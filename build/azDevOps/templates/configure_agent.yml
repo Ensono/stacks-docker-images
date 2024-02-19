@@ -3,15 +3,14 @@ parameters:
     EnsonoBuildVersion: 1.0.43
     TerraformVersion: 1.5.1
 
-
 steps:
   - task: Bash@3
     displayName: Install Taskctl
     inputs:
         targetType: inline
         script: |
-        wget https://github.com/Ensono/taskctl/releases/download/v${{ parameters.TaskctlVersion }}/taskctl_${{ parameters.TaskctlVersion }}_linux_amd64.tar.gz -O /tmp/taskctl.tar.gz
-        tar zxf /tmp/taskctl.tar.gz -C /usr/local/bin taskctl
+          wget https://github.com/Ensono/taskctl/releases/download/v${{ parameters.TaskctlVersion }}/taskctl_${{ parameters.TaskctlVersion }}_linux_amd64.tar.gz -O /tmp/taskctl.tar.gz
+          tar zxf /tmp/taskctl.tar.gz -C /usr/local/bin taskctl
 
     # Install the Independent Runner module for the base build
   - task: PowerShell@2
@@ -19,9 +18,9 @@ steps:
     inputs:
         targetType: inline
         script: |
-        New-Item -Type directory -Path /home/vsts/.local/share/powershell/Modules/EnsonoBuild
-        Invoke-WebRequest -Uri "https://github.com/Ensono/independent-runner/releases/download/v${{ parameters.EnsonoBuildVersion }}/EnsonoBuild.psd1" -OutFile /home/vsts/.local/share/powershell/Modules/EnsonoBuild/EnsonoBuild.psd1
-        Invoke-WebRequest -Uri "https://github.com/Ensono/independent-runner/releases/download/v${{ parameters.EnsonoBuildVersion }}/EnsonoBuild.psm1" -OutFile /home/vsts/.local/share/powershell/Modules/EnsonoBuild/EnsonoBuild.psm1
+          New-Item -Type directory -Path /home/vsts/.local/share/powershell/Modules/EnsonoBuild
+          Invoke-WebRequest -Uri "https://github.com/Ensono/independent-runner/releases/download/v${{ parameters.EnsonoBuildVersion }}/EnsonoBuild.psd1" -OutFile /home/vsts/.local/share/powershell/Modules/EnsonoBuild/EnsonoBuild.psd1
+          Invoke-WebRequest -Uri "https://github.com/Ensono/independent-runner/releases/download/v${{ parameters.EnsonoBuildVersion }}/EnsonoBuild.psm1" -OutFile /home/vsts/.local/share/powershell/Modules/EnsonoBuild/EnsonoBuild.psm1
 
   - task: TerraformInstaller@0
     displayName: "Install Terraform"
