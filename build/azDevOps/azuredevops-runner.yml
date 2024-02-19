@@ -29,6 +29,8 @@ variables:
 # Configure the stages
 stages:
   - stage: Build
+    variables:
+      - group: ensono-sp-creds
 
     jobs:
       - job: Build
