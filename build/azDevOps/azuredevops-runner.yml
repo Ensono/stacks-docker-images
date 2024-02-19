@@ -36,6 +36,10 @@ stages:
       - job: ConfigureAgent
         steps:
           - template: templates/configure_agent.yml
+            parameters:
+              TasckctlVersion: $(TaskctlVersion)
+              EnsonoBuildVersion: $(EnsonoBuildVersion)
+              TerraformVersion: $(TerraformVersion)
 
       - job: GetBuildNumber
 
@@ -99,6 +103,10 @@ stages:
 
         steps:
           - template: templates/configure_agent.yml
+            parameters:
+              TasckctlVersion: $(TaskctlVersion)
+              EnsonoBuildVersion: $(EnsonoBuildVersion)
+              TerraformVersion: $(TerraformVersion)
 
           - task: Bash@3
             displayName: Build Image
@@ -120,6 +128,10 @@ stages:
 
         steps:
           - template: templates/configure_agent.yml
+            parameters:
+              TasckctlVersion: $(TaskctlVersion)
+              EnsonoBuildVersion: $(EnsonoBuildVersion)
+              TerraformVersion: $(TerraformVersion)
 
           - task: Bash@3
             displayName: Build Image
