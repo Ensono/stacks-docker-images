@@ -1,3 +1,4 @@
+steps:
   - task: Bash@3
     displayName: Install Taskctl
     inputs:
