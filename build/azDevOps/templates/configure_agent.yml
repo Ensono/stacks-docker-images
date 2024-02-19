@@ -22,7 +22,7 @@ steps:
           Invoke-WebRequest -Uri "https://github.com/Ensono/independent-runner/releases/download/v${{ parameters.EnsonoBuildVersion }}/EnsonoBuild.psd1" -OutFile /home/vsts/.local/share/powershell/Modules/EnsonoBuild/EnsonoBuild.psd1
           Invoke-WebRequest -Uri "https://github.com/Ensono/independent-runner/releases/download/v${{ parameters.EnsonoBuildVersion }}/EnsonoBuild.psm1" -OutFile /home/vsts/.local/share/powershell/Modules/EnsonoBuild/EnsonoBuild.psm1
 
-  - task: TerraformInstaller@0
+  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
     displayName: "Install Terraform"
     inputs:
         terraformVersion: ${{ parameters.TerraformVersion }}
