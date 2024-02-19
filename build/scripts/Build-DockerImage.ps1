@@ -60,7 +60,7 @@ $args = @(
     "--push"
 )
 
-if (![string]::IsNullOrEmpty) {
+if (![string]::IsNullOrEmpty($arguments)) {
     $args += $arguments
 }
 
