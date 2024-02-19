@@ -48,23 +48,20 @@ tasks:
     description: Build the foundation image on the machine without using a container
     command:
       - |
-        docker buildx ls
+        # $env:DOCKER_CLI_AKV2_EXPERIMENTAL="enabled"
 
-        $env:DOCKER_CLI_AKV2_EXPERIMENTAL="enabled"
-        docker buildx create --use
-
-        docker buildx ls
-
-        $sep = (Test-Path -Path "C:\") ? ";" : ":"
-        $env:PSModulePath += "${sep}/home/vsts/modules"
-        Import-Module EnsonoBuild
+        # $sep = (Test-Path -Path "C:\") ? ";" : ":"
+        # $env:PSModulePath += "${sep}/home/vsts/modules"
+        # Import-Module EnsonoBuild
         # Build-DockerImage  -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}" -platforms "linux/amd64","linux/arm64"
-        $cmd = "docker buildx build --push --platform linux/amd64,linux/arm64 -t $env:DOCKER_CONTAINER_REGISTRY_NAME/{{ .IMAGE_NAME }}:$env:DOCKER_IMAGE_TAG {{ .DOCKER_BUILD_ARGS }}"
+        # $cmd = "docker buildx build --push --platform linux/amd64,linux/arm64 -t $env:DOCKER_CONTAINER_REGISTRY_NAME/{{ .IMAGE_NAME }}:$env:DOCKER_IMAGE_TAG {{ .DOCKER_BUILD_ARGS }}"
 
-        docker login -u $env:DOCKER_USERNAME -p $env:DOCKER_PASSWORD $env:DOCKER_CONTAINER_REGISTRY_NAME
+        # docker login -u $env:DOCKER_USERNAME -p $env:DOCKER_PASSWORD $env:DOCKER_CONTAINER_REGISTRY_NAME
 
-        Write-Output $cmd
-        Invoke-Expression $cmd
+        # Write-Output $cmd
+        # Invoke-Expression $cmd
+
+        build/scripts/Docker-BuildImage.ps1 -platform linux/amd64,linux/arm64 -registry $env:DOCKER_CONTAINER_REGISTRY_NAME -Name {{ .IMAGE_NAME }} -Arguments "{{ .DOCKER_BUILD_ARGS }}"
 
   build:image:container:
     context: powershell_docker
