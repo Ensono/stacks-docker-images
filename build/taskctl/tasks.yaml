@@ -8,40 +8,40 @@ tasks:
       # - Invoke-Terraform -Workspace -Arguments $env:ENV_NAME -Path $env:TF_FILE_LOCATION
 
   infra:vars:
-    context: powershell_docker
+    context: powershell
     description: Create Terraform variables file
     command:
       - /app/build/scripts/Set-TFVars.ps1 | Tee-Object -FilePath "${env:TF_FILE_LOCATION}/terraform.tfvars"
 
   infra:plan:
-    context: powershell_docker
+    context: powershell
     description: Plan Terraform
     command:
       - Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-input=false","-out=tfplan" -Debug
 
   infra:apply:
-    context: powershell_docker
+    context: powershell
     description: Apply Terraform
     command:
       - Invoke-Terraform -Apply -Path "${env:TF_FILE_LOCATION}/tfplan"
 
   infra:destroy:plan:
-    context: powershell_docker
+    context: powershell
     description: Destroy Environment.ShortName
     command:
       - Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-destroy","-input=false","-out=destroy-tfplan" -debug | Out-Null
 
   infra:destroy:apply:
-    context: powershell_docker
+    context: powershell
     description: Destroy Environment.ShortName
     command:
       - Invoke-Terraform -Apply -Path "${env:TF_FILE_LOCATION}/destroy-tfplan" -Arguments @("-destroy") -debug
 
   setup:environment:
-    context: powershell_docker
+    context: powershell
     description: Ensure that the environment is configured correctly
     command:
-      - Confirm-Environment -Path /app/build/config/stage_envvars.yml
+      - Confirm-Environment -Path build/config/stage_envvars.yml
 
   build:image:local:
     context: powershell
