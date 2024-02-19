@@ -92,7 +92,7 @@ stages:
 
         steps:
           # Upload the Terraform variables file and the plan for debugging
-          - template: ../templates/upload.yml
+          - template: templates/upload.yml
 
       - job: DeployInfrastructure
 
