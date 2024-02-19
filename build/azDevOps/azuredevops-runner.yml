@@ -28,33 +28,18 @@ variables:
 
 # Configure the stages
 stages:
-  - stage: Build
+  - stage: Infrastructure
     variables:
       - group: ensono-sp-creds
 
     jobs:
-      - job: Build
+      - job: ConfigureAgent
+        steps:
+          - template: templates/configure_agent.yml
+
+      - job: GetBuildNumber
 
         steps:
-          # Install Taskctl for the build to run
-          - task: Bash@3
-            displayName: Install Taskctl
-            inputs:
-              targetType: inline
-              script: |
-                wget https://github.com/Ensono/taskctl/releases/download/v${{ variables.TaskctlVersion }}/taskctl_${{ variables.TaskctlVersion }}_linux_amd64.tar.gz -O /tmp/taskctl.tar.gz
-                tar zxf /tmp/taskctl.tar.gz -C /usr/local/bin taskctl
-
-          # Install the Independent Runner module for the base build
-          - task: PowerShell@2
-            displayName: Install Independent Runner
-            inputs:
-              targetType: inline
-              script: |
-                New-Item -Type directory -Path /home/vsts/.local/share/powershell/Modules/EnsonoBuild
-                Invoke-WebRequest -Uri "https://github.com/Ensono/independent-runner/releases/download/v${{ variables.EnsonoBuild }}/EnsonoBuild.psd1" -OutFile /home/vsts/.local/share/powershell/Modules/EnsonoBuild/EnsonoBuild.psd1
-                Invoke-WebRequest -Uri "https://github.com/Ensono/independent-runner/releases/download/v${{ variables.EnsonoBuild }}/EnsonoBuild.psm1" -OutFile /home/vsts/.local/share/powershell/Modules/EnsonoBuild/EnsonoBuild.psm1
-
           - task: Bash@3
             displayName: Setup
             inputs:
@@ -62,6 +47,9 @@ stages:
               script: |
                 taskctl setup
 
+      - job: CreateTFVarsFile
+
+        steps:
           - task: Bash@3
             displayName: Terraform Variables
             inputs:
@@ -77,10 +65,16 @@ stages:
               TF_VAR_name_component: $(name_component)
               TF_VAR_name_project: $(name_project)
 
-          # Upload the Terraform variables file and the plan for debugging
-          - ${{ if eq(parameters.upload, true) }}:
-              - template: ../templates/upload.yml
+      - job: UploadGeneratedFiles
+        condition: eq(${{ parameters.upload }}, true)
 
+        steps:
+          # Upload the Terraform variables file and the plan for debugging
+          - template: templates/upload.yml
+
+      - job: DeployInfrastructure
+
+        steps:
           - task: Bash@3
             displayName: Infrastructure
             inputs:
@@ -94,8 +88,20 @@ stages:
               TF_FILE_LOCATION: /app/deploy/terraform/azure/acr
               STAGE: acr
 
+  - stage: FoundationPowerShell
+    displayName: Foundation - PowerShell
+    dependsOn: Infrastructure
+    variables:
+      - group: ensono-sp-creds
+
+    jobs:
+      - job: BuildImage
+
+        steps:
+          - template: templates/configure_agent.yml
+
           - task: Bash@3
-            displayName: Foundation - PowerShell
+            displayName: Build Image
             inputs:
               targetType: inline
               script: |
@@ -103,8 +109,20 @@ stages:
             env:
               DOCKER_IMAGE_TAG: $(Build.BuildNumber)
 
+  - stage: FoundationTools
+    displayName: Foundation - Tools
+    dependsOn: FoundationPowerShell
+    variables:
+      - group: ensono-sp-creds
+
+    jobs:
+      - job: BuildImage
+
+        steps:
+          - template: templates/configure_agent.yml
+
           - task: Bash@3
-            displayName: Foundation - PowerShell
+            displayName: Build Image
             inputs:
               targetType: inline
               script: |
@@ -112,82 +130,40 @@ stages:
             env:
               DOCKER_IMAGE_TAG: $(Build.BuildNumber)
 
-          - task: Bash@3
-            displayName: EIR - Infrastructure
-            inputs:
-              targetType: inline
-              script: |
-                taskctl build:infrastructure
-            env:
-              DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+            # - task: Bash@3
+            # displayName: Foundation - PowerShell
+            # inputs:
+            #   targetType: inline
+            #   script: |
+            #     taskctl build:foundation:tools
+            # env:
+            #   DOCKER_USERNAME: $(DOCKER_USERNAME)
+            #   DOCKER_PASSWORD: $(DOCKER_PASSWORD)
+            #   DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+            #   DOCKER_CONTAINER_REGISTRY_NAME: $(DOCKER_CONTAINER_REGISTRY_NAME)
 
-          - task: Bash@3
-            displayName: EIR - Java
-            inputs:
-              targetType: inline
-              script: |
-                taskctl build:java
-            env:
-              DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+            # - task: Bash@3
+            #   displayName: Publish to Dashboard
+            #   inputs:
+            #     targetType: inline
+            #     script: |
+            #       taskctl publish
+            #   env:
+            #     ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}: # On main branch runs
+            #       PUBLISH_RELEASE: $true
+            #     DASHBOARD_INFLUX_TOKEN: $(DASHBOARD_INFLUX_TOKEN) # requires explicit mapping to be used as an env var
 
-          - task: Bash@3
-            displayName: EIR - .NET
-            inputs:
-              targetType: inline
-              script: |
-                taskctl build:dotnet
-            env:
-              DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+            # # Generate the documentation
+            # - task: Bash@3
+            #   displayName: Generate Documentation
+            #   inputs:
+            #     targetType: inline
+            #     script: |
+            #       taskctl docs
 
-          - task: Bash@3
-            displayName: EIR - GoLang
-            inputs:
-              targetType: inline
-              script: |
-                taskctl build:golang
-            env:
-              DOCKER_IMAGE_TAG: $(Build.BuildNumber)
-
-          - task: Bash@3
-            displayName: EIR - Inspec
-            inputs:
-              targetType: inline
-              script: |
-                taskctl build:inspec
-            env:
-              DOCKER_IMAGE_TAG: $(Build.BuildNumber)
-
-          - task: Bash@3
-            displayName: EIR - AsciiDoctor
-            inputs:
-              targetType: inline
-              script: |
-                taskctl build:asciidoctor
-            env:
-              DOCKER_IMAGE_TAG: $(Build.BuildNumber)
-
-          # - task: Bash@3
-          #   displayName: Publish to Dashboard
-          #   inputs:
-          #     targetType: inline
-          #     script: |
-          #       taskctl publish
-          #   env:
-          #     ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}: # On main branch runs
-          #       PUBLISH_RELEASE: $true
-          #     DASHBOARD_INFLUX_TOKEN: $(DASHBOARD_INFLUX_TOKEN) # requires explicit mapping to be used as an env var
-
-          # # Generate the documentation
-          # - task: Bash@3
-          #   displayName: Generate Documentation
-          #   inputs:
-          #     targetType: inline
-          #     script: |
-          #       taskctl docs
-
-          # # Upload the documentation
-          # - task: PublishBuildArtifacts@1
-          #   displayName: Publish Documentation
-          #   inputs:
-          #     pathToPublish: $(Build.SourcesDirectory)/outputs/docs
-          #     artifactName: docs
+            # # Upload the documentation
+            # - task: PublishBuildArtifacts@1
+            #   displayName: Publish Documentation
+            #   inputs:
+            #     pathToPublish: $(Build.SourcesDirectory)/outputs/docs
+            #     artifactName: docs

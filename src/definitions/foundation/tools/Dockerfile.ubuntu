@@ -21,4 +21,4 @@ COPY files/install.sh /usr/local/bin/install.sh
 RUN chmod +x /usr/local/bin/install.sh && /usr/local/bin/install.sh
 
 # Setup the Path variable so that the tools can be found
-ENV PATH="$PATH:/usr/local/docker/bin"
+ENV PATH="$PATH:/usr/local/docker/bin:/usr/local/terraform/bin"
