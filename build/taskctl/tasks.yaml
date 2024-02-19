@@ -58,7 +58,7 @@ tasks:
         $sep = (Test-Path -Path "C:\") ? ";" : ":"
         $env:PSModulePath += "${sep}/home/vsts/modules"
         Import-Module EnsonoBuild
-        Build-DockerImage  -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}" -platforms "linux/amd64","linux/arm64"
+        Build-DockerImage  -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }} --load" -platforms "linux/amd64","linux/arm64"
         docker push $env:DOCKER_CONTAINER_REGISTRY_NAME/{{ .IMAGE_NAME }}:$env:DOCKER_IMAGE_TAG
 
   build:image:container:
