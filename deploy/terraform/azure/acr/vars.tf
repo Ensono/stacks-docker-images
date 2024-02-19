@@ -21,6 +21,11 @@ variable "registry_admin_enabled" {
     default = true
 }
 
+variable "anonymous_pull_enabled" {
+    type = bool
+    default = true
+}
+
 variable "registry_sku" {
     type = string
     default = "standard"

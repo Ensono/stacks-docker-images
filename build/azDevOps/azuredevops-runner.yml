@@ -28,12 +28,10 @@ variables:
 
 # Configure the stages
 stages:
-  - stage: Build
-    variables:
-      - group: ensono-sp-creds
+  - stage: ConfigureAgent
 
     jobs:
-      - job: Build
+      - job: InstallComponents
 
         steps:
           # Install Taskctl for the build to run
@@ -55,68 +53,97 @@ stages:
                 Invoke-WebRequest -Uri "https://github.com/Ensono/independent-runner/releases/download/v${{ variables.EnsonoBuild }}/EnsonoBuild.psd1" -OutFile /home/vsts/.local/share/powershell/Modules/EnsonoBuild/EnsonoBuild.psd1
                 Invoke-WebRequest -Uri "https://github.com/Ensono/independent-runner/releases/download/v${{ variables.EnsonoBuild }}/EnsonoBuild.psm1" -OutFile /home/vsts/.local/share/powershell/Modules/EnsonoBuild/EnsonoBuild.psm1
 
-          - task: Bash@3
-            displayName: Setup
-            inputs:
-              targetType: inline
-              script: |
-                taskctl setup
+  - stage: DeployInfrastructure
+    dependsOn: ConfigureAgent
+    variables:
+      - group: ensono-sp-creds
 
-          - task: Bash@3
-            displayName: Terraform Variables
-            inputs:
-              targetType: inline
-              script: |
-                taskctl infrastructure_variables
-            env:
-              STAGE: acr
-              TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
-              TF_FILE_LOCATION: /app/deploy/terraform/azure/acr
+    jobs:
+      - task: Bash@3
+        displayName: Setup
+        inputs:
+          targetType: inline
+          script: |
+            taskctl setup
 
-              TF_VAR_name_company: $(name_company)
-              TF_VAR_name_component: $(name_component)
-              TF_VAR_name_project: $(name_project)
+      - task: Bash@3
+        displayName: Terraform Variables
+        inputs:
+          targetType: inline
+          script: |
+            taskctl infrastructure_variables
+        env:
+          STAGE: acr
+          TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
+          TF_FILE_LOCATION: /app/deploy/terraform/azure/acr
 
-          # Upload the Terraform variables file and the plan for debugging
-          - ${{ if eq(parameters.upload, true) }}:
-              - template: ../templates/upload.yml
+          TF_VAR_name_company: $(name_company)
+          TF_VAR_name_component: $(name_component)
+          TF_VAR_name_project: $(name_project)
 
-          - task: Bash@3
-            displayName: Infrastructure
-            inputs:
-              targetType: inline
-              script: |
-                taskctl infrastructure
-            env:
-              CLOUD_PLATFORM: azure
-              TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
-              TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
-              TF_FILE_LOCATION: /app/deploy/terraform/azure/acr
-              STAGE: acr
+      # Upload the Terraform variables file and the plan for debugging
+      - ${{ if eq(parameters.upload, true) }}:
+          - template: ../templates/upload.yml
 
-          - task: Bash@3
-            displayName: Foundation - PowerShell
-            inputs:
-              targetType: inline
-              script: |
-                taskctl build:foundation:powershell
-            env:
-              DOCKER_USERNAME: $(DOCKER_USERNAME)
-              DOCKER_PASSWORD: $(DOCKER_PASSWORD)
-              DOCKER_IMAGE_TAG: $(Build.BuildNumber)
-              DOCKER_CONTAINER_REGISTRY_NAME: $(DOCKER_CONTAINER_REGISTRY_NAME)
+      - task: Bash@3
+        displayName: Infrastructure
+        inputs:
+          targetType: inline
+          script: |
+            taskctl infrastructure
+        env:
+          CLOUD_PLATFORM: azure
+          TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
+          TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
+          TF_FILE_LOCATION: /app/deploy/terraform/azure/acr
+          STAGE: acr
 
-          - task: Bash@3
-            displayName: Foundation - PowerShell
-            inputs:
-              targetType: inline
-              script: |
-                taskctl build:foundation:tools
-            env:
-              DOCKER_USERNAME: $(DOCKER_USERNAME)
-              DOCKER_PASSWORD: $(DOCKER_PASSWORD)
-              DOCKER_IMAGE_TAG: $(Build.BuildNumber)
-              DOCKER_CONTAINER_REGISTRY_NAME: $(DOCKER_CONTAINER_REGISTRY_NAME)
+  - stage: FoundationPowerShell
+    displayName: Foundation - PowerShell
+    dependsOn: DeployInfrastructure
+    variables:
+      - group: ensono-sp-creds
+
+    jobs:
+      - task: Bash@3
+        displayName: Build Image
+        inputs:
+          targetType: inline
+          script: |
+            taskctl build:foundation:powershell
+        env:
+          DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+
+  - stage: FoundationTools
+    displayName: Foundation - Tools
+    dependsOn: FoundationPowerShell
+    variables:
+      - group: ensono-sp-creds
+
+    jobs:
+      - task: Bash@3
+        displayName: Build Image
+        inputs:
+          targetType: inline
+          script: |
+            taskctl build:foundation:tools
+        env:
+          DOCKER_USERNAME: $(DOCKER_USERNAME)
+          DOCKER_PASSWORD: $(DOCKER_PASSWORD)
+          DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+          DOCKER_CONTAINER_REGISTRY_NAME: $(DOCKER_CONTAINER_REGISTRY_NAME)
+
+          # - task: Bash@3
+          # displayName: Foundation - PowerShell
+          # inputs:
+          #   targetType: inline
+          #   script: |
+          #     taskctl build:foundation:tools
+          # env:
+          #   DOCKER_USERNAME: $(DOCKER_USERNAME)
+          #   DOCKER_PASSWORD: $(DOCKER_PASSWORD)
+          #   DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+          #   DOCKER_CONTAINER_REGISTRY_NAME: $(DOCKER_CONTAINER_REGISTRY_NAME)
 
           # - task: Bash@3
           #   displayName: Publish to Dashboard
