@@ -59,8 +59,9 @@ tasks:
         $env:PSModulePath += "${sep}/home/vsts/modules"
         Import-Module EnsonoBuild
         # Build-DockerImage  -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }} --load" -platforms "linux/amd64","linux/arm64"
-        Write-Output "docker build buildx {{ .DOCKER_BUILD_ARGS }} --platform linux/amd64,linux/arm64 -t $env:DOCKER_CONTAINER_REGISTRY_NAME/{{ .IMAGE_NAME }}:$env:DOCKER_IMAGE_TAG --load"
-        # docker build buildx {{ .DOCKER_BUILD_ARGS }} --platform linux/amd64,linux/arm64 -t $env:DOCKER_CONTAINER_REGISTRY_NAME/{{ .IMAGE_NAME }}:$env:DOCKER_IMAGE_TAG --load
+        $cmd = "docker build buildx --platform linux/amd64,linux/arm64 -t $env:DOCKER_CONTAINER_REGISTRY_NAME/{{ .IMAGE_NAME }}:$env:DOCKER_IMAGE_TAG --load {{ .DOCKER_BUILD_ARGS }}"
+        Write-Output $cmd
+        Invoke-Expression $cmd
 
   build:image:container:
     context: powershell_docker
