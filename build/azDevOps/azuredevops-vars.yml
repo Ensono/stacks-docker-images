@@ -4,8 +4,10 @@ variables:
   # Dependency versions
   - name: TaskctlVersion
     value: 1.5.3
-  - name: EnsonoBuild
+  - name: EnsonoBuildVersion
     value: 1.0.43
+  - name: TerraformVersion
+    value: 1.5.1
 
   # DEFAULT IMAGE RUNNER
   - name: pool_vm_image
