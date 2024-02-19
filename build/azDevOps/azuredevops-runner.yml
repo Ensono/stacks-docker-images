@@ -106,6 +106,18 @@ stages:
               DOCKER_IMAGE_TAG: $(Build.BuildNumber)
               DOCKER_CONTAINER_REGISTRY_NAME: $(DOCKER_CONTAINER_REGISTRY_NAME)
 
+          - task: Bash@3
+            displayName: Foundation - PowerShell
+            inputs:
+              targetType: inline
+              script: |
+                taskctl build:foundation:tools
+            env:
+              DOCKER_USERNAME: $(DOCKER_USERNAME)
+              DOCKER_PASSWORD: $(DOCKER_PASSWORD)
+              DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+              DOCKER_CONTAINER_REGISTRY_NAME: $(DOCKER_CONTAINER_REGISTRY_NAME)
+
           # - task: Bash@3
           #   displayName: Publish to Dashboard
           #   inputs:
