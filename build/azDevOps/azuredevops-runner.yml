@@ -117,15 +117,17 @@ stages:
       - group: ensono-sp-creds
 
     jobs:
-      steps:
-        - task: Bash@3
-          displayName: Build Image
-          inputs:
-            targetType: inline
-            script: |
-              taskctl build:foundation:powershell
-          env:
-            DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+      - job: BuildImage
+
+        steps:
+          - task: Bash@3
+            displayName: Build Image
+            inputs:
+              targetType: inline
+              script: |
+                taskctl build:foundation:powershell
+            env:
+              DOCKER_IMAGE_TAG: $(Build.BuildNumber)
 
   - stage: FoundationTools
     displayName: Foundation - Tools
@@ -134,15 +136,17 @@ stages:
       - group: ensono-sp-creds
 
     jobs:
-      steps:
-        - task: Bash@3
-          displayName: Build Image
-          inputs:
-            targetType: inline
-            script: |
-              taskctl build:foundation:tools
-          env:
-            DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+      - job: BuildImage
+
+        steps:
+          - task: Bash@3
+            displayName: Build Image
+            inputs:
+              targetType: inline
+              script: |
+                taskctl build:foundation:tools
+            env:
+              DOCKER_IMAGE_TAG: $(Build.BuildNumber)
 
             # - task: Bash@3
             # displayName: Foundation - PowerShell
