@@ -44,6 +44,8 @@ ARG HELM_VERSION=3.12.0
 ARG ARM_TTK_VERSION="20221215"
 ARG KLUCTL_VERSION=v2.22.1
 ARG KUSTOMIZE_VERSION=v5.3.0
+ARG SNYK_VERSION=v1.1280.0
+ARG SNYK_TO_HTML_VERSION=v2.4.0
 
 # Configure environment variables
 ENV TZ="Europe/London"
@@ -146,6 +148,16 @@ RUN export ARCH="$(uname -m)" \
     && curl -L "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/${KUSTOMIZE_VERSION}/kustomize_${KUSTOMIZE_VERSION}_linux_amd64.tar.gz" -o /tmp/kustomize.tar.gz \
     && tar zxf /tmp/kustomize.tar.gz -C /usr/bin kustomize \
     && chmod +x /usr/bin/kustomize
+
+# Install Snyk
+RUN curl -L "https://github.com/snyk/cli/releases/download/${SNYK_VERSION}/snyk-linux"
+    && cp snyk-linux /usr/local/bin/snyk \
+    && chmod +x /usr/local/bin/snyk
+
+# Install Snyk-to-Html
+RUN curl -L "https://github.com/snyk/snyk-to-html/releases/download/${SNYK_TO_HTML_VERSION}/snyk-to-html-linux"
+    && cp snyk-to-html-linux /usr/local/bin/snyk-to-html \
+    && chmod +x /usr/local/bin/snyk-to-html
 
 # Remove packages that are no longer required
 RUN apk del --no-cache build-base linux-headers
