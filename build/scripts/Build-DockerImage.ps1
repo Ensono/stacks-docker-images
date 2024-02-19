@@ -74,6 +74,16 @@ if ($dryrun.IsPresent) {
     Invoke-Expression $cmd
 }
 
+# Create a new buildx driver to
+Write-Host "Creating new buildx profile"
+$cmd = "docker buildx create --use"
+
+if ($dryrun.IsPresent) {
+    Write-Host $cmd
+} else {
+    Invoke-Expression $cmd
+}
+
 # Build and push the image
 Write-Host ("Building docker image: {0}" -f ($platform -join ","))
 $cmd = "docker buildx build {0}" -f ($args -join " ")
