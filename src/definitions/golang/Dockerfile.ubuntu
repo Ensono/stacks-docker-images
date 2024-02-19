@@ -1,6 +1,7 @@
-ARG IMAGE_TAG=0.0.1-workkstation
+ARG REGISTRY=docker.io
+ARG IMAGE_TAG=0.0.1-workstation
 
-FROM ensono/eir-foundation-powershell:${IMAGE_TAG}
+FROM ${REGISTRY}/ensono/eir-foundation-powershell:${IMAGE_TAG}
 
 ARG GOLANG_VERSION=1.21.5
 

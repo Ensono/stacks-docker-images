@@ -24,40 +24,40 @@ pipelines:
   # Build the images using the tools container
   # This means that there is less to install on a local machine to get things working
   build:infrastructure:
-    - task: build:image:container
+    - task: build:image:local
       variables:
         IMAGE_NAME: ensono/eir-infrastructure
-        DOCKER_BUILD_ARGS: -f ./src/definitions/infrastructure/Dockerfile.ubuntu ./src/definitions/infrastructure --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG}
+        DOCKER_BUILD_ARGS: -f ./src/definitions/infrastructure/Dockerfile.ubuntu ./src/definitions/infrastructure --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
 
   build:java:
-    - task: build:image:container
+    - task: build:image:local
       variables:
         IMAGE_NAME: ensono/eir-java
-        DOCKER_BUILD_ARGS: -f ./src/definitions/java/Dockerfile.ubuntu ./src/definitions/java --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG}
+        DOCKER_BUILD_ARGS: -f ./src/definitions/java/Dockerfile.ubuntu ./src/definitions/java --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
 
   build:dotnet:
-    - task: build:image:container
+    - task: build:image:local
       variables:
         IMAGE_NAME: ensono/eir-dotnet
-        DOCKER_BUILD_ARGS: -f ./src/definitions/dotnet/Dockerfile.ubuntu ./src/definitions/dotnet --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG}
+        DOCKER_BUILD_ARGS: -f ./src/definitions/dotnet/Dockerfile.ubuntu ./src/definitions/dotnet --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
 
   build:inspec:
-    - task: build:image:container
+    - task: build:image:local
       variables:
         IMAGE_NAME: ensono/eir-inspec
-        DOCKER_BUILD_ARGS: -f ./src/definitions/inspec/Dockerfile.ubuntu ./src/definitions/inspec --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG}
+        DOCKER_BUILD_ARGS: -f ./src/definitions/inspec/Dockerfile.ubuntu ./src/definitions/inspec --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
 
   build:golang:
-    - task: build:image:container
+    - task: build:image:local
       variables:
         IMAGE_NAME: ensono/eir-golang
-        DOCKER_BUILD_ARGS: -f ./src/definitions/golang/Dockerfile.ubuntu ./src/definitions/golang --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG}
+        DOCKER_BUILD_ARGS: -f ./src/definitions/golang/Dockerfile.ubuntu ./src/definitions/golang --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
 
   build:asciidoctor:
-    - task: build:image:container
+    - task: build:image:local
       variables:
         IMAGE_NAME: ensono/eir-asciidoctor
-        DOCKER_BUILD_ARGS: -f ./src/definitions/asciidoctor/Dockerfile.ubuntu ./src/definitions/asciidoctor --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG}
+        DOCKER_BUILD_ARGS: -f ./src/definitions/asciidoctor/Dockerfile.ubuntu ./src/definitions/asciidoctor --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
 
   build:base:
     - task: build:container:base

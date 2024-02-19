@@ -52,7 +52,7 @@ tasks:
 
   build:image:container:
     context: powershell_docker
-    description: Build the foundation image on the machine without using a container
+    description: Build the foundation image on the machine using the tools container
     command:
       - |
         $sep = (Test-Path -Path "C:\") ? ";" : ":"
