@@ -49,6 +49,12 @@ tasks:
     command:
       - |
         docker buildx ls
+
+        $env:DOCKER_CLI_AKV2_EXPERIMENTAL="enabled"
+        docker buildx create --use
+
+        docker buildx ls
+
         $sep = (Test-Path -Path "C:\") ? ";" : ":"
         $env:PSModulePath += "${sep}/home/vsts/modules"
         Import-Module EnsonoBuild
