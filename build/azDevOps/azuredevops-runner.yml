@@ -112,7 +112,7 @@ stages:
 
   - stage: FoundationPowerShell
     displayName: Foundation - PowerShell
-    dependsOn: DeployInfrastructure
+    dependsOn: ConfigureInfrastructure
     variables:
       - group: ensono-sp-creds
 
