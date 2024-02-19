@@ -1,6 +1,7 @@
+ARG REGISTRY=docker.io
 ARG IMAGE_TAG=0.0.1-workstation
 
-FROM ensono/eir-foundation-powershell:${IMAGE_TAG}
+FROM ${REGISTRY}/ensono/eir-foundation-powershell:${IMAGE_TAG}
 
 # Set the values for the applications to install
 ARG TERRAFORM_VERSION=1.5.1
