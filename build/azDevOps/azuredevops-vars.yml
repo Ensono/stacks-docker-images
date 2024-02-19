@@ -11,6 +11,13 @@ variables:
   - name: pool_vm_image
     value: ubuntu-22.04
 
+  - name: name_company
+    value: ensono
+  - name: name_project
+    value: stacks
+  - name: name_component
+    value: eir
+
   # Terraform state storage
   - name: tf_state_key
     value: eir
