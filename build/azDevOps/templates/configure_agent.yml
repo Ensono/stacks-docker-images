@@ -25,5 +25,5 @@ steps:
   - task: TerraformInstaller@0
     displayName: "Install Terraform"
     inputs:
-        terraformVersion: ${{ paramneters.TerraformVersion }}
+        terraformVersion: ${{ parameters.TerraformVersion }}
         terraformDownloadLocation: 'https://releases.hashicorp.com/terraform'
