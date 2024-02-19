@@ -9,6 +9,13 @@ parameters:
     displayName: Turn on debug for the Independent Runner
     type: boolean
     default: false
+  - name: stages
+    displayname: Container Image Stages
+    type: object
+    default:
+      - stage: FoundationPowerShell
+        dependsOn: Infrastructure
+        taskName: build:foundation:powershell
 
 pr:
   - main
@@ -42,7 +49,7 @@ stages:
               TerraformVersion: $(TerraformVersion)
 
       - job: GetBuildNumber
-
+        dependsOn: ConfigureAgent
         steps:
           - task: Bash@3
             displayName: Setup
@@ -52,7 +59,7 @@ stages:
                 taskctl setup
 
       - job: CreateTFVarsFile
-
+        dependsOn: ConfigureAgent
         steps:
           - task: Bash@3
             displayName: Terraform Variables
@@ -70,6 +77,7 @@ stages:
               TF_VAR_name_project: $(name_project)
 
       - job: UploadGeneratedFiles
+        dependsOn: CreateTFVarsFile
         condition: eq(${{ parameters.upload }}, true)
 
         steps:
@@ -77,7 +85,9 @@ stages:
           - template: templates/upload.yml
 
       - job: DeployInfrastructure
-
+        dependsOn:
+          - ConfigureAgent
+          - CreateTFVarsFile
         steps:
           - task: Bash@3
             displayName: Infrastructure
