@@ -1,6 +1,7 @@
+ARG REGISTRY=docker.io
 ARG IMAGE_TAG=0.0.1-workstation
 
-FROM ensono/eir-java:${IMAGE_TAG} as base
+FROM ${REGISTRY}/ensono/eir-java:${IMAGE_TAG} as base
 
 ARG SONARSCANNER_VERSION=5.14
 ARG REPORTGENERATOR_VERSION=5.1.26

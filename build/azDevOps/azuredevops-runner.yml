@@ -112,6 +112,60 @@ stages:
             env:
               DOCKER_IMAGE_TAG: $(Build.BuildNumber)
 
+          - task: Bash@3
+            displayName: EIR - Infrastructure
+            inputs:
+              targetType: inline
+              script: |
+                taskctl build:infrastructure
+            env:
+              DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+
+          - task: Bash@3
+            displayName: EIR - Java
+            inputs:
+              targetType: inline
+              script: |
+                taskctl build:java
+            env:
+              DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+
+          - task: Bash@3
+            displayName: EIR - .NET
+            inputs:
+              targetType: inline
+              script: |
+                taskctl build:dotnet
+            env:
+              DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+
+          - task: Bash@3
+            displayName: EIR - GoLang
+            inputs:
+              targetType: inline
+              script: |
+                taskctl build:golang
+            env:
+              DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+
+          - task: Bash@3
+            displayName: EIR - Inspec
+            inputs:
+              targetType: inline
+              script: |
+                taskctl build:inspec
+            env:
+              DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+
+          - task: Bash@3
+            displayName: EIR - AsciiDoctor
+            inputs:
+              targetType: inline
+              script: |
+                taskctl build:asciidoctor
+            env:
+              DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+
           # - task: Bash@3
           #   displayName: Publish to Dashboard
           #   inputs:

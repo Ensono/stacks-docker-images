@@ -1,10 +1,11 @@
 
+ARG REGISTRY=docker.io
 ARG IMAGE_TAG=0.0.1-workstation
 
 # Bring in other images to copy necessary tools from them
-FROM ensono/eir-foundation-tools:${IMAGE_TAG} as tools
+FROM ${REGISTRY}/ensono/eir-foundation-tools:${IMAGE_TAG} as tools
 
-FROM ensono/eir-foundation-powershell:${IMAGE_TAG}
+FROM ${REGISTRY}/ensono/eir-foundation-powershell:${IMAGE_TAG}
 
 ARG AZURE_CLI_VERSION=2.48.1
 ARG AWS_CLI_VERSION=2.15.8

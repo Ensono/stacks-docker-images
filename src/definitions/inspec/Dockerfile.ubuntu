@@ -1,6 +1,7 @@
+ARG REGISTRY=docker.io
 ARG IMAGE_TAG=0.0.1-workstation
 
-FROM ensono/eir-foundation-powershell:${IMAGE_TAG}
+FROM ${REGISTRY}/ensono/eir-foundation-powershell:${IMAGE_TAG}
 
 # Set the version of Inspec to install
 ARG INSPEC_VERSION=5.22.29

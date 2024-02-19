@@ -1,3 +1,4 @@
+ARG REGISTRY=docker.io
 ARG IMAGE_TAG=0.0.1-workstation
 
 # After updating the Java version, ensure that the major version is set in
@@ -9,7 +10,7 @@ ARG JAVA_VERSION=21.0.1
 # Pull in Azul Java from image
 FROM azul/zulu-openjdk:${JAVA_VERSION} as java
 
-FROM ensono/eir-foundation-powershell:${IMAGE_TAG}
+FROM ${REGISTRY}/ensono/eir-foundation-powershell:${IMAGE_TAG}
 
 ARG MAVEN_VERSION=3.8.8
 
