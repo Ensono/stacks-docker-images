@@ -61,7 +61,7 @@ tasks:
         # Write-Output $cmd
         # Invoke-Expression $cmd
 
-        ./build/scripts/Build-DockerImage.ps1 -platform linux/amd64,linux/arm64 -Name {{ .IMAGE_NAME }} -Arguments "{{ .DOCKER_BUILD_ARGS }}" -dryrun
+        ./build/scripts/Build-DockerImage.ps1 -platform linux/amd64,linux/arm64 -Name {{ .IMAGE_NAME }} -Arguments "{{ .DOCKER_BUILD_ARGS }}"
 
   build:image:container:
     context: powershell_docker
