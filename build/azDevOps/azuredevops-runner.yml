@@ -10,7 +10,7 @@ parameters:
     type: boolean
     default: false
   - name: stages
-    displayname: Container Image Stages
+    displayName: Container Image Stages
     type: object
     default:
       - stage: FoundationPowerShell
