@@ -23,7 +23,7 @@ parameters:
         dependsOn:
           - FoundationPowerShell
         taskName: build:foundation:tools
-      - stage: Infrastructure
+      - stage: Infra
         displayName: "[CONTAINER] Infrastructure"
         dependsOn:
           - FoundationTools
