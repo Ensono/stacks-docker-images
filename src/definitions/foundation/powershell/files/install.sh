@@ -26,7 +26,7 @@ chmod +x /opt/microsoft/powershell/7/pwsh
 ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
 
 # Remove the package
-# rm /tmp/powershell.tar.gz
+rm /tmp/powershell.tar.gz
 
 # Taskctl Runner ------------------------------------------------------------
 mkdir -p /usr/local/taskctl/bin && \

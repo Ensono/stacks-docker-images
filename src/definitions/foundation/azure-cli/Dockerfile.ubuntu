@@ -1,0 +1,10 @@
+ARG REGISTRY=docker.io
+ARG IMAGE_TAG=0.0.1-workstation
+
+FROM ${REGISTRY}/ensono/eir-foundation-powershell:${IMAGE_TAG}
+
+ARG AZURE_CLI_VERSION=2.48.1
+
+# Install the Azure CLI application
+COPY files/install.sh /usr/local/bin/install.sh
+RUN chmod +x /usr/local/bin/install.sh && /usr/local/bin/install.sh
