@@ -56,6 +56,7 @@ stages:
             inputs:
               targetType: inline
               script: |
+                ls -l /usr/local/bin
                 taskctl setup
 
       - job: CreateTFVarsFile
