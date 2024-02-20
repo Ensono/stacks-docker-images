@@ -18,11 +18,13 @@ tasks:
     description: Plan Terraform
     command:
       - Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-input=false","-out=tfplan" -Debug
+      - ls -l $env:TF_FILE_LOCATION
 
   infra:apply:
     context: powershell
     description: Apply Terraform
     command:
+      - ls -l $env:TF_FILE_LOCATION
       - Invoke-Terraform -Apply -Path "${env:TF_FILE_LOCATION}/tfplan"
 
   infra:destroy:plan:
