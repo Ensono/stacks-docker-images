@@ -30,10 +30,13 @@ steps:
         script: |
           Install-Module -Name Powershell-Yaml -Scope CurrentUser -Repository PSGallery -Force
 
-  - task: Bash@3
-    displayName: Install Taskctl
+  - task: PowerShell@2
+    displayName: Install Terraform
     inputs:
         targetType: inline
         script: |
-          curl -L "https://releases.hashicorp.com/terraform/${{ parameters.TerraformVersion }}/terraform_${{ parameters.TerraformVersion }}_linux_amd64.zip" -o /tmp/terraform.zip 
+          $url = "https://releases.hashicorp.com/terraform/${{ parameters.TerraformVersion }}/terraform_${{ parameters.TerraformVersion }}_linux_amd64.zip" -o /tmp/terraform.zip 
+          Write-Host $url
+          Invoke-RestMethod -Uri $url -OutFile /tmp/terraform.zip
+          Write-Host $env:PATH
           unzip /tmp/terraform.zip -d /usr/local/bin 
