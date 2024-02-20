@@ -29,16 +29,3 @@ steps:
         targetType: inline
         script: |
           Install-Module -Name Powershell-Yaml -Scope CurrentUser -Repository PSGallery -Force
-
-  - task: PowerShell@2
-    displayName: Install Terraform
-    inputs:
-        targetType: inline
-        script: |
-          ls -l /usr/local/bin
-          $url = "https://releases.hashicorp.com/terraform/${{ parameters.TerraformVersion }}/terraform_${{ parameters.TerraformVersion }}_linux_amd64.zip" 
-          Write-Host $url
-          Invoke-RestMethod -Uri $url -OutFile /tmp/terraform.zip
-          Write-Host $env:PATH
-          unzip -o /tmp/terraform.zip -d /usr/local/bin 
-          ls -l /usr/local/bin
