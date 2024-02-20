@@ -19,7 +19,8 @@ apt-get install -y \
     python3-pip \
     libjpeg9-dev \
     libfreetype-dev \
-    libcairo2-dev
+    libcairo2-dev \
+    libpango-dev
 
 # Install python packages
 pip install --no-cache-dir \
@@ -27,8 +28,7 @@ pip install --no-cache-dir \
     'blockdiag[pdf]' \
     nwdiag \
     seqdiag \
-    pillow \
-    pango
+    pillow
 
 # apt-get install -y build-essential \
 #     libjpeg \
