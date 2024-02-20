@@ -12,7 +12,7 @@ steps:
           wget https://github.com/Ensono/taskctl/releases/download/v${{ parameters.TaskctlVersion }}/taskctl_${{ parameters.TaskctlVersion }}_linux_amd64.tar.gz -O /tmp/taskctl.tar.gz
           echo "Unpacking Taskctl"
           tar zxf /tmp/taskctl.tar.gz -C /usr/local/bin taskctl
-          ls -l /usr/local/bin
+          which taskctl
 
     # Install the Independent Runner module for the base build
   - task: PowerShell@2
