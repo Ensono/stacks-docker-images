@@ -18,36 +18,43 @@ parameters:
         dependsOn:
           - Infrastructure
         taskName: build:foundation:powershell
+
       - stage: FoundationTools
         displayName: "[CONTAINER] Foundation - Tools"
         dependsOn:
           - FoundationPowerShell
         taskName: build:foundation:tools
+
       - stage: Infra
         displayName: "[CONTAINER] Infrastructure"
         dependsOn:
           - FoundationTools
         taskName: build:infrastructure
+
       - stage: Java
         displayName: "[CONTAINER] Java"
         dependsOn:
           - FoundationTools
         taskName: build:java
+
       - stage: DotNet
         displayName: "[CONTAINER] .NET"
         dependsOn:
           - Java
         taskName: build:dotnet
+
       - stage: Go
         displayName: "[CONTAINER] Go"
         dependsOn:
           - FoundationPowerShell
         taskName: build:golang
+
       - stage: Inspec
         displayName: "[CONTAINER] Inspec"
         dependsOn:
           - FoundationPowerShell
         taskName: build:inspec
+
       - stage: AsciiDoctor
         displayName: "[CONTAINER] AsciiDoctor"
         dependsOn:
