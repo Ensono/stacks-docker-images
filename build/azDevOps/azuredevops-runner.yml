@@ -35,6 +35,7 @@ parameters:
         displayName: "[CONTAINER] Infrastructure"
         dependsOn:
           - FoundationTools
+          - FoundationAzureCli
         taskName: build:infrastructure
 
       - stage: Java
