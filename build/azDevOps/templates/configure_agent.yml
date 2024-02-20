@@ -30,8 +30,10 @@ steps:
         script: |
           Install-Module -Name Powershell-Yaml -Scope CurrentUser -Repository PSGallery -Force
 
-  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
-    displayName: "Install Terraform"
+  - task: Bash@3
+    displayName: Install Taskctl
     inputs:
-        terraformVersion: ${{ parameters.TerraformVersion }}
-        terraformDownloadLocation: 'https://releases.hashicorp.com/terraform'
+        targetType: inline
+        script: |
+          curl -L "https://releases.hashicorp.com/terraform/${{ parameters.TerraformVersion }}/terraform_${{ parameters.TerraformVersion }}_linux_amd64.zip" -o /tmp/terraform.zip 
+          unzip /tmp/terraform.zip -d /usr/local/bin 
