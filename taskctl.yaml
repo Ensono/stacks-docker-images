@@ -15,6 +15,12 @@ pipelines:
         IMAGE_NAME: ensono/eir-foundation-powershell
         DOCKER_BUILD_ARGS: -f ./src/definitions/foundation/powershell/Dockerfile.ubuntu ./src/definitions/foundation/powershell
 
+  build:foundation:azure-cli:
+    - task: build:image:local
+      variables:
+        IMAGE_NAME: ensono/eir-foundation-azure-cli
+        DOCKER_BUILD_ARGS: -f ./src/definitions/foundation/azure-cli/Dockerfile.ubuntu ./src/definitions/foundation/azure-cli --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
+
   build:foundation:tools:
     - task: build:image:local
       variables:
@@ -59,6 +65,12 @@ pipelines:
         IMAGE_NAME: ensono/eir-asciidoctor
         DOCKER_BUILD_ARGS: -f ./src/definitions/asciidoctor/Dockerfile.ubuntu ./src/definitions/asciidoctor --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
 
+  build:data:
+    - task: build:image:local
+      variables:
+        IMAGE_NAME: ensono/eir-azure-data
+        DOCKER_BUILD_ARGS: -f ./src/definitions/foundation/azure-cli/Dockerfile.ubuntu ./src/definitions/foundation/azure-cli --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
+
   build:base:
     - task: build:container:base
       variables:
@@ -76,12 +88,6 @@ pipelines:
   #   variables:
   #     IMAGE_NAME: amidostacks/runner-pwsh-golang
   #     DOCKER_BUILD_ARGS: -f ./image_definitions/golang/Dockerfile ./image_definitions/golang --build-arg IMAGE_REF=amidostacks/runner-pwsh:${env:DOCKER_IMAGE_TAG}
-
-  build:data:
-    - task: build:container
-      variables:
-        IMAGE_NAME: amidostacks/runner-pwsh-data
-        DOCKER_BUILD_ARGS: -f ./image_definitions/data/Dockerfile ./image_definitions/data --build-arg IMAGE_REF=amidostacks/runner-pwsh:${env:DOCKER_IMAGE_TAG}
 
   build:node:
     - task: build:container

@@ -19,6 +19,12 @@ parameters:
           - Infrastructure
         taskName: build:foundation:powershell
 
+      - stage: FoundationAzureCli
+        displayName: "[CONTAINER] Foundation - Tools"
+        dependsOn:
+          - FoundationPowerShell
+        taskName: build:foundation:azure-cli
+
       - stage: FoundationTools
         displayName: "[CONTAINER] Foundation - Tools"
         dependsOn:
@@ -60,6 +66,12 @@ parameters:
         dependsOn:
           - Java
         taskName: build:asciidoctor
+
+      - stage: AzureData
+        displayName: "[CONTAINER] Azure Data"
+        dependsOn:
+          - FoundationAzureCli
+        taskName: build:data
 
 pr:
   - main
