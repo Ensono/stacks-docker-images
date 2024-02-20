@@ -14,8 +14,45 @@ parameters:
     type: object
     default:
       - stage: FoundationPowerShell
-        dependsOn: Infrastructure
+        displayName: "[CONTAINER] Foundation - PowerShell"
+        dependsOn:
+          - Infrastructure
         taskName: build:foundation:powershell
+      - stage: FoundationTools
+        displayName: "[CONTAINER] Foundation - Tools"
+        dependsOn:
+          - FoundationPowerShell
+        taskName: build:foundation:tools
+      - stage: Infrastructure
+        displayName: "[CONTAINER] Infrastructure"
+        dependsOn:
+          - FoundationTools
+        taskName: build:infrastructure
+      - stage: Java
+        displayName: "[CONTAINER] Java"
+        dependsOn:
+          - FoundationTools
+        taskName: build:java
+      - stage: DotNet
+        displayName: "[CONTAINER] .NET"
+        dependsOn:
+          - Java
+        taskName: build:java
+      - stage: Go
+        displayName: "[CONTAINER] Go"
+        dependsOn:
+          - FoundationPowerShell
+        taskName: build:golang
+      - stage: Inspec
+        displayName: "[CONTAINER] Inspec"
+        dependsOn:
+          - FoundationPowerShell
+        taskName: build:inspec
+      - stage: AsciiDoctor
+        displayName: "[CONTAINER] AsciiDoctor"
+        dependsOn:
+          - Java
+        taskName: build:asciidoctor
 
 pr:
   - main
@@ -87,67 +124,31 @@ stages:
               TF_FILE_LOCATION: deploy/terraform/azure/acr
               STAGE: acr
 
-  - stage: FoundationPowerShell
-    displayName: Foundation - PowerShell
-    dependsOn: Infrastructure
-    variables:
-      - group: ensono-sp-creds
+  - ${{ each stage in parameters.stages }}:
+      - stage: ${{ stage.stage }}
+        displayName: ${{ stage.displayName }}
+        dependsOn: ${{ stage.dependsOn }}
+        variables:
+          - group: ensono-sp-creds
 
-    jobs:
-      - job: BuildImage
+        jobs:
+          - job: BuildImage
 
-        steps:
-          - template: templates/configure_agent.yml
-            parameters:
-              TasckctlVersion: $(TaskctlVersion)
-              EnsonoBuildVersion: $(EnsonoBuildVersion)
-              TerraformVersion: $(TerraformVersion)
+            steps:
+              - template: templates/configure_agent.yml
+                parameters:
+                  TasckctlVersion: $(TaskctlVersion)
+                  EnsonoBuildVersion: $(EnsonoBuildVersion)
+                  TerraformVersion: $(TerraformVersion)
 
-          - task: Bash@3
-            displayName: Build Image
-            inputs:
-              targetType: inline
-              script: |
-                taskctl build:foundation:powershell
-            env:
-              DOCKER_IMAGE_TAG: $(Build.BuildNumber)
-
-  - stage: FoundationTools
-    displayName: Foundation - Tools
-    dependsOn: FoundationPowerShell
-    variables:
-      - group: ensono-sp-creds
-
-    jobs:
-      - job: BuildImage
-
-        steps:
-          - template: templates/configure_agent.yml
-            parameters:
-              TasckctlVersion: $(TaskctlVersion)
-              EnsonoBuildVersion: $(EnsonoBuildVersion)
-              TerraformVersion: $(TerraformVersion)
-
-          - task: Bash@3
-            displayName: Build Image
-            inputs:
-              targetType: inline
-              script: |
-                taskctl build:foundation:tools
-            env:
-              DOCKER_IMAGE_TAG: $(Build.BuildNumber)
-
-            # - task: Bash@3
-            # displayName: Foundation - PowerShell
-            # inputs:
-            #   targetType: inline
-            #   script: |
-            #     taskctl build:foundation:tools
-            # env:
-            #   DOCKER_USERNAME: $(DOCKER_USERNAME)
-            #   DOCKER_PASSWORD: $(DOCKER_PASSWORD)
-            #   DOCKER_IMAGE_TAG: $(Build.BuildNumber)
-            #   DOCKER_CONTAINER_REGISTRY_NAME: $(DOCKER_CONTAINER_REGISTRY_NAME)
+              - task: Bash@3
+                displayName: Build Image
+                inputs:
+                  targetType: inline
+                  script: |
+                    taskctl ${{ stage.taskName }}
+                env:
+                  DOCKER_IMAGE_TAG: $(Build.BuildNumber)
 
             # - task: Bash@3
             #   displayName: Publish to Dashboard
