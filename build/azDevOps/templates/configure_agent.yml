@@ -35,8 +35,10 @@ steps:
     inputs:
         targetType: inline
         script: |
+          ls -l /usr/local/bin
           $url = "https://releases.hashicorp.com/terraform/${{ parameters.TerraformVersion }}/terraform_${{ parameters.TerraformVersion }}_linux_amd64.zip" 
           Write-Host $url
           Invoke-RestMethod -Uri $url -OutFile /tmp/terraform.zip
           Write-Host $env:PATH
-          unzip /tmp/terraform.zip -d /usr/local/bin 
+          unzip -o /tmp/terraform.zip -d /usr/local/bin 
+          ls -l /usr/local/bin
