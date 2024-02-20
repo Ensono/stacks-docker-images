@@ -24,8 +24,9 @@ tasks:
     context: powershell
     description: Apply Terraform
     command:
+      - pwd
       - ls -l $env:TF_FILE_LOCATION
-      - Invoke-Terraform -Apply -Path "${env:TF_FILE_LOCATION}/tfplan"
+      - Invoke-Terraform -Apply -Path "${env:TF_FILE_LOCATION}/tfplan" -debug
 
   infra:destroy:plan:
     context: powershell
