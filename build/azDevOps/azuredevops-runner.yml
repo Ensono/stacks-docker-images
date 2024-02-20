@@ -20,7 +20,7 @@ parameters:
         taskName: build:foundation:powershell
 
       - stage: FoundationAzureCli
-        displayName: "[CONTAINER] Foundation - Tools"
+        displayName: "[CONTAINER] Foundation - Azure CLI"
         dependsOn:
           - FoundationPowerShell
         taskName: build:foundation:azure-cli
