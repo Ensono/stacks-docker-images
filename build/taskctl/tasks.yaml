@@ -25,6 +25,8 @@ tasks:
     description: Apply Terraform
     command:
       - pwd
+      - ls -l
+      - Write-Host $env:TF_FILE_LOCATION
       - ls -l $env:TF_FILE_LOCATION
       - Invoke-Terraform -Apply -Path "${env:TF_FILE_LOCATION}/tfplan" -debug
 
