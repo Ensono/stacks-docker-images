@@ -28,7 +28,7 @@ steps:
     inputs:
         targetType: inline
         script: |
-          Install-Module -Name Powershell-Yaml -Scope AllUsers -Repository PSGallery -Force -Scope CurrentUser
+          Install-Module -Name Powershell-Yaml -Scope CurrentUser -Repository PSGallery -Force
 
   - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
     displayName: "Install Terraform"
