@@ -20,7 +20,12 @@ apt-get install -y \
     libjpeg9-dev \
     libfreetype-dev \
     libcairo2-dev \
-    libpango-dev
+    libpango1.0-dev \
+    libgdk-pixbuf-2.0-dev \
+    libxml2-dev \
+    libwebp-dev \
+    libzstd-dev
+
 
 # Install python packages
 pip install --no-cache-dir \

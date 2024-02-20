@@ -11,7 +11,7 @@ COPY files/install.sh /usr/local/bin/install.sh
 
 RUN chmod +x /usr/local/bin/unittests.sh && \
     chmod +x /usr/local/bin/install.sh && \
-    /usr/local/bin/install.sh
+    bash /usr/local/bin/install.sh
 
 # Update the path to include the go binary
 ENV PATH="$PATH:/usr/local/go/bin"
