@@ -150,13 +150,13 @@ RUN export ARCH="$(uname -m)" \
     && chmod +x /usr/bin/kustomize
 
 # Install Snyk
-RUN curl -L "https://github.com/snyk/cli/releases/download/${SNYK_VERSION}/snyk-linux" \
-    && cp snyk-linux /usr/local/bin/snyk \
+RUN curl -L "https://github.com/snyk/cli/releases/download/${SNYK_VERSION}/snyk-linux" -o /tmp/snyk-linux \
+    && cp /tmp/snyk-linux /usr/local/bin/snyk \
     && chmod +x /usr/local/bin/snyk
 
 # Install Snyk-to-Html
-RUN curl -L "https://github.com/snyk/snyk-to-html/releases/download/${SNYK_TO_HTML_VERSION}/snyk-to-html-linux" \
-    && cp snyk-to-html-linux /usr/local/bin/snyk-to-html \
+RUN curl -L "https://github.com/snyk/snyk-to-html/releases/download/${SNYK_TO_HTML_VERSION}/snyk-to-html-linux" -o /tmp/snyk-to-html-linux \
+    && cp /tmp/snyk-to-html-linux /usr/local/bin/snyk-to-html \
     && chmod +x /usr/local/bin/snyk-to-html
 
 # Remove packages that are no longer required
