@@ -12,6 +12,17 @@ parameters:
     displayName: Turn on debug for the Independent Runner
     type: boolean
     default: false
+
+  - name: env_stages
+    type: object
+    default:
+      - stage: Staging
+        vargroup: ensono-stacks-acr-creds
+        condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+      - stage: Live
+        vargroup: ensono-stacks-docker-creds
+        condition: ne(variables['Build.SourceBranch'], 'refs/heads/main')
+
   - name: stages
     displayName: Container Image Stages
     type: object
@@ -148,7 +159,7 @@ stages:
               TF_FILE_LOCATION: deploy/terraform/azure/acr
               STAGE: acr
 
-  - ${{ each env_stage in variables.environment_stages }}:
+  - ${{ each env_stage in parameters.env_stages }}:
       - ${{ each stage in parameters.stages }}:
           - stage: ${{ stage.stage }}
             displayName: "${{ stage.displayName }} $(env_stage.stage)"
