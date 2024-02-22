@@ -31,11 +31,11 @@ variables:
     value: tfstate
 
   # Determine the "stability" of the image
-  - name: stability
-    ${{ if or(eq(variables['Build.SourceBranchName'], 'master'), eq(variables['Build.SourceBranchName'], 'main'))}}:
-      value: stable
-    ${{ else }}:
-      value: unstable
+  #- name: stability
+  #  ${{ if or(eq(variables['Build.SourceBranchName'], 'master'), eq(variables['Build.SourceBranchName'], 'main'))}}:
+  #    value: stable
+  #  ${{ else }}:
+  #    value: unstable
 
   # Versioning
   - name: version_major
@@ -45,17 +45,17 @@ variables:
   - name: version_revision
     value: $[counter(join(variables['version_major'], join('-', variables['version_minor'])), 0)]
   - name: version_semver
-    value: "$(version_major).$(version_minor).$(version_revision)-$(stability)"
+    value: "$(version_major).$(version_minor).$(version_revision)"
 
   # Docker
   - name: DOCKER_IMAGE_TAG
     value: $(version_semver)
-  - name: DOCKER_CONTAINER_REGISTRY_NAME
-    value: docker.io
-  - group: ensono-stacks-acr-creds
-    # Group should contain:
-    # DOCKER_PASSWORD
-    # DOCKER_USERNAME
+  # - name: DOCKER_CONTAINER_REGISTRY_NAME
+  #  value: docker.io
+  # - group: ensono-stacks-acr-creds
+  # Group should contain:
+  # DOCKER_PASSWORD
+  # DOCKER_USERNAME
 
   # Dashboard Publishing
   - name: DASHBOARD_VERSION
