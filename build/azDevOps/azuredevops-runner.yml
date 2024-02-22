@@ -93,15 +93,6 @@ variables:
   - name: DebugPreference
     value: "Continue"
 
-  # Set the group(s) to use based on the branch of the code
-  - name: registry_cred_groups
-    ${{ if eq(parameters.force_deploy, true) }}:
-      - value: ["ensono-stacks-acr-creds", "ensono-stacks-docker-creds"]
-    ${{ elseif eq(variables['Build.SourceBranchName'], 'main') }}:
-      - value: ["ensono-stacks-docker-creds"]
-    ${{ else }}:
-      - value: ["ensono-stacks-acr-creds"]
-
 # Configure the stages
 stages:
   - stage: Infrastructure
@@ -157,10 +148,10 @@ stages:
               TF_FILE_LOCATION: deploy/terraform/azure/acr
               STAGE: acr
 
-  - ${{ each registry_cred_group in variables.registry_cred_groups }}:
+  - ${{ each env_stage in variables.environment_stages }}:
       - ${{ each stage in parameters.stages }}:
           - stage: ${{ stage.stage }}
-            displayName: ${{ stage.displayName }}
+            displayName: "${{ stage.displayName }} $(env_stage.stage)"
             dependsOn: ${{ stage.dependsOn }}
             variables:
               - group: $(registry_cred_group)
