@@ -165,10 +165,10 @@ stages:
             displayName: "${{ stage.displayName }} $(env_stage.stage)"
             dependsOn:
               ${{ each dependency in stage.dependsOn }}:
-                ${{ if eq(tolower(dependency), 'infrastructure') }}:
+                ${{ if eq(lower(dependency), 'infrastructure') }}:
                   - ${{ dependency }}
                 ${{ else }}:
-                  - ${{ dependency }}-${{ tolower(env_stage.stage) }}
+                  - ${{ dependency }}-${{ lower(env_stage.stage) }}
             variables:
               - group: $(registry_cred_group)
 
