@@ -72,7 +72,7 @@ variables:
     # DASHBOARD_INFLUX_SERVER
 
   - name: environment_stages
-  - value:
+    value:
       - stage: Staging
         vargroup: ensono-stacks-acr-creds
         condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
