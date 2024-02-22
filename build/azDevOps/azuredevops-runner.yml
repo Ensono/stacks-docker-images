@@ -165,7 +165,7 @@ stages:
             displayName: "${{ stage.displayName }} $(env_stage.stage)"
             dependsOn:
               ${{ each dependency in stage.dependsOn }}:
-                ${{ if eq(tolower(dependency), 'infrastructure'}}:
+                ${{ if eq(tolower(dependency), 'infrastructure') }}:
                   - ${{ dependency }}
                 ${{ else }}:
                   - ${{ dependency }}-${{ tolower(env_stage.stage) }}
