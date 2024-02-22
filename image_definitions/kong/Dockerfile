@@ -3,7 +3,7 @@ ARG IMAGE_REF=amidostacks/runner-pwsh
 FROM $IMAGE_REF
 
 ARG DECK_VERSION=1.34.0
-ARG PORTAL_CLI_VERSION=0.0.1-alpha004
+ARG PORTAL_CLI_VERSION=1.0.0
 
 # -- Deck
 RUN export ARCH="$(uname -m)" \
