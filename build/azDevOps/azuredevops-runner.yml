@@ -2,7 +2,7 @@ name: "$(Build.SourceBranchName)-init"
 
 parameters:
   - name: force_deploy
-    displayName: Force deploy regardless of branch
+    displayName: Force build and publish to Live
     type: boolean
   - name: upload
     displayName: Upload generated files
@@ -12,17 +12,6 @@ parameters:
     displayName: Turn on debug for the Independent Runner
     type: boolean
     default: false
-
-  - name: env_stages
-    type: object
-    default:
-      - stage: Staging
-        vargroup: ensono-stacks-acr-creds
-        condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
-      - stage: Live
-        vargroup: ensono-stacks-docker-creds
-        condition: ne(variables['Build.SourceBranch'], 'refs/heads/main')
-
   - name: stages
     displayName: Container Image Stages
     type: object
@@ -159,18 +148,14 @@ stages:
               TF_FILE_LOCATION: deploy/terraform/azure/acr
               STAGE: acr
 
-  - ${{ each env_stage in parameters.env_stages }}:
       - ${{ each stage in parameters.stages }}:
           - stage: ${{ stage.stage }}
-            displayName: "${{ stage.displayName }} $(env_stage.stage)"
+            displayName: ${{ stage.displayName }}
             dependsOn:
-              ${{ each dependency in stage.dependsOn }}:
-                ${{ if eq(lower(dependency), 'infrastructure') }}:
-                  - ${{ dependency }}
-                ${{ else }}:
-                  - ${{ dependency }}-${{ lower(env_stage.stage) }}
-            variables:
-              - group: $(registry_cred_group)
+              ${{ if or(eq(parameters.force_deploy, true), eq(variables['Build.SourceBranch'], 'refs/heads/main'))}}:
+                - group: ensono-stacks-docker-creds
+              ${{ else }}:
+                - group: ensono-stacks-acr-creds
 
             jobs:
               - job: BuildImage
