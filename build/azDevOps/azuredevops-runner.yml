@@ -153,10 +153,10 @@ stages:
         displayName: ${{ stage.displayName }}
         dependsOn: ${{ stage.dependsOn }}
         variables:
-          ${{ if or(eq(parameters.force_deploy, 'true'), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
-            - group: ensono-stacks-docker-creds
-          ${{ else }}:
-            - group: ensono-stacks-acr-creds
+          - ${{ if or(eq(parameters.force_deploy, 'true'), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
+              - group: ensono-stacks-docker-creds
+          - ${{ else }}:
+              - group: ensono-stacks-acr-creds
 
         jobs:
           - job: BuildImage
