@@ -70,12 +70,3 @@ variables:
     # DASHBOARD_INFLUX_BUCKET
     # DASHBOARD_INFLUX_TOKEN
     # DASHBOARD_INFLUX_SERVER
-
-  - name: environment_stages
-    value:
-      - stage: Staging
-        vargroup: ensono-stacks-acr-creds
-        condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
-      - stage: Live
-        vargroup: ensono-stacks-docker-creds
-        condition: ne(variables['Build.SourceBranch'], 'refs/heads/main')
