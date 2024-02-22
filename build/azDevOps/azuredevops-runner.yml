@@ -151,7 +151,8 @@ stages:
   - ${{ each stage in parameters.stages }}:
       - stage: ${{ stage.stage }}
         displayName: ${{ stage.displayName }}
-        dependsOn:
+        dependsOn: ${{ stage.dependsOn }}
+        variables:
           ${{ if or(eq(parameters.force_deploy, true), eq(variables['Build.SourceBranch'], 'refs/heads/main'))}}:
             - group: ensono-stacks-docker-creds
           ${{ else }}:
