@@ -163,7 +163,12 @@ stages:
       - ${{ each stage in parameters.stages }}:
           - stage: ${{ stage.stage }}
             displayName: "${{ stage.displayName }} $(env_stage.stage)"
-            dependsOn: ${{ stage.dependsOn }}
+            dependsOn:
+              ${{ each dependency in stage.dependsOn }}:
+                ${{ if eq(tolower(dependency), 'infrastructure'}}:
+                  - ${{ dependency }}
+                ${{ else }}:
+                  - ${{ dependency }}-${{ tolower(env_stage.stage) }}
             variables:
               - group: $(registry_cred_group)
 
