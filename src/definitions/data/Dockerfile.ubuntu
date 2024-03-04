@@ -1,7 +1,8 @@
 ARG REGISTRY=docker.io
 ARG IMAGE_TAG=0.0.1-workstation
+ARG ORG=ensono
 
-FROM ${REGISTRY}/ensono/eir-foundation-azure-cli
+FROM ${REGISTRY}/${ORG}/eir-foundation-azure-cli
 
 # Run the install script to get the additional commands
 COPY files/install.sh /tmp/install.sh

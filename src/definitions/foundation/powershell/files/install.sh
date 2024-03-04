@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Get the ARCH of the enviornment
-/usr/local/bin/platform.sh
+. /usr/local/bin/platform.sh
 
 # Install dependencies for PowerShell
 apt-get install -y libc6 libgcc-s1 libicu70 libssl3 libstdc++6 libunwind8 zlib1g
