@@ -62,10 +62,10 @@ if ($versions.length -eq 0) {
         $cmds += "bash /tmp/dotnet-install.sh --install-dir {0} --version {1}" -f $toolpath, $version
 
         # --- Install SonarScanner
-        # $cmds += "dotnet tool install dotnet-sonarscanner --version {0} --tool-path {1} --framework {2}" -f $sonarscanner_version, $toolpath, $moniker
+        $cmds += "dotnet tool install dotnet-sonarscanner --version {0} --tool-path {1} --framework {2}" -f $sonarscanner_version, $toolpath, $moniker
 
         # --- Install ReportGenerator
-        # $cmds += "dotnet tool install dotnet-reportgenerator-globaltool --version {0} --tool-path {1} --framework {2}" -f $reportgenerator_version, $toolpath, $moniker
+        $cmds += "dotnet tool install dotnet-reportgenerator-globaltool --version {0} --tool-path {1} --framework {2}" -f $reportgenerator_version, $toolpath, $moniker
 
         # iterate around the commands
         foreach ($cmd in $cmds) {

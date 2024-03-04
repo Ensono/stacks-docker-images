@@ -71,6 +71,12 @@ pipelines:
         IMAGE_NAME: ensono/eir-azure-data
         DOCKER_BUILD_ARGS: -f ./src/definitions/foundation/azure-cli/Dockerfile.ubuntu ./src/definitions/foundation/azure-cli --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
 
+  build:kong:
+    - task: build:image:local
+      variables:
+        IMAGE_NAME: ensono/eir-kong
+        DOCKER_BUILD_ARGS: -f ./src/definitions/kong/Dockerfile.ubuntu ./src/definitions/foundation/azure-cli --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
+
   build:base:
     - task: build:container:base
       variables:

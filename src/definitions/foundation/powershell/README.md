@@ -1,0 +1,19 @@
+# EIR Foundation PowerShell
+
+This Docker image is the foundation image from which all other EIR images are built from. It is not intended to be used directly as a container image, but there is no restriction on doing so.
+
+The image is built from Ubuntu, PowerShell and the EnsonoBuild PowerShell module are installed.
+
+## Specs
+
+**Platforms**: `linux/amd64`, `linux/arm64`
+
+**Base Image**: ubuntu:22.04
+
+### Software
+
+| Name | Version | URL |
+|---|---|---|
+| PowerShell | 7.4.1 | https://github.com/PowerShell/PowerShell |
+| EnsonoBuild | 1.0.43 | https://github.com/Ensono/independent-runner |
+| Taskctl | 1.5.3 | https://github.com/Ensono/taskctl |

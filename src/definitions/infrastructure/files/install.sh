@@ -3,14 +3,7 @@
 # Script to install python and the cloud CLI tools
 
 # Get the architecture of the container
-export PROPER_ARCH="$(uname -m)"
-if [ "$PROPER_ARCH" = "x86_64" ]
-then 
-    export ARCH="amd64"
-elif [ "$PROPER_ARCH" = "aarch64" ]
-then 
-    export ARCH="arm64"
-fi
+/usr/local/bin/platform.sh
 
 # Install necessary linux packages
 apt-get update
@@ -19,7 +12,7 @@ unlink /etc/localtime
 ln -s /usr/share/zoneinfo/UTC /etc/localtime
 
 # Install AWS CLI
-curl -L "https://awscli.amazonaws.com/awscli-exe-linux-${PROPER_ARCH}-${AWS_CLI_VERSION}.zip" -o /tmp/awscliv2.zip
+curl -L "https://awscli.amazonaws.com/awscli-exe-linux-${UNAME_ARCH}-${AWS_CLI_VERSION}.zip" -o /tmp/awscliv2.zip
 cd /tmp
 unzip awscliv2.zip
 ./aws/install

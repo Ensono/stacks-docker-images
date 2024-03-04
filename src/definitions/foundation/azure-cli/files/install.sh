@@ -2,16 +2,6 @@
 
 # Script to install python and the cloud CLI tools
 
-# Get the architecture of the container
-export PROPER_ARCH="$(uname -m)"
-if [ "$PROPER_ARCH" = "x86_64" ]
-then 
-    export ARCH="amd64"
-elif [ "$PROPER_ARCH" = "aarch64" ]
-then 
-    export ARCH="arm64"
-fi
-
 apt-get update
 apt-get install -y gnupg lsb-release
 
