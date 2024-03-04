@@ -1,0 +1,13 @@
+ARG REGISTRY=docker.io
+ARG IMAGE_TAG=0.0.1-workstation
+
+ARG DECK_VERSION=1.34.0
+ARG PORTAL_CLI_VERSION=0.0.1-alpha005
+
+FROM ${REGISTRY}/ensono/eir-foundation-powershell:${IMAGE_TAG}
+
+COPY files/install.sh /usr/local/bin/install.sh
+
+RUN chmod +x /usr/local/bin/unittests.sh && \
+    chmod +x /usr/local/bin/install.sh && \
+    bash /usr/local/bin/install.sh

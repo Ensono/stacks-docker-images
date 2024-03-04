@@ -65,6 +65,12 @@ parameters:
           - FoundationPowerShell
         taskName: build:inspec
 
+      - stage: Kong
+        displayName: "[CONTAINER] Kong"
+        dependsOn:
+          - FoundationPowerShell
+        taskName: build:kong
+
       - stage: AsciiDoctor
         displayName: "[CONTAINER] AsciiDoctor"
         dependsOn:
@@ -96,7 +102,7 @@ variables:
 # Configure the stages
 stages:
   - stage: Infrastructure
-    condition: ne(variables['Build.SourceBranchName'], 'main')
+    condition: and(ne(variables['Build.SourceBranchName'], 'main'), eq(parameters.force_deploy, 'false'))
     variables:
       - group: ensono-sp-creds
 

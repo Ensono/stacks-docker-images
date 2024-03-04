@@ -9,10 +9,12 @@ ARG TASKCTL_VERSION=1.5.3
 ARG TIMEZONE="Europe/London"
 
 COPY files/install.sh /tmp/install.sh
+COPY files/platform.sh /usr/local/bin/platform.sh
 
 # Install Powershell into the image
 RUN apt-get update && \
     apt-get install -y bash curl && \
     chmod +x /tmp/install.sh && \
+    chmod +x /usr/local/bin/platform.sh && \
     /tmp/install.sh
 
