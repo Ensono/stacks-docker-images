@@ -17,7 +17,3 @@ ENV DOTNET_ROOT="${TOOLPATH}"
 
 COPY files/install.ps1 /tmp/install.ps1
 RUN pwsh /tmp/install.ps1 -list ${DOTNET_VERSION} -sonarscanner_version ${SONARSCANNER_VERSION} -reportgenerator_version ${REPORTGENERATOR_VERSION}
-
-# Install necessary dotnet tools
-#RUN dotnet tool install dotnet-sonarscanner --version ${SONARSCANNER_VERSION} --tool-path ${TOOLPATH} && \
-#    dotnet tool install dotnet-reportgenerator-globaltool --version ${REPORTGENERATOR_VERSION} --tool-path ${TOOLPATH}
