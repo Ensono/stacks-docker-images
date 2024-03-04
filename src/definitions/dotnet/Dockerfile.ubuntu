@@ -1,7 +1,8 @@
 ARG REGISTRY=docker.io
 ARG IMAGE_TAG=0.0.1-workstation
+ARG ORG=ensono
 
-FROM ${REGISTRY}/ensono/eir-java:${IMAGE_TAG} as base
+FROM ${REGISTRY}/${ORG}/eir-java:${IMAGE_TAG} as base
 
 ARG SONARSCANNER_VERSION=5.14
 ARG REPORTGENERATOR_VERSION=5.1.26
@@ -18,5 +19,5 @@ COPY files/install.ps1 /tmp/install.ps1
 RUN pwsh /tmp/install.ps1 -list ${DOTNET_VERSION} -sonarscanner_version ${SONARSCANNER_VERSION} -reportgenerator_version ${REPORTGENERATOR_VERSION}
 
 # Install necessary dotnet tools
-RUN dotnet tool install dotnet-sonarscanner --version ${SONARSCANNER_VERSION} --tool-path ${TOOLPATH} && \
-    dotnet tool install dotnet-reportgenerator-globaltool --version ${REPORTGENERATOR_VERSION} --tool-path ${TOOLPATH}
+#RUN dotnet tool install dotnet-sonarscanner --version ${SONARSCANNER_VERSION} --tool-path ${TOOLPATH} && \
+#    dotnet tool install dotnet-reportgenerator-globaltool --version ${REPORTGENERATOR_VERSION} --tool-path ${TOOLPATH}

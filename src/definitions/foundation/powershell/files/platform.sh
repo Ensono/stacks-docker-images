@@ -20,7 +20,8 @@ MUSL="$(ldd /bin/ls | grep 'musl' | head -1 | cut -d ' ' -f1)"
 export UNAME_ARCH="$(uname -m)"
 
 # Set the ARCH to be used when downloading applications
-if [ "$UNAME_ARCH" = "x86_64" ]
+if [ "$UNAME_ARCH" == "x86_64" ]
+then
     export BIN_ARCH="amd64"
     export ABBR_ARCH="x64"
 
@@ -31,8 +32,15 @@ if [ "$UNAME_ARCH" = "x86_64" ]
     else
         export MUSL_ARCH="x64"
     fi
-then
+else
     export BIN_ARCH="arm64"
     export MUSL_ARCH=$BIN_ARCH
     export ABBR_ARCH=$BIN_ARCH
 fi
+
+echo "PLATFORM DETECTION =================================="
+echo "Uname:             ${UNAME_ARCH} (UNAME_ARCH)" 
+echo "Binary arch:       ${BIN_ARCH}   (BIN_ARCH)"
+echo "Abbreviated arch:  ${ABBR_ARCH}  (ABBR_ARCH)"
+echo "Musl Arch:         ${MUSL_ARCH}  (MUSL_ARCH)"
+echo "====================================================="
