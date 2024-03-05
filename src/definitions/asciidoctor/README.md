@@ -2,15 +2,13 @@
 
 A number of repositories that we have for Stacks have documentation in the Asciidoc format. This image contains all of the components required to run `asciidoctor` and turn the documentation into different formats.
 
-The CLI can be added to, for example the `databricks` extension.
-
 The image is built from the Ensono Java image, as there are components that are rely on Java to operate.
 
 ## Specs
 
 **Platforms**: `linux/amd64`, `linux/arm64`
 
-**Base Image**: ensno/eir-java
+**Base Image**: ensono/eir-java
 
 ### Software
 

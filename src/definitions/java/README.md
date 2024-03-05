@@ -1,0 +1,17 @@
+# EIR Java
+
+Ensono Stacks Java image which is used to build Stacks Java applications. It includes the Azul OpenJDK Java framework as well as Maven.
+
+The JVM is copied from the azul/zulu-openjdk image. This is done so that we do not need to build Java manually.
+
+## Specs
+
+**Platforms**: `linux/amd64`, `linux/arm64`
+
+**Base Image**: ensono/eir-foundation-powershell
+
+### Software
+
+| Type | Name | Version | URL |
+|---|---|---|---|
+| Binary | Maven | 3.8.8 | https://dlcdn.apache.org/maven/maven-3/3.8.8/binaries/apache-maven-3.8.8-bin.zip |

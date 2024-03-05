@@ -1,0 +1,22 @@
+# EIR Golang
+
+Image that contains the Go program,ming language, which is used to build Ensono Stacks applications:
+
+- Stacks CLI - https://githgub.com/Ensono/stacks-cli
+- MRBuild - https://github.com/Ensono/mrbuild
+
+## Specs
+
+**Platforms**: `linux/amd64`, `linux/arm64`
+
+**Base Image**: ensono/eir-foundation-powershell
+
+### Software
+
+| Type | Name | Version | URL |
+|---|---|---|---|
+| Binary | Go | 1.21.5 | https://go.dev/dl/go1.21.5.linux-amd64.tar.gz |
+| Library | go-junit-report | latest | https://github.com/jstemmer/go-junit-report |
+| Library | gocover-cobertura | latest | https://github.com/t-yuki/gocover-cobertura@latest |
+| Library | gocov | latest | https://github.com/axw/gocov/gocov@latest |
+| Library | gocov-xml | latest | https://github.com/AlekSi/gocov-xml@latest |
