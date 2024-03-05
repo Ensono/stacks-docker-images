@@ -2,6 +2,7 @@ parameters:
     TaskctlVersion: 1.5.3
     EnsonoBuildVersion: 1.0.43
     TerraformVersion: 1.5.1
+    DockerPushRM: 1.9.0
 
 steps:
   - task: Bash@3
@@ -29,3 +30,12 @@ steps:
         targetType: inline
         script: |
           Install-Module -Name Powershell-Yaml -Scope CurrentUser -Repository PSGallery -Force
+
+  - task: Bash@3
+    displayName: Install Docker Push Readme
+    inputs:
+      targetType: inline
+      script: |
+        mkdir -p $HOME/.docker/cli-plugins
+        curl -L "https://github.com/christian-korneck/docker-pushrm/releases/download/v{{ parameters.DockerPushRM }}/docker-pushrm_linux_amd64" -o $HOME/.docker/cli-plugins/docker-pushrm
+        chmod +x $HOME/.docker/cli-plugins/docker-pushrm

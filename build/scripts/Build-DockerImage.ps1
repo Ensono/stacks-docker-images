@@ -93,3 +93,22 @@ if ($dryrun.IsPresent) {
 } else {
     Invoke-Expression $cmd
 }
+
+# Push the readme if the registry is docker.io
+if ($registry -ieq "docker.io") {
+
+    # get the path to the readme file from the args that have been set
+    $status = $arguments -match '-f\s\./([a-zA-Z/\.-]*)/Dockerfile\.ubuntu'
+    if ($status) {
+
+        $path_parts = $Matches[1] -split "/"
+        $readme_path = [IO.Path]::Combine([IO.Path]::Combine($path_parts), "README.md")
+
+        Write-Host ("Pusing README file: {0}" -f $readme_path)
+
+        # build up the command to run
+        $cmd = "docker pushrm --provider dockerhub {0}/{1} --file {2}" -f $registry, $name, $readme_path
+
+        Invoke-Expression $cmd
+    }
+}
