@@ -1,0 +1,24 @@
+# EIR Dotnet
+
+The .NET image is used to build and test the Stack .NET applications. The image is built from the Ensono Java image, this is so the static code analysis software, Sonarcloud, can be run.
+
+The image contains two version of .NET Core:
+
+- 6.0.300
+- 8.0.100
+
+## Specs
+
+**Platforms**: `linux/amd64`, `linux/arm64`
+
+**Base Image**: ensono/eir-java
+
+### Software
+
+| Type | Name | Version | URL |
+|---|---|---|---|
+| Binary | .NET | 6.0.300 | https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/sdk-6.0.300-linux-x64-binaries |
+| Binary | .NET | 8.0.100 | https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/sdk-8.0.100-linux-x64-binaries |
+| Binary | SonarScanner | 5.14 | |
+| Binary | ReportGenerator | 5.1.26 | |
+
