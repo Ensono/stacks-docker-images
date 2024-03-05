@@ -3,6 +3,9 @@
 # Configure the system to use the apt-cacher-ng container
 # echo "Acquire::http::Proxy \"http://127.0.0.1:3142\";" > /etc/apt/apt.conf.d/00aptproxy
 
+# Get the ARCH of the enviornment
+. /usr/local/bin/platform.sh
+
 # Install necessary packages
 apt-get update
 apt-get install -y \
@@ -24,8 +27,9 @@ apt-get install -y \
     libgdk-pixbuf-2.0-dev \
     libxml2-dev \
     libwebp-dev \
-    libzstd-dev
-
+    libzstd-dev \
+    libpng-dev \
+    zlib1g-dev \
 
 # Install python packages
 pip install --no-cache-dir \
@@ -34,16 +38,6 @@ pip install --no-cache-dir \
     nwdiag \
     seqdiag \
     pillow
-
-# apt-get install -y build-essential \
-#     libjpeg \
-#     jpeg-dev \
-#     zlib-dev \
-#     freetype-dev \
-#     libxml2-dev \
-#     ruby-bigdecimal \
-#     ruby-mathematical \
-#     ruby-rake
 
 echo "gem: --no-document" > /etc/gemrc
 
@@ -73,5 +67,14 @@ gem install \
     "asciidoctor-reducer:${ASCIIDOCTOR_REDUCER_VERSION}" \
     barby \
     rqrcode \
-    prawn-icon    
+    prawn-icon \
+    bigdecimal
 
+# Remove obsolete packages
+apt-get remove -y build-essential
+apt-get autoremove -y
+apt-get clean
+
+# Install ERD binary
+curl -L "https://github.com/kaishuu0123/erd-go/releases/download/v${ERD_VERSION}/linux_${BIN_ARCH}_erd-go" -o /usr/local/bin/erd
+chmod +x /usr/local/bin/erd
