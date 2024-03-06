@@ -4,6 +4,7 @@ parameters:
   - name: force_deploy
     displayName: Force build and publish to Live
     type: boolean
+    default: false
   - name: upload
     displayName: Upload generated files
     type: boolean
