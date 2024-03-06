@@ -77,11 +77,11 @@ pipelines:
         IMAGE_NAME: ensono/eir-kong
         DOCKER_BUILD_ARGS: -f ./src/definitions/kong/Dockerfile.ubuntu ./src/definitions/foundation/azure-cli --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
 
-  build:base:
-    - task: build:container:base
-      variables:
-        IMAGE_NAME: amidostacks/runner-pwsh
-        DOCKER_BUILD_ARGS: -f ./image_definitions/base/Dockerfile ./image_definitions/base
+  # build:base:
+  #  - task: build:container:base
+  #    variables:
+  #      IMAGE_NAME: amidostacks/runner-pwsh
+  #      DOCKER_BUILD_ARGS: -f ./image_definitions/base/Dockerfile ./image_definitions/base
 
   # build:inspec:
   # - task: build:container
