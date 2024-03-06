@@ -103,7 +103,7 @@ variables:
 # Configure the stages
 stages:
   - stage: Infrastructure
-    condition: and(ne(variables['Build.SourceBranchName'], 'main'), eq(${{ parameters['force_deploy'] }}, 'false'))
+    condition: and(ne(variables['Build.SourceBranchName'], 'main'), eq(lower(${{ parameters['force_deploy'] }}), 'false'))
     variables:
       - group: azure-sp-creds
 
