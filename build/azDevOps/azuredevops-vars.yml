@@ -52,7 +52,7 @@ variables:
     value: $(version_semver)
   # - name: DOCKER_CONTAINER_REGISTRY_NAME
   #  value: docker.io
-  # - group: ensono-stacks-acr-creds
+  # - group: stacks-acr-creds
   # Group should contain:
   # DOCKER_PASSWORD
   # DOCKER_USERNAME

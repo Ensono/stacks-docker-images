@@ -104,7 +104,7 @@ stages:
   - stage: Infrastructure
     condition: and(ne(variables['Build.SourceBranchName'], 'main'), eq(parameters.force_deploy, 'false'))
     variables:
-      - group: ensono-sp-creds
+      - group: azure-sp-creds
 
     jobs:
       - job: DeployInfrastructure
@@ -160,9 +160,9 @@ stages:
         dependsOn: ${{ stage.dependsOn }}
         variables:
           - ${{ if or(eq(parameters.force_deploy, 'true'), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
-              - group: ensono-stacks-docker-creds
+              - group: stacks-docker-creds
           - ${{ else }}:
-              - group: ensono-stacks-acr-creds
+              - group: stacks-acr-creds
 
         jobs:
           - job: BuildImage
