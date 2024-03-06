@@ -103,7 +103,7 @@ variables:
 # Configure the stages
 stages:
   - stage: Infrastructure
-    condition: and(ne(variables['Build.SourceBranchName'], 'main'), eq(parameters.force_deploy, 'false'))
+    condition: and(ne(variables['Build.SourceBranchName'], 'main'), eq(${{ parameters['force_deploy'] }}, 'false'))
     variables:
       - group: azure-sp-creds
 
@@ -160,7 +160,7 @@ stages:
         displayName: ${{ stage.displayName }}
         dependsOn: ${{ stage.dependsOn }}
         variables:
-          - ${{ if or(eq(parameters.force_deploy, 'true'), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
+          - ${{ if or(eq(parameters['force_deploy'], 'true'), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
               - group: stacks-docker-creds
           - ${{ else }}:
               - group: stacks-acr-creds
