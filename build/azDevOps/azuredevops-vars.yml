@@ -58,15 +58,15 @@ variables:
   # DOCKER_USERNAME
 
   # Dashboard Publishing
-  - name: DASHBOARD_VERSION
-    value: $(version_semver)
-  - name: DASHBOARD_TAGS
-    value: environment=$(System.StageName),source=$(Build.SourceBranchName),app=$(Build.DefinitionName)
-  - name: DASHBOARD_MEASUREMENT
-    value: deployment # Static definition within Influx Config
-  - group: amido-stacks-influx-credentials-prod
-    # Group should contain:
-    # DASHBOARD_INFLUX_ORG
-    # DASHBOARD_INFLUX_BUCKET
-    # DASHBOARD_INFLUX_TOKEN
-    # DASHBOARD_INFLUX_SERVER
+  # - name: DASHBOARD_VERSION
+  #  value: $(version_semver)
+  #- name: DASHBOARD_TAGS
+  #  value: environment=$(System.StageName),source=$(Build.SourceBranchName),app=$(Build.DefinitionName)
+  #- name: DASHBOARD_MEASUREMENT
+  #  value: deployment # Static definition within Influx Config
+  #- group: amido-stacks-influx-credentials-prod
+  #  # Group should contain:
+  #  # DASHBOARD_INFLUX_ORG
+  #  # DASHBOARD_INFLUX_BUCKET
+  #  # DASHBOARD_INFLUX_TOKEN
+  #  # DASHBOARD_INFLUX_SERVER
