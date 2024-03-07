@@ -18,6 +18,9 @@ COPY --from=tools /usr/local/ghcli /usr/local/ghcli
 COPY --from=tools /usr/local/kluctl /usr/local/kluctl
 COPY --from=tools /usr/local/kustomize /usr/local/kustomize
 
+COPY --from=tools /usr/local/share/powershell/Modules/powershell-yaml /usr/local/share/powershell/Modules/powershell-yaml
+COPY --from=tools /usr/local/share/powershell/Modules/Pester /usr/local/share/powershell/Modules/Pester
+
 # Install the Cloud CLI applications
 COPY files/install.sh /usr/local/bin/install.sh
 RUN chmod +x /usr/local/bin/install.sh && /usr/local/bin/install.sh
