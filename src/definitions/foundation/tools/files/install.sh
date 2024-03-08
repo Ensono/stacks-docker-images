@@ -76,6 +76,13 @@ curl -L "https://github.com/docker/buildx/releases/download/v${DOCKER_BUILDX_VER
 chmod +x /usr/libexec/docker/cli-plugins/docker-buildx
 # ---------------------------------------------------------------------------
 
+# Install JQ ----------------------------------------------------------------
+echo "Installing: JQ"
+mkdir -p /usr/local/jq/bin
+curl -L "https://github.com/jqlang/jq/releases/download/jq-${JQ_VERSION}/jq-linux-${BIN_ARCH}" -o /usr/local/jq/bin
+chmod +x /usr/local/jq/bin/jq
+# ---------------------------------------------------------------------------
+
 # PowerShell Modules --------------------------------------------------------
 # PowerShell Azure **********************************************************
 pwsh -NoProfile -Command "Install-Module -Name Az -Scope AllUsers -Repository PSGallery -Force -RequiredVersion ${AZURE_AZ_MODULE_VERSON}"
