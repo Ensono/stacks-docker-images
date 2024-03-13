@@ -2,22 +2,25 @@ ARG IMAGE_REF=amidostacks/runner-pwsh
 FROM $IMAGE_REF
 
 # Install the data extension for the Az command
-RUN /azure-cli/bin/python -m azure.cli extension add --name datafactory
-
-# Remove old python and pip versions
-RUN  apk del py-pip \  
-     && apk del  python3-dev py3-pip \
-     && rm -rf ~/.cache/pip \ 
-     && apk del  python3
-
-# Add new updated repositry 
-RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.17/main" > /etc/apk/repositories 
-RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.17/community" >> /etc/apk/repositories 
-RUN apk update
-
-# Add latest version of python  and poetry
-RUN apk add --update python3 py3-pip gcc musl-dev linux-headers python3-dev
-RUN pip install pytest pylint pylint-exit pytest-azurepipelines pytest-cov poetry
-
-# Install the databricks CLI, precommit and tomli
-RUN pip install databricks-cli pre-commit tomli
+# Add latest version of python, databricks CLI, precommit and tomli, and other python dependencies
+RUN /azure-cli/bin/python -m azure.cli extension add --name datafactory \
+    && apk del py3-pip \
+    && apk add --no-cache --update \
+        python3 \
+        gcc \
+        musl-dev \
+        linux-headers \
+        python3-dev \
+    && python -m ensurepip --upgrade \
+    && ln -s $(which pip3) /usr/bin/pip \
+    && pip install wheel \
+    && pip install --no-cache-dir \
+        pytest \
+        pylint \
+        pylint-exit \
+        pytest-azurepipelines \
+        pytest-cov \
+        databricks-cli \
+        pre-commit \
+        tomli \
+        poetry
