@@ -44,6 +44,7 @@ ARG HELM_VERSION=3.12.0
 ARG ARM_TTK_VERSION="20221215"
 ARG KLUCTL_VERSION=v2.22.1
 ARG KUSTOMIZE_VERSION=v5.3.0
+ARG JQ_VERSION=jq-1.7.1
 
 # Configure environment variables
 ENV TZ="Europe/London"
@@ -146,6 +147,13 @@ RUN export ARCH="$(uname -m)" \
     && curl -L "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/${KUSTOMIZE_VERSION}/kustomize_${KUSTOMIZE_VERSION}_linux_amd64.tar.gz" -o /tmp/kustomize.tar.gz \
     && tar zxf /tmp/kustomize.tar.gz -C /usr/bin kustomize \
     && chmod +x /usr/bin/kustomize
+
+# Install JQ
+RUN export ARCH="$(uname -m)" \
+    && if [[ ${ARCH} == "x86_64" ]]; then export ARCH="amd64"; elif [[ ${ARCH} == "aarch64" ]]; then export ARCH="arm64"; fi \
+    && curl -L "https://github.com/jqlang/jq/releases/download/${JQ_VERSION}/jq-linux-${ARCH}" -o /tmp/jq \
+    && mv /tmp/jq /usr/bin/jq \
+    && chmod +x /usr/bin/jq
 
 # Remove packages that are no longer required
 RUN apk del --no-cache build-base linux-headers
