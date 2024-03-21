@@ -1,0 +1,211 @@
+name: "$(Build.SourceBranchName)-init"
+
+parameters:
+  - name: force_deploy
+    displayName: Force build and publish to Live
+    type: boolean
+    default: false
+  - name: upload
+    displayName: Upload generated files
+    type: boolean
+    default: false
+  - name: debug
+    displayName: Turn on debug for the Independent Runner
+    type: boolean
+    default: false
+  - name: stages
+    displayName: Container Image Stages
+    type: object
+    default:
+      - stage: FoundationPowerShell
+        displayName: "[CONTAINER] Foundation - PowerShell"
+        dependsOn:
+          - Infrastructure
+        taskName: build:foundation:powershell
+
+      - stage: FoundationAzureCli
+        displayName: "[CONTAINER] Foundation - Azure CLI"
+        dependsOn:
+          - FoundationPowerShell
+        taskName: build:foundation:azure-cli
+
+      - stage: FoundationTools
+        displayName: "[CONTAINER] Foundation - Tools"
+        dependsOn:
+          - FoundationPowerShell
+        taskName: build:foundation:tools
+
+      - stage: Infra
+        displayName: "[CONTAINER] Infrastructure"
+        dependsOn:
+          - FoundationTools
+          - FoundationAzureCli
+        taskName: build:infrastructure
+
+      - stage: Java
+        displayName: "[CONTAINER] Java"
+        dependsOn:
+          - FoundationTools
+        taskName: build:java
+
+      - stage: DotNet
+        displayName: "[CONTAINER] .NET"
+        dependsOn:
+          - Java
+        taskName: build:dotnet
+
+      - stage: Go
+        displayName: "[CONTAINER] Go"
+        dependsOn:
+          - FoundationPowerShell
+        taskName: build:golang
+
+      - stage: Inspec
+        displayName: "[CONTAINER] Inspec"
+        dependsOn:
+          - FoundationPowerShell
+        taskName: build:inspec
+
+      - stage: Kong
+        displayName: "[CONTAINER] Kong"
+        dependsOn:
+          - FoundationPowerShell
+        taskName: build:kong
+
+      - stage: AsciiDoctor
+        displayName: "[CONTAINER] AsciiDoctor"
+        dependsOn:
+          - Java
+        taskName: build:asciidoctor
+
+      - stage: AzureData
+        displayName: "[CONTAINER] Azure Data"
+        dependsOn:
+          - FoundationAzureCli
+        taskName: build:data
+
+pr:
+  - main
+
+trigger:
+  branches:
+    include:
+      - "main"
+  paths:
+    include:
+      - "*"
+
+variables:
+  - template: azuredevops-vars.yml
+  - name: DebugPreference
+    value: "Continue"
+
+# Configure the stages
+stages:
+  - stage: Infrastructure
+    condition: and(ne(variables['Build.SourceBranchName'], 'main'), eq(lower(${{ parameters['force_deploy'] }}), 'false'))
+    variables:
+      - group: azure-sp-creds
+
+    jobs:
+      - job: DeployInfrastructure
+        steps:
+          - template: templates/configure_agent.yml
+            parameters:
+              TasckctlVersion: $(TaskctlVersion)
+              EnsonoBuildVersion: $(EnsonoBuildVersion)
+              TerraformVersion: $(TerraformVersion)
+
+          - task: Bash@3
+            displayName: Setup
+            inputs:
+              targetType: inline
+              script: |
+                taskctl setup
+
+          - task: Bash@3
+            displayName: Terraform Variables
+            inputs:
+              targetType: inline
+              script: |
+                taskctl infrastructure_variables
+            env:
+              STAGE: acr
+              TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
+              TF_FILE_LOCATION: deploy/terraform/azure/acr
+
+              TF_VAR_name_company: $(name_company)
+              TF_VAR_name_component: $(name_component)
+              TF_VAR_name_project: $(name_project)
+
+          # Upload the Terraform variables file and the plan for debugging
+          - ${{ if eq(parameters.upload, true) }}:
+              - template: templates/upload.yml
+
+          - task: Bash@3
+            displayName: Infrastructure
+            inputs:
+              targetType: inline
+              script: |
+                taskctl infrastructure
+            env:
+              CLOUD_PLATFORM: azure
+              TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
+              TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
+              TF_FILE_LOCATION: deploy/terraform/azure/acr
+              STAGE: acr
+
+  - ${{ each stage in parameters.stages }}:
+      - stage: ${{ stage.stage }}
+        displayName: ${{ stage.displayName }}
+        dependsOn: ${{ stage.dependsOn }}
+        variables:
+          - ${{ if or(eq(parameters['force_deploy'], 'true'), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
+              - group: stacks-docker-creds
+          - ${{ else }}:
+              - group: stacks-acr-creds
+
+        jobs:
+          - job: BuildImage
+
+            steps:
+              - template: templates/configure_agent.yml
+                parameters:
+                  TasckctlVersion: $(TaskctlVersion)
+                  EnsonoBuildVersion: $(EnsonoBuildVersion)
+                  TerraformVersion: $(TerraformVersion)
+
+              - task: Bash@3
+                displayName: Build Image
+                inputs:
+                  targetType: inline
+                  script: |
+                    taskctl ${{ stage.taskName }}
+                env:
+                  DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+
+                # - task: Bash@3
+                #   displayName: Publish to Dashboard
+                #   inputs:
+                #     targetType: inline
+                #     script: |
+                #       taskctl publish
+                #   env:
+                #     ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}: # On main branch runs
+                #       PUBLISH_RELEASE: $true
+                #     DASHBOARD_INFLUX_TOKEN: $(DASHBOARD_INFLUX_TOKEN) # requires explicit mapping to be used as an env var
+
+                # # Generate the documentation
+                # - task: Bash@3
+                #   displayName: Generate Documentation
+                #   inputs:
+                #     targetType: inline
+                #     script: |
+                #       taskctl docs
+
+                # # Upload the documentation
+                # - task: PublishBuildArtifacts@1
+                #   displayName: Publish Documentation
+                #   inputs:
+                #     pathToPublish: $(Build.SourcesDirectory)/outputs/docs
+                #     artifactName: docs
