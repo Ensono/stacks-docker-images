@@ -50,12 +50,13 @@ gem install \
     "asciidoctor-epub3:${ASCIIDOCTOR_EPUB3_VERSION}" \
     "asciidoctor-fb2:${ASCIIDOCTOR_FB2_VERSION}" \
     "asciidoctor-mathematical:${ASCIIDOCTOR_MATHEMATICAL_VERSION}" \
+    "asciidoctor-chart:${ASCIIDOCTOR_CHART_VERSION}" \
     asciimath \
     "asciidoctor-revealjs:${ASCIIDOCTOR_REVEALJS_VERSION}" \
     coderay \
     epubcheck-ruby:4.2.4.0 \
     haml \
-    "kramdown-asciidoc:${KRAMDOWN_ASCIIDOC_VERSION}" \
+    "kramdown-asciidoc:${ASCIIDOCTOR_KRAMDOWN_VERSION}" \
     pygments.rb \
     rouge \
     slim \
@@ -78,3 +79,14 @@ apt-get clean
 # Install ERD binary
 curl -L "https://github.com/kaishuu0123/erd-go/releases/download/v${ERD_VERSION}/linux_${BIN_ARCH}_erd-go" -o /usr/local/bin/erd
 chmod +x /usr/local/bin/erd
+
+# Install the Pandoc dommand
+mkdir -p /usr/local/pandoc/bin
+curl -L "https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-linux-${BIN_ARCH}.tar.gz" -o /tmp/pandoc.tar.gz
+pushd /tmp
+tar zxf /tmp/pandoc.tar.gz
+mv pandoc-${PANDOC_VERSION}/bin/pandoc /usr/local/pandoc/bin
+popd
+
+# Remove files
+rm -rf /tmp/*
