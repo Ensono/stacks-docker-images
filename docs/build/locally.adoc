@@ -1,0 +1,136 @@
+=== Building Locally
+
+The necessary tools for building the images locally are:
+
+* Docker Engine
+** Docker Server
+** Docker Desktop - https://www.docker.com/products/docker-desktop/
+** Rancher Desktop - https://rancherdesktop.io 
+** POD Man - https://podman.io
+* {module_name} PowerShell Module - https://github.com/ensono/independent-runner
+
+The following table shows the commands that are required to build each image.
+
+.Docker commands to build images locally
+[cols="1,3a",options="header",stripes=even]
+|===
+| Image Name | Command
+| Foundation PowerShell |
+
+----
+docker build `
+    -f ./src/definitions/foundation/powershell/Dockerfile.ubuntu `
+    -t {registry_local}/eir-foundation-powershell `
+    ./src/definitions/foundation/powershell
+----
+| Foundation Tools |
+
+----
+docker build `
+    -f ./src/definitions/foundation/tools/Dockerfile.ubuntu `
+    -t {registry_local}/eir-foundation-tools `
+    --build-arg ORG={registry_org} `
+    --build-arg IMAGE_TAG=latest `
+    --build-arg REGISTRY={registry} `
+    ./src/definitions/foundation/tools
+----
+| Foundation Azure CLI |
+
+----
+docker build `
+    -f ./src/definitions/foundation/azure-cli/Dockerfile.ubuntu `
+    -t {registry_local}/eir-foundation-azure-cli `
+    --build-arg ORG={registry_org} `
+    --build-arg IMAGE_TAG=latest `
+    --build-arg REGISTRY={registry} `
+    ./src/definitions/foundation/azure-cli
+----
+| Infrastructure |
+
+----
+docker build `
+    -f ./src/definitions/infrastructure/Dockerfile.ubuntu `
+    -t {registry_local}/eir-infrastructure `
+    --build-arg ORG={registry_org} `
+    --build-arg IMAGE_TAG=latest `
+    --build-arg REGISTRY={registry} `
+    ./src/definitions/infrastructure
+----
+| Java |
+
+----
+docker build `
+    -f ./src/definitions/java/Dockerfile.ubuntu `
+    -t {registry_local}/eir-java `
+    --build-arg ORG={registry_org} `
+    --build-arg IMAGE_TAG=latest `
+    --build-arg REGISTRY={registry} `
+    ./src/definitions/java
+----
+| .NET |
+
+----
+docker build `
+    -f ./src/definitions/dotnet/Dockerfile.ubuntu `
+    -t {registry_local}/eir-dotnet `
+    --build-arg ORG={registry_org} `
+    --build-arg IMAGE_TAG=latest `
+    --build-arg REGISTRY={registry} `
+    ./src/definitions/dotnet
+----
+| GoLang |
+
+----
+docker build `
+    -f ./src/definitions/golang/Dockerfile.ubuntu `
+    -t {registry_local}/eir-golang `
+    --build-arg ORG={registry_org} `
+    --build-arg IMAGE_TAG=latest `
+    --build-arg REGISTRY={registry} `
+    ./src/definitions/golang
+----
+| InSpec |
+
+----
+docker build `
+    -f ./src/definitions/inspec/Dockerfile.ubuntu `
+    -t {registry_local}/eir-inspec `
+    --build-arg ORG={registry_org} `
+    --build-arg IMAGE_TAG=latest `
+    --build-arg REGISTRY={registry} `
+    ./src/definitions/inspec
+----
+| Kong |
+
+----
+docker build `
+    -f ./src/definitions/kong/Dockerfile.ubuntu `
+    -t {registry_local}/eir-kong `
+    --build-arg ORG={registry_org} `
+    --build-arg IMAGE_TAG=latest `
+    --build-arg REGISTRY={registry} `
+    ./src/definitions/kong
+----
+| Node |
+
+----
+docker build `
+    -f ./src/definitions/node/Dockerfile.ubuntu `
+    -t {registry_local}/eir-node `
+    --build-arg ORG={registry_org} `
+    --build-arg IMAGE_TAG=latest `
+    --build-arg REGISTRY={registry} `
+    ./src/definitions/node
+----
+| Asciidoctor |
+
+----
+docker build `
+    -f ./src/definitions/asciidoctor/Dockerfile.ubuntu `
+    -t {registry_local}/eir-asciidoctor `
+    --build-arg ORG={registry_org} `
+    --build-arg IMAGE_TAG=latest `
+    --build-arg REGISTRY={registry} `
+    ./src/definitions/asciidoctor
+----
+|===

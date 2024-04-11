@@ -53,7 +53,7 @@ contexts:
         - /app
         - --env-file
         - envfile
-        - amidostacks/runner-pwsh-asciidoctor
+        - ensonostackseuweirdfmu.azurecr.io/ensono/eir-asciidoctor:latest
         - pwsh
         - -NoProfile
         - -Command

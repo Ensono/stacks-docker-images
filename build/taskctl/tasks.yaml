@@ -73,6 +73,14 @@ tasks:
       #- Build-DockerImage -push -provider generic -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}" -latest0
     # Set variable IMAGE_NAME; i.e. stacks-api and DOCKER_BUILD_ARGS path i.e. ./image_definitions/base
 
+  generate:docker:overview:
+    context: powershell
+    description: Generate Docker overview files from main docs
+    command: |
+      $cmd = "./build/scripts/Set-DockerOverview.ps1"
+      Write-Host $cmd
+      Invoke-Expression $cmd
+
   build:number:
     context: powershell
     description: Update the build number

@@ -104,7 +104,7 @@ if ($registry -ieq "docker.io") {
         $path_parts = $Matches[1] -split "/"
         $readme_path = [IO.Path]::Combine([IO.Path]::Combine($path_parts), "README.md")
 
-        Write-Host ("Pusing README file: {0}" -f $readme_path)
+        Write-Host ("Pushing README file: {0}" -f $readme_path)
 
         # build up the command to run
         $cmd = "docker pushrm --provider dockerhub {0}/{1} --file {2}" -f $registry, $name, $readme_path

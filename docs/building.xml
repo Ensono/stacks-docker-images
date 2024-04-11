@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?asciidoc-toc?>
+<?asciidoc-numbered?>
+<article xmlns="http://docbook.org/ns/docbook" xmlns:xl="http://www.w3.org/1999/xlink" version="5.0" xml:lang="en">
+<info>
+<title>Building Images</title>
+<date>2024-03-21</date>
+</info>
+<section xml:id="_building_images">
+<title>Building Images</title>
+<simpara>As seen in the <xref linkend="docker-image-dependencies"/> image, all of the Docker images that are built for use with the Independent Runner are based on a hierarchy. This means that they need to be built in the correct order. All of the tasks are set in Taskctl.</simpara>
+<simpara>Although the build process uses the <literal>taskctl</literal> command line tool and some aspects of the Independent Runner are used, the Docker images are <emphasis role="strong">not</emphasis> used to build the images. The reason for this is to avoid a circular dependency on the images as they are being built.</simpara>
+<simpara>Due to the requirement to build without using container images and needing to produce images for multiple platforms, there are a couple of disadvantages:</simpara>
+<itemizedlist>
+<listitem>
+<simpara>When building locally, the necessary tools all need to be installed</simpara>
+</listitem>
+<listitem>
+<simpara>Depending on the Docker engine being used, the way in which the images are built differ.</simpara>
+</listitem>
+</itemizedlist>
+<important>
+<simpara>This goes against the ethos of the Independent Runner in running the same commands on any system. Please see <xref linkend="_multi_platform_builds"/> for more information.</simpara>
+</important>
+<section xml:id="_multi_platform_builds">
+<title>Multi Platform Builds</title>
+<simpara>Although Docker supports multi-platform builds, the way it works across different engines differs. For example if using Docker Desktop multi platform builds are very easy to do, however if running using a Docker server (as is the case on an ADO agent) a slightly different approach is required.</simpara>
+<simpara>The main difference is that a Docker server is not able to store the manifests for multi-platform build images so when a build is kicked off push details must be provided as well. This does not lend itself to a good locally experience as it is highly likely that local builds should not be pushed to the Docker registry.</simpara>
+<simpara>Currently, This means that we have a different approach for pipelines in a CI/CD system as we do for local machines.</simpara>
+</section>
+<section xml:id="_building_locally">
+<title>Building Locally</title>
+<simpara>The necessary tools for building the images locally are:</simpara>
+<itemizedlist>
+<listitem>
+<simpara>Docker Engine</simpara>
+<itemizedlist>
+<listitem>
+<simpara>Docker Server</simpara>
+</listitem>
+<listitem>
+<simpara>Docker Desktop - <link xl:href="https://www.docker.com/products/docker-desktop/">https://www.docker.com/products/docker-desktop/</link></simpara>
+</listitem>
+<listitem>
+<simpara>Rancher Desktop - <link xl:href="https://rancherdesktop.io">https://rancherdesktop.io</link></simpara>
+</listitem>
+<listitem>
+<simpara>POD Man - <link xl:href="https://podman.io">https://podman.io</link></simpara>
+</listitem>
+</itemizedlist>
+</listitem>
+<listitem>
+<simpara>{module_name} PowerShell Module - <link xl:href="https://github.com/ensono/independent-runner">https://github.com/ensono/independent-runner</link></simpara>
+</listitem>
+</itemizedlist>
+</section>
+<section xml:id="_building_in_a_cicd_pipeline">
+<title>Building in a CI/CD Pipeline</title>
+<simpara>Due to the way in which the the builds now work, an updated version of the <literal>Build-DockerImage</literal> cmdlet has been created and is in the <literal>build/scripts</literal> directory of the repository. A listing for this can be found in the <xref linkend="Build-DockerImage Script"/> appendix.</simpara>
+<simpara>The script uses <literal>dockerx</literal> to create a new build profile on the agent which is then used to create the images for the specified platforms. As this is using the Docker server, it is not able to store the manifests for multi-platform images so by default they need to be pushed to the relevant registry when building.</simpara>
+<simpara>In addition the latest tag is applied to each image when it is built to assist with discovery from each of the registries.</simpara>
+<simpara>Although EIR is not used to build the images, <literal>taskctl</literal> is. A context of called "powershell" runs all of the commands on the agent. The task that builds the image is called <literal>build:image:local</literal>. This is called by pipelines that pass in environment variables to ensure the task builds from the correct Dockerfile.</simpara>
+<figure xml:id="taskctl-pipeline">
+<title>Taskctl pipeline with environment variables</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="images/taskctl-pipeline.png"/>
+</imageobject>
+<textobject><phrase>taskctl pipeline</phrase></textobject>
+</mediaobject>
+</figure>
+<simpara>The code shown in <xref linkend="taskctl-pipeline"/> details the pipeline that is called to build the foundation powershell image. The environment variables passed to the task determine what image is built. The task that is being called is shown below.</simpara>
+<figure xml:id="taskctl-task">
+<title>Taskctl task calling Build-DockerImage script</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="images/taskctl-task-docker-image.png"/>
+</imageobject>
+<textobject><phrase>taskctl task docker image</phrase></textobject>
+</mediaobject>
+</figure>
+</section>
+<section xml:id="_azure_devops">
+<title>Azure DevOps</title>
+<simpara>A pipeline has been configured for Azure DevOps, which calls <literal>taskctl</literal>, and runs the tasks as described previously.</simpara>
+<simpara>A number of parameters have been defined which allow the behaviour of the pipeline to be changed at run time.</simpara>
+<informaltable frame="all" rowsep="1" colsep="1">
+<tgroup cols="3">
+<colspec colname="col_1" colwidth="20*"/>
+<colspec colname="col_2" colwidth="60*"/>
+<colspec colname="col_3" colwidth="20*"/>
+<thead>
+<row>
+<entry align="left" valign="top">Name</entry>
+<entry align="left" valign="top">Description</entry>
+<entry align="left" valign="top">Default Value</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry align="left" valign="top"><simpara><literal>force_deploy</literal></simpara></entry>
+<entry align="left" valign="top"><simpara>Typically an image is only pushed to Docker hub when it is run from the <literal>main</literal> branch, however by using this parameter it is possible to force the deployment from a branch</simpara></entry>
+<entry align="left" valign="top"><simpara><inlinemediaobject>
+<imageobject>
+<imagedata fileref="./images/icons/fas-times.png"/>
+</imageobject>
+<textobject><phrase>fas times</phrase></textobject>
+</inlinemediaobject></simpara></entry>
+</row>
+<row>
+<entry align="left" valign="top"><simpara><literal>upload</literal></simpara></entry>
+<entry align="left" valign="top"><simpara>Upload generated files as an artifact of the build.</simpara></entry>
+<entry align="left" valign="top"><simpara><inlinemediaobject>
+<imageobject>
+<imagedata fileref="./images/icons/fas-times.png"/>
+</imageobject>
+<textobject><phrase>fas times</phrase></textobject>
+</inlinemediaobject></simpara></entry>
+</row>
+<row>
+<entry align="left" valign="top"><simpara><literal>debug</literal></simpara></entry>
+<entry align="left" valign="top"><simpara>Turn on debug output for <literal>taskctl</literal></simpara></entry>
+<entry align="left" valign="top"><simpara><inlinemediaobject>
+<imageobject>
+<imagedata fileref="./images/icons/fas-times.png"/>
+</imageobject>
+<textobject><phrase>fas times</phrase></textobject>
+</inlinemediaobject></simpara></entry>
+</row>
+<row>
+<entry align="left" valign="top"><simpara><literal>stages</literal></simpara></entry>
+<entry align="left" valign="top"><simpara>A list of objects that define what pipeline from <literal>taskctl</literal> needs to be run.</simpara><simpara>It has been specified like this so that the stages can be iterated over, rather than having to be declarative on all stages.</simpara></entry>
+<entry align="left" valign="top"><simpara><xref linkend="Azure DevOps Pipeline Stages"/></simpara></entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+<simpara>The object that contains the stages also contains the dependencies between the different stages. This means that all of the Docker images are built in the correct order. This order can be seen when the pipeline runs in Azure DevOps, this very closely reflects the dependency map as shown in <xref linkend="docker-image-dependencies"/> figure.</simpara>
+<figure>
+<title>Azure DevOps Stages</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="images/ado-stage-deps.png"/>
+</imageobject>
+<textobject><phrase>ado stage deps</phrase></textobject>
+</mediaobject>
+</figure>
+<simpara>The build pipeline for Azure DevOps uses the following workflow.</simpara>
+<figure>
+<title>Build process in Azure DevOps</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="images/ado-build-process.png"/>
+</imageobject>
+<textobject><phrase>ado build process</phrase></textobject>
+</mediaobject>
+</figure>
+<section xml:id="_docker_hub_overview">
+<title>Docker Hub Overview</title>
+<simpara>One of the things that Docker Hub allows is an overview to be published. This is generally a README file from the folder that the <literal>Dockerfile</literal> resides in. However this also forms part of the documentation. So in this repo the README.md files are generated from the AsciiDoctor files in the <literal>docs/</literal> directory.</simpara>
+<informaltable frame="all" rowsep="1" colsep="1">
+<tgroup cols="2">
+<colspec colname="col_1" colwidth="50*"/>
+<colspec colname="col_2" colwidth="50*"/>
+<thead>
+<row>
+<entry align="left" valign="top">AsciiDoctor File</entry>
+<entry align="left" valign="top">README destination</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry align="left" valign="top"><simpara>docs/docker-definitions/foundation/powershell.adoc</simpara></entry>
+<entry align="left" valign="top"><simpara>src/definitions/foundation/powershell/README.md</simpara></entry>
+</row>
+<row>
+<entry align="left" valign="top"><simpara>docs/docker-definitions/foundation/tools.adoc</simpara></entry>
+<entry align="left" valign="top"><simpara>src/definitions/foundation/tools/README.md</simpara></entry>
+</row>
+<row>
+<entry align="left" valign="top"><simpara>docs/docker-definitions/foundation/azure-cli.adoc</simpara></entry>
+<entry align="left" valign="top"><simpara>src/definitions/foundation/azure-cli/README.md</simpara></entry>
+</row>
+<row>
+<entry align="left" valign="top"><simpara>docs/docker-definitions/asciidoctor.adoc</simpara></entry>
+<entry align="left" valign="top"><simpara>src/definitions/asciidoctor/README.md</simpara></entry>
+</row>
+<row>
+<entry align="left" valign="top"><simpara>docs/docker-definitions/data.adoc</simpara></entry>
+<entry align="left" valign="top"><simpara>src/definitions/data/README.md</simpara></entry>
+</row>
+<row>
+<entry align="left" valign="top"><simpara>docs/docker-definitions/dotnet.adoc</simpara></entry>
+<entry align="left" valign="top"><simpara>src/definitions/dotnet/README.md</simpara></entry>
+</row>
+<row>
+<entry align="left" valign="top"><simpara>docs/docker-definitions/golang.adoc</simpara></entry>
+<entry align="left" valign="top"><simpara>src/definitions/golang/README.md</simpara></entry>
+</row>
+<row>
+<entry align="left" valign="top"><simpara>docs/docker-definitions/infrastructure.adoc</simpara></entry>
+<entry align="left" valign="top"><simpara>src/definitions/infrastructure/README.md</simpara></entry>
+</row>
+<row>
+<entry align="left" valign="top"><simpara>docs/docker-definitions/inspec.adoc</simpara></entry>
+<entry align="left" valign="top"><simpara>src/definitions/inspec/README.md</simpara></entry>
+</row>
+<row>
+<entry align="left" valign="top"><simpara>docs/docker-definitions/java.adoc</simpara></entry>
+<entry align="left" valign="top"><simpara>src/definitions/java/README.md</simpara></entry>
+</row>
+<row>
+<entry align="left" valign="top"><simpara>docs/docker-definitions/kong.adoc</simpara></entry>
+<entry align="left" valign="top"><simpara>src/definitions/kong/README.md</simpara></entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+<simpara>AS these README.md files are generated from the main documentation branch, the pattern <literal>src/definitions/**/README.md</literal> has been added to the <literal>.gitignore</literal> file so that they are not checked in automatically.</simpara>
+<simpara>The reason for doing the conversion from AsciiDoctor to Markdown, rather than the other way around, is that documentation can be taken by other processes and built - if the Markdown had to be converted this would need to be taken into account in the retrieval process making things harder to manage.</simpara>
+<simpara>The process that manages the generation of the README files is a PowerShell script that is called by Taskctl as part of the build.</simpara>
+<table frame="all" rowsep="1" colsep="1">
+<title>Task for generating Docker overview files</title>
+<tgroup cols="3">
+<colspec colname="col_1" colwidth="33.3333*"/>
+<colspec colname="col_2" colwidth="33.3333*"/>
+<colspec colname="col_3" colwidth="33.3334*"/>
+<thead>
+<row>
+<entry align="left" valign="top">Taskctl Task</entry>
+<entry align="left" valign="top">PowerShell Script</entry>
+<entry align="left" valign="top">Script Reference</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry align="left" valign="top"><simpara><literal>generate:docker:overview</literal></simpara></entry>
+<entry align="left" valign="top"><simpara><literal>build/scripts/Set-DockerOverview.ps1</literal></simpara></entry>
+<entry align="left" valign="top"><simpara><xref linkend="Set-DockerOverview Script"/></simpara></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+<note>
+<simpara>The <literal>generate:docker:overview</literal> is set as part of the Taskctl <literal>docs</literal> pipeline</simpara>
+</note>
+</section>
+</section>
+</section>
+</article>

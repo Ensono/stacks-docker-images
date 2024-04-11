@@ -18,13 +18,16 @@ COPY --from=tools /usr/local/ghcli /usr/local/ghcli
 COPY --from=tools /usr/local/kluctl /usr/local/kluctl
 COPY --from=tools /usr/local/kustomize /usr/local/kustomize
 COPY --from=tools /usr/local/jq /usr/local/jq
+COPY --from=tools /usr/local/terrascan /usr/local/terrascan
 
 COPY --from=tools /usr/local/share/powershell/Modules/powershell-yaml /usr/local/share/powershell/Modules/powershell-yaml
 COPY --from=tools /usr/local/share/powershell/Modules/Pester /usr/local/share/powershell/Modules/Pester
+COPY --from=tools /usr/local/share/powershell/Modules/PSScriptAnalyzer /usr/local/share/powershell/Modules/PSScriptAnalyzer
 
 # Install the Cloud CLI applications
+COPY files/requirements.txt /tmp/requirements.txt
 COPY files/install.sh /usr/local/bin/install.sh
 RUN chmod +x /usr/local/bin/install.sh && /usr/local/bin/install.sh
 
 # Set the PATH so that the tools can be accessed
-ENV PATH="${PATH}:/usr/local/kubectl/bin:/usr/local/helm/bin:/usr/local/terraform/bin:/usr/local/ghcli/bin:/usr/local/kluctl/bin:/usr/local/kustomize/bin:/usr/local/jq/bin"
+ENV PATH="${PATH}:/usr/local/kubectl/bin:/usr/local/helm/bin:/usr/local/terraform/bin:/usr/local/ghcli/bin:/usr/local/kluctl/bin:/usr/local/kustomize/bin:/usr/local/jq/bin:/usr/local/terrascan/bin"

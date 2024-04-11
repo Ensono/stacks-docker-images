@@ -155,6 +155,8 @@ stages:
               TF_FILE_LOCATION: deploy/terraform/azure/acr
               STAGE: acr
 
+  # TODO: Place stage to build the documentation here
+
   - ${{ each stage in parameters.stages }}:
       - stage: ${{ stage.stage }}
         displayName: ${{ stage.displayName }}

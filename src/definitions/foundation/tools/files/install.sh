@@ -37,6 +37,15 @@ unzip /tmp/terraform.zip -d /usr/local/terraform/bin
 chmod +x /usr/local/terraform/bin/terraform
 # ---------------------------------------------------------------------------
 
+# Terrascan -----------------------------------------------------------------
+echo "Installing: TerraScan"
+mkdir -p /usr/local/terrascan/bin 
+curl -L "https://github.com/tenable/terrascan/releases/download/v${TERRASCAN_VERSION}/terrascan_${TERRASCAN_VERSION}_Linux_${UNAME_ARCH}.tar.gz" -o /tmp/terrascan.tar.gz
+tar zxf /tmp/terrascan.tar.gz -C /tmp
+mv /tmp/terrascan /usr/local/terrascan/bin
+chmod +x /usr/local/terrascan/bin/terrascan
+# ---------------------------------------------------------------------------
+
 # GH CLI --------------------------------------------------------------------
 echo "Installing: GitHub CLI"
 curl -L "https://github.com/cli/cli/releases/download/v${GHCLI_VERSION}/gh_${GHCLI_VERSION}_linux_${BIN_ARCH}.tar.gz" -o /tmp/ghcli.tar.gz 
@@ -96,12 +105,18 @@ pwsh -NoProfile -Command "Install-Module -Name Pester -Scope AllUsers -Repositor
 pwsh -NoProfile -Command "Install-Module -Name Powershell-Yaml -Scope AllUsers -Repository PSGallery -Force -RequiredVersion ${POWERSHELL_YAML_VERSION}"
 # ***************************************************************************
 
+# PSScriptAnalyzer **********************************************************
+pwsh -NoProfile -Command "Install-Module -Name PSScriptAnalyzer -Scope AllUsers -Repository PSGallery -Force -RequiredVersion ${PSSCRIPTANALYZER_VERSION}"
+# ***************************************************************************
+
 # ARM Template Checker ******************************************************
 # Install this into the global Modules directory as this is not likely to need
 # to be overridden (/usr/local/share/powershell/Modules)
 curl -L https://github.com/Azure/arm-ttk/releases/download/${ARM_TTK_VERSION}/arm-ttk.zip -o /tmp/arm-ttk.zip 
 unzip -d /usr/local/share/powershell/Modules /tmp/arm-ttk.zip
 # ***************************************************************************
+
+
 
 # Clean Up ******************************************************************
 # Remove everything from the temp directory

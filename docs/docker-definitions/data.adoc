@@ -1,0 +1,27 @@
+== EIR Data
+
+The Ensono Stacks Data project requires the Azure CLI with the `datafactory` extension added. This image builds ont he Azure LCI image and 9installs the necessary extension. Python is already installed so can be used for data engineering.
+
+The image is built from the Ensono Azure CLI image, this is so that the necessary extensions can be installed.
+
+=== Specs
+
+**Platforms**: `linux/amd64`, `linux/arm64`
+
+**Base Image**: ensono/eir-foundation-azure-cli
+
+==== Software
+
+[cols="1,2,1,2",options=header]
+|====
+| Type | Name | Version | URL 
+| Extension | datafactory | - | https://learn.microsoft.com/en-us/cli/azure/azure-cli-extensions-overview
+| Python | pytest | 8.0.1 | https://pypi.org/project/pytest/
+| Python | pylint | 3.0.3 | https://pypi.org/project/pylint/
+| Python | pylint-exit | 1.2.0 | https://pypi.org/project/pylint-exit/
+| Python | pytest-azurepipelines | 1.0.5 | https://pypi.org/project/pytest-azurepipelines
+| Python | pytest-cov | 4.1.0 | https://pypi.org/project/pytest-cov
+| Python | poetry | 1.7.1 | https://pypi.org/project/poetry
+| Python | databricks-cli | 0.18.0 | https://pypi.org/project/databricks-cli
+| Python | tomli | 2.0.1 | https://pypi.org/project/tomli
+|====
