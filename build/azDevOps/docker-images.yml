@@ -161,6 +161,12 @@ stages:
     jobs:
       - job: GenerateDocumentation
         steps:
+          - template: templates/configure_agent.yml
+            parameters:
+              TasckctlVersion: $(TaskctlVersion)
+              EnsonoBuildVersion: $(EnsonoBuildVersion)
+              TerraformVersion: $(TerraformVersion)
+
           # Generate the documentation
           - task: Bash@3
             displayName: Generate Documentation
