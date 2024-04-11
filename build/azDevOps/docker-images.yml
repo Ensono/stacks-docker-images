@@ -155,7 +155,26 @@ stages:
               TF_FILE_LOCATION: deploy/terraform/azure/acr
               STAGE: acr
 
-  # TODO: Place stage to build the documentation here
+  - stage: documentation
+    displayName: Documentation
+
+    jobs:
+      - job: GenerateDocumentation
+        steps:
+          # Generate the documentation
+          - task: Bash@3
+            displayName: Generate Documentation
+            inputs:
+              targetType: inline
+              script: |
+                taskctl docs
+
+          # Upload the documentation
+          - task: PublishBuildArtifacts@1
+            displayName: Publish Documentation
+            inputs:
+              pathToPublish: $(Build.SourcesDirectory)/outputs/docs
+              artifactName: docs
 
   - ${{ each stage in parameters.stages }}:
       - stage: ${{ stage.stage }}
@@ -185,29 +204,3 @@ stages:
                     taskctl ${{ stage.taskName }}
                 env:
                   DOCKER_IMAGE_TAG: $(Build.BuildNumber)
-
-                # - task: Bash@3
-                #   displayName: Publish to Dashboard
-                #   inputs:
-                #     targetType: inline
-                #     script: |
-                #       taskctl publish
-                #   env:
-                #     ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}: # On main branch runs
-                #       PUBLISH_RELEASE: $true
-                #     DASHBOARD_INFLUX_TOKEN: $(DASHBOARD_INFLUX_TOKEN) # requires explicit mapping to be used as an env var
-
-                # # Generate the documentation
-                # - task: Bash@3
-                #   displayName: Generate Documentation
-                #   inputs:
-                #     targetType: inline
-                #     script: |
-                #       taskctl docs
-
-                # # Upload the documentation
-                # - task: PublishBuildArtifacts@1
-                #   displayName: Publish Documentation
-                #   inputs:
-                #     pathToPublish: $(Build.SourcesDirectory)/outputs/docs
-                #     artifactName: docs
