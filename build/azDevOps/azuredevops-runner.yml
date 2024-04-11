@@ -197,6 +197,13 @@ stages:
                   TerraformVersion: $(TerraformVersion)
 
               - task: Bash@3
+                displayName: Create Image Overview
+                inputs:
+                  targetType: inline
+                  script: |
+                    taskctl generate:docker:overview
+
+              - task: Bash@3
                 displayName: Build Image
                 inputs:
                   targetType: inline

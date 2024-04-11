@@ -90,8 +90,6 @@ pipelines:
     - pipeline: setup
     - task: _docs
       depends_on: setup
-    - task: generate:docker:overview
-      depends_on: docs
 
   # Pipeline to ensure that the infrastructure is valid
   infrastructure:
