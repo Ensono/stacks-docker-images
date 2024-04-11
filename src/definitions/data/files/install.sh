@@ -4,8 +4,7 @@
 apt-get update
 apt-get install -y \
     python3-pip \
-    gpg \
-
+    gpg
 
 # Install the AZ CLI datafactory extenstion
 az extension add --name datafactory

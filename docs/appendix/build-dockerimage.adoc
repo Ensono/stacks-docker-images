@@ -1,0 +1,8 @@
+=== Build-DockerImage Script
+
+The script for building the docker image is displayed below, or can be found at https://github.com/Ensono/stacks-docker-images/blob/main/build/scripts/Build-DockerImage.ps1.
+
+[source,powershell,linenums]
+----
+include::../../build/scripts/Build-DockerImage.ps1[]
+----

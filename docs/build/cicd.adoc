@@ -1,0 +1,22 @@
+=== Building in a CI/CD Pipeline
+
+Due to the way in which the the builds now work, an updated version of the `Build-DockerImage` cmdlet has been created and is in the `build/scripts` directory of the repository. A listing for this can be found in the <<Build-DockerImage Script>> appendix.
+
+The script uses `dockerx` to create a new build profile on the agent which is then used to create the images for the specified platforms. As this is using the Docker server, it is not able to store the manifests for multi-platform images so by default they need to be pushed to the relevant registry when building.
+
+In addition the latest tag is applied to each image when it is built to assist with discovery from each of the registries.
+
+Although EIR is not used to build the images, `taskctl` is. A context of called "powershell" runs all of the commands on the agent. The task that builds the image is called `build:image:local`. This is called by pipelines that pass in environment variables to ensure the task builds from the correct Dockerfile.
+
+.Taskctl pipeline with environment variables
+[#taskctl-pipeline]
+image::images/taskctl-pipeline.png[]
+
+The code shown in <<taskctl-pipeline>> details the pipeline that is called to build the foundation powershell image. The environment variables passed to the task determine what image is built. The task that is being called is shown below.
+
+.Taskctl task calling Build-DockerImage script
+[#taskctl-task]
+image::images/taskctl-task-docker-image.png[]
+
+include::cicd/ado.adoc[]
+

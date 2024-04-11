@@ -1,0 +1,75 @@
+=== Azure DevOps Pipeline Stages
+
+[source,yaml,linenums]
+----
+  - name: stages
+    displayName: Container Image Stages
+    type: object
+    default:
+      - stage: FoundationPowerShell
+        displayName: "[CONTAINER] Foundation - PowerShell"
+        dependsOn:
+          - Infrastructure
+        taskName: build:foundation:powershell
+
+      - stage: FoundationAzureCli
+        displayName: "[CONTAINER] Foundation - Azure CLI"
+        dependsOn:
+          - FoundationPowerShell
+        taskName: build:foundation:azure-cli
+
+      - stage: FoundationTools
+        displayName: "[CONTAINER] Foundation - Tools"
+        dependsOn:
+          - FoundationPowerShell
+        taskName: build:foundation:tools
+
+      - stage: Infra
+        displayName: "[CONTAINER] Infrastructure"
+        dependsOn:
+          - FoundationTools
+          - FoundationAzureCli
+        taskName: build:infrastructure
+
+      - stage: Java
+        displayName: "[CONTAINER] Java"
+        dependsOn:
+          - FoundationTools
+        taskName: build:java
+
+      - stage: DotNet
+        displayName: "[CONTAINER] .NET"
+        dependsOn:
+          - Java
+        taskName: build:dotnet
+
+      - stage: Go
+        displayName: "[CONTAINER] Go"
+        dependsOn:
+          - FoundationPowerShell
+        taskName: build:golang
+
+      - stage: Inspec
+        displayName: "[CONTAINER] Inspec"
+        dependsOn:
+          - FoundationPowerShell
+        taskName: build:inspec
+
+      - stage: Kong
+        displayName: "[CONTAINER] Kong"
+        dependsOn:
+          - FoundationPowerShell
+        taskName: build:kong
+
+      - stage: AsciiDoctor
+        displayName: "[CONTAINER] AsciiDoctor"
+        dependsOn:
+          - Java
+        taskName: build:asciidoctor
+
+      - stage: AzureData
+        displayName: "[CONTAINER] Azure Data"
+        dependsOn:
+          - FoundationAzureCli
+        taskName: build:data
+----

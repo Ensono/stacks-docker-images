@@ -1,0 +1,64 @@
+:src_docs_path: docs/docker-definitions
+:dst_docs_path: src/definitions
+
+=== Azure DevOps
+
+A pipeline has been configured for Azure DevOps, which calls `taskctl`, and runs the tasks as described previously.
+
+A number of parameters have been defined which allow the behaviour of the pipeline to be changed at run time.
+
+[cols="1,3,1a",stripes=even,options=header]
+|===
+| Name | Description | Default Value
+| `force_deploy` | Typically an image is only pushed to Docker hub when it is run from the `main` branch, however by using this parameter it is possible to force the deployment from a branch | icon:fas-times[]
+| `upload` | Upload generated files as an artifact of the build. | icon:fas-times[]
+| `debug` | Turn on debug output for `taskctl` | icon:fas-times[]
+| `stages` | A list of objects that define what pipeline from `taskctl` needs to be run.
+
+It has been specified like this so that the stages can be iterated over, rather than having to be declarative on all stages. | <<Azure DevOps Pipeline Stages>> 
+|===
+
+The object that contains the stages also contains the dependencies between the different stages. This means that all of the Docker images are built in the correct order. This order can be seen when the pipeline runs in Azure DevOps, this very closely reflects the dependency map as shown in <<docker-image-dependencies>> figure.
+
+.Azure DevOps Stages
+image::images/ado-stage-deps.png[]
+
+The build pipeline for Azure DevOps uses the following workflow.
+
+.Build process in Azure DevOps
+image::images/ado-build-process.png[]
+
+==== Docker Hub Overview
+
+One of the things that Docker Hub allows is an overview to be published. This is generally a README file from the folder that the `Dockerfile` resides in. However this also forms part of the documentation. So in this repo the README.md files are generated from the AsciiDoctor files in the `docs/` directory.
+
+[cols="1,1",options=header,stripes=even]
+|===
+| AsciiDoctor File | README destination
+| {src_docs_path}/foundation/powershell.adoc | {dst_docs_path}/foundation/powershell/README.md
+| {src_docs_path}/foundation/tools.adoc | {dst_docs_path}/foundation/tools/README.md
+| {src_docs_path}/foundation/azure-cli.adoc | {dst_docs_path}/foundation/azure-cli/README.md
+| {src_docs_path}/asciidoctor.adoc | {dst_docs_path}/asciidoctor/README.md
+| {src_docs_path}/data.adoc | {dst_docs_path}/data/README.md
+| {src_docs_path}/dotnet.adoc | {dst_docs_path}/dotnet/README.md
+| {src_docs_path}/golang.adoc | {dst_docs_path}/golang/README.md
+| {src_docs_path}/infrastructure.adoc | {dst_docs_path}/infrastructure/README.md
+| {src_docs_path}/inspec.adoc | {dst_docs_path}/inspec/README.md
+| {src_docs_path}/java.adoc | {dst_docs_path}/java/README.md
+| {src_docs_path}/kong.adoc | {dst_docs_path}/kong/README.md
+|===
+
+AS these README.md files are generated from the main documentation branch, the pattern `src/definitions/**/README.md` has been added to the `.gitignore` file so that they are not checked in automatically.
+
+The reason for doing the conversion from AsciiDoctor to Markdown, rather than the other way around, is that documentation can be taken by other processes and built - if the Markdown had to be converted this would need to be taken into account in the retrieval process making things harder to manage.
+
+The process that manages the generation of the README files is a PowerShell script that is called by Taskctl as part of the build.
+
+.Task for generating Docker overview files
+[options=header,stripes=even]
+|===
+| Taskctl Task | PowerShell Script | Script Reference
+| `generate:docker:overview` | `build/scripts/Set-DockerOverview.ps1` | <<Set-DockerOverview Script>>
+|===
+
+NOTE: The `generate:docker:overview` is set as part of the Taskctl `docs` pipeline

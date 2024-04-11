@@ -1,28 +1,30 @@
 {
-    "title": "Stacks Docker Images - {{ DOCKER_IMAGE_TAG }}",
-    "output": "{{ basepath }}/outputs/docs/{{ format }}",
-    "trunkBranch": "main",
-    "path": "{{ basepath }}/docs/index.adoc",
-    "libs": [
-        "asciidoctor-diagram"
-    ],
-    "pdf": {
-        "attributes": [
-            "pdf-theme={{ basepath }}/build/conf/pdf/theme.yml",
-            "pdf-fontsdir=\"{{ basepath }}/docs/styles/fonts;GEM_FONTS_DIR\"",
-            "allow-uri-read",
-            "blockdiag=/usr/bin/blockdiag",
-            "skip-front-matter"
-        ]
-    },
-    "html": {
-        "attributes": [
-            "stylesheet={{ basepath }}/conf/html/style.css",
-            "allow-uri-read",
-            "toc=left",
-            "java=/usr/bin/java",
-            "graphvizdot=/usr/bin/dot",
-            "skip-front-matter"
-        ]
-    }
+  "title": "Stacks Docker Images - {{ DOCKER_IMAGE_TAG }}",
+  "output": "{{ basepath }}/outputs/docs/{{ format }}",
+  "trunkBranch": "main",
+  "path": "{{ basepath }}/docs/index.adoc",
+  "libs": [
+    "asciidoctor-diagram",
+    "asciidoctor-chart",
+    "/app/build/lib/glob-include-processor.rb"
+  ],
+  "pdf": {
+    "attributes": [
+      "pdf-theme={{ basepath }}/build/config/pdf/theme.yml",
+      "pdf-fontsdir=\"{{ basepath }}/docs/styles/fonts;GEM_FONTS_DIR\"",
+      "allow-uri-read",
+      "blockdiag=/usr/bin/blockdiag",
+      "skip-front-matter"
+    ]
+  },
+  "html": {
+    "attributes": [
+      "stylesheet={{ basepath }}/config/html/style.css",
+      "allow-uri-read",
+      "toc=left",
+      "java=/usr/bin/java",
+      "graphvizdot=/usr/bin/dot",
+      "skip-front-matter"
+    ]
+  }
 }
