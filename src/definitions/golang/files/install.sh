@@ -1,7 +1,7 @@
 #/bin/bash
 
 # Determine the architecture of the image
-/usr/local/bin/platform.sh
+. /usr/local/bin/platform.sh
 
 # Update APT and install nessary packages
 apt-get update
