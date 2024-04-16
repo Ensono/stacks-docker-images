@@ -25,6 +25,7 @@ It is based on the Ensono Stacks Founcation Azure CLI so that the `az` command i
 | PS Module | PowerShell YAML | |
 | PS Module | Pester | | 
 | PS Module | PSCloudShell | |
+| PS Module | PSScriptAnalyzer | |
 |====
 
 NOTE: For versions of the tools that are copied from the tools image please refer to the https://hub.docker.com/r/ensono/eir-foundation-tools image.
