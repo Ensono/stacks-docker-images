@@ -2,7 +2,7 @@
 
 This image is desgined to be used for everything that is Platform Engineering (DevOps) based. It contains tools for deploying infrastructure and applications.
 
-It is based on the Ensono Stacks Founcation Azure CLI so that the `az` command is available. The other tools are copied from the ensono/eir-foundation-tools image.
+It is based on the Ensono Stacks Foundation Azure CLI so that the `az` command is available. The other tools are copied from the ensono/eir-foundation-tools image.
 
 === Specs
 
