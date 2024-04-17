@@ -30,3 +30,26 @@ The image is built from the Ensono Java image, as there are components that are 
 | Gem | asciidoctor-reducer | 1.0.6 | https://rubygems.org/gems/asciidoctor-reducer
 | Gem | kramdown_asciidoc | 2.1.0 | https://rubygems.org/gems/kramdown-asciidoc
 |====
+
+In addition to the above binaries and Ruby Gems, the image has been populated with custom libraries that enhance the functionality of the Asciidoctor tool. The following table shows these libraries and an example command of how to use them in an Asciidoctor document.
+
+[cols="1,1a,2a",options=header]
+|====
+| Name | Location | Example Usage
+| Glob Include | 
+----
+/usr/local/ensono/lib/glob_include_processor.rb
+----
+| 
+----
+# include::glob:*.adoc[]
+----
+
+|====
+
+The following command is an example of how to generate a PDF using AsciiDoctor with the Glob Include extension.
+
+[source,shell]
+----
+asciidoctor-pdf -r /usr/local/ensono/lib/glob_include_processor.rb index.adoc
+----

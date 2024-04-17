@@ -6,7 +6,7 @@
   "libs": [
     "asciidoctor-diagram",
     "asciidoctor-chart",
-    "/app/build/lib/glob-include-processor.rb"
+    "/usr/local/ensono/lib/glob-include-processor.rb"
   ],
   "pdf": {
     "attributes": [
