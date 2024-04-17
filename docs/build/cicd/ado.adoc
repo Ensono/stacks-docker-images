@@ -48,7 +48,7 @@ One of the things that Docker Hub allows is an overview to be published. This is
 | {src_docs_path}/kong.adoc | {dst_docs_path}/kong/README.md
 |===
 
-AS these README.md files are generated from the main documentation branch, the pattern `src/definitions/**/README.md` has been added to the `.gitignore` file so that they are not checked in automatically.
+As these README.md files are generated from the main documentation branch, the pattern `src/definitions/**/README.md` has been added to the `.gitignore` file so that they are not checked in automatically.
 
 The reason for doing the conversion from AsciiDoctor to Markdown, rather than the other way around, is that documentation can be taken by other processes and built - if the Markdown had to be converted this would need to be taken into account in the retrieval process making things harder to manage.
 

@@ -80,7 +80,7 @@ apt-get clean
 curl -L "https://github.com/kaishuu0123/erd-go/releases/download/v${ERD_VERSION}/linux_${BIN_ARCH}_erd-go" -o /usr/local/bin/erd
 chmod +x /usr/local/bin/erd
 
-# Install the Pandoc dommand
+# Install the Pandoc command
 mkdir -p /usr/local/pandoc/bin
 curl -L "https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-linux-${BIN_ARCH}.tar.gz" -o /tmp/pandoc.tar.gz
 pushd /tmp

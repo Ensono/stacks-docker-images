@@ -1,11 +1,6 @@
 ARG REGISTRY=docker.io
 ARG IMAGE_TAG=0.0.1-workstation
 ARG ORG=ensono
-
-# After updating the Java version, ensure that the major version is set in
-# the PATH environment update on ine 19
-# This is done so that all the Java comands are available on the path without
-# having to setup lots of symbolic links
 ARG JAVA_VERSION=21.0.1
 
 # Pull in Azul Java from image

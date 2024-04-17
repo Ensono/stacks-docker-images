@@ -1,6 +1,6 @@
 == EIR Data
 
-The Ensono Stacks Data project requires the Azure CLI with the `datafactory` extension added. This image builds ont he Azure LCI image and 9installs the necessary extension. Python is already installed so can be used for data engineering.
+The Ensono Stacks Data project requires the Azure CLI with the `datafactory` extension added. This image builds on the Azure LCI image and installs the necessary extension. Python is already installed so can be used for data engineering.
 
 The image is built from the Ensono Azure CLI image, this is so that the necessary extensions can be installed.
 

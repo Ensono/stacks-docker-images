@@ -27,6 +27,3 @@ RUN chmod +x /usr/local/bin/install.sh && /usr/local/bin/install.sh
 
 # Update the PATH so some tools are accessible
 ENV PATH="${PATH}:/usr/local/pandoc/bin"
-
-
-
