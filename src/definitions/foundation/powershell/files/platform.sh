@@ -15,6 +15,9 @@
 # Detect MUSL
 MUSL="$(ldd /bin/ls | grep 'musl' | head -1 | cut -d ' ' -f1)"
 
+# Get the distcodename of the platform
+export AZ_DIST=$(lsb_release -cs)
+
 # Get the archiecture of the platform based on the `uname -m` command
 # This is known as the UNAME_ARCH
 export UNAME_ARCH="$(uname -m)"
@@ -43,4 +46,5 @@ echo "Uname:             ${UNAME_ARCH} (UNAME_ARCH)"
 echo "Binary arch:       ${BIN_ARCH}   (BIN_ARCH)"
 echo "Abbreviated arch:  ${ABBR_ARCH}  (ABBR_ARCH)"
 echo "Musl Arch:         ${MUSL_ARCH}  (MUSL_ARCH)"
+echo "OS Distribution:   ${AZ_DIST}    (AZ_DIST)"
 echo "====================================================="
