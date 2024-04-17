@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# Get the ARCH of the enviornment
-. /usr/local/bin/platform.sh
-
 # Install dependencies for PowerShell
 #
 # The dependencies are from running PowerShell when they have not been installed:
 #   - Couldn't find a valid ICU package - Please install libicu (https://aka.ms/dotnet-missing-libicu)
-apt-get install -y libicu70
+apt-get install -y libicu70 lsb-release
+
+# Get the ARCH of the enviornment
+. /usr/local/bin/platform.sh
 
 # Download the PowerShell binary for the platform
 URL="https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELL_VERSION}/powershell-${POWERSHELL_VERSION}-linux-${ABBR_ARCH}.tar.gz"
