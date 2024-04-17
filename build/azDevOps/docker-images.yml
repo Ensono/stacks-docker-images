@@ -182,6 +182,13 @@ stages:
               pathToPublish: $(Build.SourcesDirectory)/outputs/docs
               artifactName: docs
 
+          - task: Bash@3
+            displayName: Create image Overview
+            inputs:
+              targetType: inline
+              script: |
+                taskctl generate:docker:overview
+
   - ${{ each stage in parameters.stages }}:
       - stage: ${{ stage.stage }}
         displayName: ${{ stage.displayName }}

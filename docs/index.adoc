@@ -21,6 +21,10 @@ include::building.adoc[]
 
 <<<
 
+include::documentation.adoc[]
+
+<<<
+
 == Docker Image Definitions
 
 Each of the following sections details what is in each of the Docker images.
