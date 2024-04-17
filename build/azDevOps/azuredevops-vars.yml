@@ -30,13 +30,6 @@ variables:
   - name: tf_state_container
     value: tfstate
 
-  # Determine the "stability" of the image
-  #- name: stability
-  #  ${{ if or(eq(variables['Build.SourceBranchName'], 'master'), eq(variables['Build.SourceBranchName'], 'main'))}}:
-  #    value: stable
-  #  ${{ else }}:
-  #    value: unstable
-
   # Versioning
   - name: version_major
     value: 1
@@ -50,23 +43,3 @@ variables:
   # Docker
   - name: DOCKER_IMAGE_TAG
     value: $(version_semver)
-  # - name: DOCKER_CONTAINER_REGISTRY_NAME
-  #  value: docker.io
-  # - group: stacks-acr-creds
-  # Group should contain:
-  # DOCKER_PASSWORD
-  # DOCKER_USERNAME
-
-  # Dashboard Publishing
-  # - name: DASHBOARD_VERSION
-  #  value: $(version_semver)
-  #- name: DASHBOARD_TAGS
-  #  value: environment=$(System.StageName),source=$(Build.SourceBranchName),app=$(Build.DefinitionName)
-  #- name: DASHBOARD_MEASUREMENT
-  #  value: deployment # Static definition within Influx Config
-  #- group: amido-stacks-influx-credentials-prod
-  #  # Group should contain:
-  #  # DASHBOARD_INFLUX_ORG
-  #  # DASHBOARD_INFLUX_BUCKET
-  #  # DASHBOARD_INFLUX_TOKEN
-  #  # DASHBOARD_INFLUX_SERVER

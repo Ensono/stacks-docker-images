@@ -35,7 +35,7 @@ param (
 if (!(Test-Path -Path $toolpath)) {
     Write-Host "Downloading Dotnet installation tool"
 
-    # Download the script to the tmp directorty
+    # Download the script to the tmp directory
     Invoke-RestMethod -Method GET -Uri https://dot.net/v1/dotnet-install.sh -OutFile /tmp/dotnet-install.sh -FollowRelLink
 }
 

@@ -92,6 +92,21 @@ curl -L "https://github.com/jqlang/jq/releases/download/jq-${JQ_VERSION}/jq-linu
 chmod +x /usr/local/jq/bin/jq
 # ---------------------------------------------------------------------------
 
+# Install Snyk Tools --------------------------------------------------------
+echo "Installing: Snyk"
+mkdir -p /usr/local/synk/bin
+
+# As the package does not have an ARCH in the filename, the filename needs to be set correctly
+if [ "${BIN_ARCH}" == "amd64" ]; then
+    FILENAME="synk-linux"
+else
+    FILENAME="synk-linux-arm64"
+fi
+
+curl -L "https://github.com/snyk/cli/releases/download/v${SYNK_VERSION}/${FILENAME}" -o /usr/local/synk/bin
+
+# ---------------------------------------------------------------------------
+
 # PowerShell Modules --------------------------------------------------------
 # PowerShell Azure **********************************************************
 pwsh -NoProfile -Command "Install-Module -Name Az -Scope AllUsers -Repository PSGallery -Force -RequiredVersion ${AZURE_AZ_MODULE_VERSON}"
@@ -115,8 +130,6 @@ pwsh -NoProfile -Command "Install-Module -Name PSScriptAnalyzer -Scope AllUsers 
 curl -L https://github.com/Azure/arm-ttk/releases/download/${ARM_TTK_VERSION}/arm-ttk.zip -o /tmp/arm-ttk.zip 
 unzip -d /usr/local/share/powershell/Modules /tmp/arm-ttk.zip
 # ***************************************************************************
-
-
 
 # Clean Up ******************************************************************
 # Remove everything from the temp directory
