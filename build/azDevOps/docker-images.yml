@@ -83,6 +83,13 @@ parameters:
           - FoundationPowerShell
         taskName: build:kong
 
+      - stage: NodeJS
+        displayName: "[CONTAINER] NodeJS"
+        dependsOn:
+          - FoundationBuilder
+          - FoundationPowerShell
+        taskName: build:node
+
       - stage: AsciiDoctor
         displayName: "[CONTAINER] AsciiDoctor"
         dependsOn:
