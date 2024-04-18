@@ -49,8 +49,7 @@ contexts:
         - /app
         - --env-file
         - envfile
-        # - ensonostackseuweirdfmu.azurecr.io/ensono/eir-asciidoctor:latest
-        - rjs/eir-asciidoctor:latest
+        - ensonostackseuweirdfmu.azurecr.io/ensono/eir-asciidoctor:latest
         - pwsh
         - -NoProfile
         - -Command
