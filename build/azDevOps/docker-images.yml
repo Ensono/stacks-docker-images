@@ -23,15 +23,23 @@ parameters:
           - Infrastructure
         taskName: build:foundation:powershell
 
+      - stage: FoundationBuilder
+        displayName: "[CONTAINER] Foundation - Builder"
+        dependsOn:
+          - FoundationPowerShell
+        taskName: build:foundation:builder
+
       - stage: FoundationAzureCli
         displayName: "[CONTAINER] Foundation - Azure CLI"
         dependsOn:
+          - FoundationBuilder
           - FoundationPowerShell
         taskName: build:foundation:azure-cli
 
       - stage: FoundationTools
         displayName: "[CONTAINER] Foundation - Tools"
         dependsOn:
+          - FoundationBuilder
           - FoundationPowerShell
         taskName: build:foundation:tools
 
@@ -57,18 +65,21 @@ parameters:
       - stage: Go
         displayName: "[CONTAINER] Go"
         dependsOn:
+          - FoundationBuilder
           - FoundationPowerShell
         taskName: build:golang
 
       - stage: Inspec
         displayName: "[CONTAINER] Inspec"
         dependsOn:
+          - FoundationBuilder
           - FoundationPowerShell
         taskName: build:inspec
 
       - stage: Kong
         displayName: "[CONTAINER] Kong"
         dependsOn:
+          - FoundationBuilder
           - FoundationPowerShell
         taskName: build:kong
 

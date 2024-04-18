@@ -62,7 +62,9 @@ tasks:
         $sep = (Test-Path -Path "C:\") ? ";" : ":"
         $env:PSModulePath += "${sep}/home/vsts/modules"
         Import-Module EnsonoBuild
-        Build-DockerImage -push -provider generic -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}"
+        # Build-DockerImage -push -provider generic -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}"
+        $cmd = "./build/scripts/Build-DockerImage.ps1 -platform $($env:PLATFORM ? $env:PLATFORM : "linux/amd64,linux/arm64") -Name {{ .IMAGE_NAME }} -Arguments `"{{ .DOCKER_BUILD_ARGS }}`""
+        Invoke-Expression $cmd
 
   build:container:
     context: powershell_docker
