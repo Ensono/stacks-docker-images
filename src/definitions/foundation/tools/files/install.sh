@@ -69,26 +69,10 @@ tar zxf /tmp/kustomize.tar.gz -C /usr/local/kustomize/bin kustomize
 chmod +x /usr/local/kustomize/bin/kustomize
 # ---------------------------------------------------------------------------
 
-# Docker --------------------------------------------------------------------
-echo "Installing: Docker"
-mkdir -p /usr/local/docker/bin 
-curl -L "https://download.docker.com/linux/static/stable/${UNAME_ARCH}/docker-${DOCKER_VERSION}.tgz" -o /tmp/docker.tgz 
-tar zxf /tmp/docker.tgz -C /tmp 
-mv /tmp/docker/* /usr/local/docker/bin
-# ---------------------------------------------------------------------------
-
-# Docker Buildx -------------------------------------------------------------
-# Used to extend Docker so that builds for other platforms can be created
-echo "Installing: Docker Buildx"
-mkdir -p /usr/libexec/docker/cli-plugins 
-curl -L "https://github.com/docker/buildx/releases/download/v${DOCKER_BUILDX_VERSION}/buildx-v${DOCKER_BUILDX_VERSION}.linux-${BIN_ARCH}" -o /usr/libexec/docker/cli-plugins/docker-buildx 
-chmod +x /usr/libexec/docker/cli-plugins/docker-buildx
-# ---------------------------------------------------------------------------
-
 # Install JQ ----------------------------------------------------------------
 echo "Installing: JQ"
 mkdir -p /usr/local/jq/bin
-curl -L "https://github.com/jqlang/jq/releases/download/jq-${JQ_VERSION}/jq-linux-${BIN_ARCH}" -o /usr/local/jq/bin
+curl -L "https://github.com/jqlang/jq/releases/download/jq-${JQ_VERSION}/jq-linux-${BIN_ARCH}" -o /usr/local/jq/bin/jq
 chmod +x /usr/local/jq/bin/jq
 # ---------------------------------------------------------------------------
 
@@ -103,7 +87,7 @@ else
     FILENAME="synk-linux-arm64"
 fi
 
-curl -L "https://github.com/snyk/cli/releases/download/v${SYNK_VERSION}/${FILENAME}" -o /usr/local/synk/bin
+curl -L "https://github.com/snyk/cli/releases/download/v${SYNK_VERSION}/${FILENAME}" -o /usr/local/synk/bin/snyk
 
 # ---------------------------------------------------------------------------
 

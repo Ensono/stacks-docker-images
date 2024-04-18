@@ -2,13 +2,13 @@ ARG REGISTRY=docker.io
 ARG IMAGE_TAG=0.0.1-workstation
 ARG ORG=ensono
 
+FROM ${REGISTRY}/${ORG}/eir-foundation-builder:${IMAGE_TAG} as builder
+
 FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
 
-# Set the values for the applications to install
+# Set the versions for the applications to install
 ARG ARM_TTK_VERSION="20231122"
 ARG AZURE_AZ_MODULE_VERSON=10.0.0
-ARG DOCKER_BUILDX_VERSION="0.12.0"
-ARG DOCKER_VERSION="24.0.7"
 ARG GHCLI_VERSION="2.40.1"
 ARG HELM_VERSION=3.12.0
 ARG JQ_VERSION=1.7.1
@@ -21,6 +21,10 @@ ARG PSSCRIPTANALYZER_VERSION="1.22.0"
 ARG SYNK_VERSION=1.1289.0
 ARG TERRAFORM_VERSION=1.5.1
 ARG TERRASCAN_VERSION=1.19.1
+
+# Copy the Docker binary files from the builder image
+COPY --from=builder /usr/local/docker /usr/local/docker
+COPY --from=builder /usr/libexec/docker/cli-plugins/docker-buildx /usr/libexec/docker/cli-plugins/docker-buildx
 
 # Copy the install script over and then run it
 COPY files/install.sh /usr/local/bin/install.sh
