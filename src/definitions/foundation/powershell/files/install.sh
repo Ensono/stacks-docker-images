@@ -24,15 +24,22 @@ ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
 rm /tmp/powershell.tar.gz
 
 # Taskctl Runner ------------------------------------------------------------
-mkdir -p /usr/local/taskctl/bin && \
-    curl -L "https://github.com/Ensono/taskctl/releases/download/v${TASKCTL_VERSION}/taskctl_${TASKCTL_VERSION}_linux_${BIN_ARCH}.tar.gz" -o /tmp/taskctl.tar.gz && \
-    tar zxf /tmp/taskctl.tar.gz -C /usr/local/taskctl/bin taskctl && \
-    rm -f /tmp/taskctl.tar.gz && \
-    chmod +x /usr/local/taskctl/bin/taskctl
+
+# Update the arch to fit in with the pattern for the Taskctl binary
+if [ "BIN_ARCH" == "arm64" ];
+then
+    BIN_ARCH="arm7"
+fi
+
+mkdir -p /usr/local/taskctl/bin 
+curl -L "https://github.com/Ensono/taskctl/releases/download/v${TASKCTL_VERSION}/taskctl_${TASKCTL_VERSION}_linux_${BIN_ARCH}.tar.gz" -o /tmp/taskctl.tar.gz 
+tar zxf /tmp/taskctl.tar.gz -C /usr/local/taskctl/bin taskctl 
+rm -f /tmp/taskctl.tar.gz 
+chmod +x /usr/local/taskctl/bin/taskctl
 # ---------------------------------------------------------------------------
 
 # Independent Runner module *************************************************
-mkdir -p /modules/EnsonoBuild && \
-    curl -L "https://github.com/Ensono/independent-runner/releases/download/v${ENSONOBUILD_VERSION}/EnsonoBuild.psd1" -o /modules/EnsonoBuild/EnsonoBuild.psd1 && \
-    curl -L "https://github.com/Ensono/independent-runner/releases/download/v${ENSONOBUILD_VERSION}/EnsonoBuild.psm1" -o /modules/EnsonoBuild/EnsonoBuild.psm1
+mkdir -p /modules/EnsonoBuild 
+curl -L "https://github.com/Ensono/independent-runner/releases/download/v${ENSONOBUILD_VERSION}/EnsonoBuild.psd1" -o /modules/EnsonoBuild/EnsonoBuild.psd1 
+curl -L "https://github.com/Ensono/independent-runner/releases/download/v${ENSONOBUILD_VERSION}/EnsonoBuild.psm1" -o /modules/EnsonoBuild/EnsonoBuild.psm1
 # ***************************************************************************
