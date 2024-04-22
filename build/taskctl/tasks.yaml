@@ -1,5 +1,41 @@
 # Compilation tasks
 tasks:
+  build:number:
+    context: powershell
+    description: Update the build number
+    command:
+      - Import-Module EnsonoBuild
+      - Update-BuildNumber
+    # Set variable DOCKER_IMAGE_TAG; i.e. 0.2.1
+
+  build:image:local:
+    context: powershell
+    description: Build the foundation image on the machine without using a container
+    command:
+      - |
+        $cmd = "./build/scripts/Build-DockerImage.ps1 -platform linux/amd64,linux/arm64 -Name {{ .IMAGE_NAME }} -Arguments `"{{ .DOCKER_BUILD_ARGS }}`""
+        Write-Host $cmd
+        Invoke-Expression $cmd
+
+  build:image:container:
+    context: powershell_docker
+    description: Build the foundation image on the machine using the tools container
+    command:
+      - |
+        $sep = (Test-Path -Path "C:\") ? ";" : ":"
+        $env:PSModulePath += "${sep}/home/vsts/modules"
+        Import-Module EnsonoBuild
+        # Build-DockerImage -push -provider generic -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}"
+        $cmd = "./build/scripts/Build-DockerImage.ps1 -platform $($env:PLATFORM ? $env:PLATFORM : "linux/amd64,linux/arm64") -Name {{ .IMAGE_NAME }} -Arguments `"{{ .DOCKER_BUILD_ARGS }}`""
+        Invoke-Expression $cmd
+
+  _docs:
+    description: Build Docs for Stacks CLI
+    context: docsenv
+    command:
+      # - /app/build/scripts/Build-Docs.ps1 -BuildNumber $BUILDNUMBER -BasePath /app
+      - Invoke-AsciiDoc -PDF -basepath /app -config /app/docs.json -debug
+
   infra:init:
     context: powershell
     description: Initialise Terraform for chosen templates
@@ -45,27 +81,6 @@ tasks:
     command:
       - Confirm-Environment -Path build/config/stage_envvars.yml
 
-  build:image:local:
-    context: powershell
-    description: Build the foundation image on the machine without using a container
-    command:
-      - |
-        $cmd = "./build/scripts/Build-DockerImage.ps1 -platform linux/amd64,linux/arm64 -Name {{ .IMAGE_NAME }} -Arguments `"{{ .DOCKER_BUILD_ARGS }}`""
-        Write-Host $cmd
-        Invoke-Expression $cmd
-
-  build:image:container:
-    context: powershell_docker
-    description: Build the foundation image on the machine using the tools container
-    command:
-      - |
-        $sep = (Test-Path -Path "C:\") ? ";" : ":"
-        $env:PSModulePath += "${sep}/home/vsts/modules"
-        Import-Module EnsonoBuild
-        # Build-DockerImage -push -provider generic -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}"
-        $cmd = "./build/scripts/Build-DockerImage.ps1 -platform $($env:PLATFORM ? $env:PLATFORM : "linux/amd64,linux/arm64") -Name {{ .IMAGE_NAME }} -Arguments `"{{ .DOCKER_BUILD_ARGS }}`""
-        Invoke-Expression $cmd
-
   build:container:
     context: powershell_docker
     description: Create container image for application
@@ -83,32 +98,8 @@ tasks:
       Write-Host $cmd
       Invoke-Expression $cmd
 
-  build:number:
-    context: powershell
-    description: Update the build number
-    command:
-      - Import-Module EnsonoBuild
-      - Update-BuildNumber
-    # Set variable DOCKER_IMAGE_TAG; i.e. 0.2.1
-
-  update:dashboard:
-    context: powershell_docker
-    description: Update the Deployment Dashboard
-    command:
-      - Update-InfluxDashboard
-    # TODO: Currently handled by ADO pipeline var, captured in Story 4122
-    # env:
-    #  PUBLISH_RELEASE: $true
-
   debug:
     context: powershell_docker
     description: debugs env vars
     command:
       - Get-ChildItem env:/
-
-  _docs:
-    description: Build Docs for Stacks CLI
-    context: docsenv
-    command:
-      # - /app/build/scripts/Build-Docs.ps1 -BuildNumber $BUILDNUMBER -BasePath /app
-      - Invoke-AsciiDoc -PDF -basepath /app -config /app/docs.json -debug

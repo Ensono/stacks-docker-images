@@ -1,6 +1,8 @@
 === Building Locally
 
-The necessary tools for building the images locally are:
+All of the Docker images used for {project_name} can be built using he Independent Runner. However some tools need to be installed locally as the first two images must be built on the local machine. The other images can then be built using EIR as they are built using the initial images.
+
+The tools required for building the initial images are as follows:
 
 * Docker Engine
 ** Docker Server
@@ -9,13 +11,13 @@ The necessary tools for building the images locally are:
 ** POD Man - https://podman.io
 * {module_name} PowerShell Module - https://github.com/ensono/independent-runner
 
-The following table shows the commands that are required to build each image.
+The following table shows the commands to build the images. For completeness the Docker commands that EIR will generate are also shown.
 
 .Docker commands to build images locally
-[cols="1,3a",options="header",stripes=even]
+[cols="1,2a,3a",options="header",stripes=even]
 |===
-| Image Name | Command
-| Foundation PowerShell |
+| Image Name | EIR Task | Command
+| Foundation PowerShell | `taskctl build:foundation:powershell` |
 
 ----
 docker build `
@@ -23,7 +25,15 @@ docker build `
     -t {registry_local}/eir-foundation-powershell `
     ./src/definitions/foundation/powershell
 ----
-| Foundation Tools |
+| Foundation Builder | `taskctl build:foundation:builder` |
+
+----
+docker build `
+    -f ./src/definitions/foundation/builder/Dockerfile.ubuntu `
+    -t {registry_local}/eir-foundation-builder `
+    ./src/definitions/foundation/builder
+----
+| Foundation Tools | `taskctl build:foundation:tools` |
 
 ----
 docker build `
@@ -34,7 +44,7 @@ docker build `
     --build-arg REGISTRY={registry} `
     ./src/definitions/foundation/tools
 ----
-| Foundation Azure CLI |
+| Foundation Azure CLI | `taskctl build:foundation:azure-cli` |
 
 ----
 docker build `
@@ -45,7 +55,7 @@ docker build `
     --build-arg REGISTRY={registry} `
     ./src/definitions/foundation/azure-cli
 ----
-| Infrastructure |
+| Infrastructure | `taskctl build:infrastructure` |
 
 ----
 docker build `
@@ -56,7 +66,7 @@ docker build `
     --build-arg REGISTRY={registry} `
     ./src/definitions/infrastructure
 ----
-| Java |
+| Java | `taskctl build:java` |
 
 ----
 docker build `
@@ -67,7 +77,7 @@ docker build `
     --build-arg REGISTRY={registry} `
     ./src/definitions/java
 ----
-| .NET |
+| .NET | `taskctl build:dotnet` |
 
 ----
 docker build `
@@ -78,7 +88,7 @@ docker build `
     --build-arg REGISTRY={registry} `
     ./src/definitions/dotnet
 ----
-| GoLang |
+| GoLang | `taskctl build:golang` |
 
 ----
 docker build `
@@ -89,7 +99,7 @@ docker build `
     --build-arg REGISTRY={registry} `
     ./src/definitions/golang
 ----
-| InSpec |
+| InSpec | `taskctl build:inspec` |
 
 ----
 docker build `
@@ -100,7 +110,7 @@ docker build `
     --build-arg REGISTRY={registry} `
     ./src/definitions/inspec
 ----
-| Kong |
+| Kong | `taskctl build:kong` |
 
 ----
 docker build `
@@ -111,7 +121,7 @@ docker build `
     --build-arg REGISTRY={registry} `
     ./src/definitions/kong
 ----
-| Node |
+| Node | `taskctl build:node` |
 
 ----
 docker build `
@@ -122,7 +132,7 @@ docker build `
     --build-arg REGISTRY={registry} `
     ./src/definitions/node
 ----
-| Asciidoctor |
+| Asciidoctor | `taskctl build:asciidoctor` |
 
 ----
 docker build `
