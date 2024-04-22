@@ -89,9 +89,6 @@ pipelines:
         IMAGE_NAME: ensono/eir-nodejs
         DOCKER_BUILD_ARGS: -f ./src/definitions/node/Dockerfile.ubuntu ./src/definitions/node --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
 
-  publish:
-    - task: update:dashboard
-
   docs:
     - pipeline: setup
     - task: _docs
