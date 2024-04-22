@@ -1,0 +1,20 @@
+== EIR NodeJS
+
+This Docker image installs the Node Version Manager (NVM) tool so that multiple versions of NodeJS can be installed and used. Two versions of the application installed.
+
+The latest version of NodeJS is set as the default version.
+
+=== Specs
+
+**Platforms**: `linux/amd64`, `linux/arm64`
+
+**Base Image**: ensono/eir-powershell
+
+==== Software
+
+[cols="1,2,1,2",options=header]
+|====
+| Type | Name | Version | URL
+| Javascript | NVM | 0.39.7 | https://github.com/nvm-sh/nvm
+| Binary | NodeJS | 18.20.2 | https://nodejs.org/dist/v18.20.2/node-v18.20.2-linux-x64.tar.xz
+| Binary | NodeJS | 20.12.2 | https://nodejs.org/dist/v20.12.2/node-v20.12.2-linux-x64.tar.xz
