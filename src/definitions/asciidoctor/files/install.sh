@@ -37,7 +37,7 @@ pip install --no-cache-dir \
     'blockdiag[pdf]' \
     nwdiag \
     seqdiag \
-    pillow
+    pillow==9.5.0
 
 echo "gem: --no-document" > /etc/gemrc
 
@@ -69,7 +69,8 @@ gem install \
     barby \
     rqrcode \
     prawn-icon \
-    bigdecimal
+    bigdecimal \
+    rmagick
 
 # Remove obsolete packages
 apt-get remove -y build-essential

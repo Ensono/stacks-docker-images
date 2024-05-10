@@ -33,7 +33,6 @@ tasks:
     description: Build Docs for Stacks CLI
     context: docsenv
     command:
-      # - /app/build/scripts/Build-Docs.ps1 -BuildNumber $BUILDNUMBER -BasePath /app
       - Invoke-AsciiDoc -PDF -basepath /app -config /app/docs.json -debug
 
   infra:init:
@@ -41,7 +40,7 @@ tasks:
     description: Initialise Terraform for chosen templates
     command:
       - Invoke-Terraform -Init -Path $env:TF_FILE_LOCATION -Arguments $env:TF_BACKEND_INIT -debug
-      # - Invoke-Terraform -Workspace -Arguments $env:ENV_NAME -Path $env:TF_FILE_LOCATION
+      - Invoke-Terraform -Workspace -Arguments $env:ENV_NAME -Path $env:TF_FILE_LOCATION
 
   infra:vars:
     context: powershell
@@ -87,8 +86,6 @@ tasks:
     command:
       - Write-Host "Build-DockerImage -push -provider generic -Name {{ .IMAGE_NAME }} -buildargs `"{{ .DOCKER_BUILD_ARGS }}`""
       - Build-DockerImage -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}" -latest
-      #- Build-DockerImage -push -provider generic -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}" -latest0
-    # Set variable IMAGE_NAME; i.e. stacks-api and DOCKER_BUILD_ARGS path i.e. ./image_definitions/base
 
   generate:docker:overview:
     context: powershell

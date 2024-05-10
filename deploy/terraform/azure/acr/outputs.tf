@@ -1,9 +1,6 @@
 output "resource_group_name" {
   description = "Name of the resource group for the anciallry resources"
   value       = azurerm_resource_group.rg.name
-  depends_on = [
-    azurerm_resource_group.rg
-  ]
 }
 
 output "acr_admin_username" {

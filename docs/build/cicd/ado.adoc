@@ -3,7 +3,7 @@
 
 === Azure DevOps
 
-A pipeline has been configured for Azure DevOps, which calls `taskctl`, and runs the tasks as described previously.
+A pipeline has been configured for Azure DevOps, which calls `taskctl`, and runs the tasks.
 
 A number of parameters have been defined which allow the behaviour of the pipeline to be changed at run time.
 
