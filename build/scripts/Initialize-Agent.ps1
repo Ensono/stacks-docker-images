@@ -121,7 +121,7 @@ if (!(Test-Path -Path $plugins_path)) {
 
 $plugins = @{
     "docker-pushrm" = @{
-        "uri" = "https://github.com/christian-korneck/docker-pushrm/releases/download/v{0}/docker-pushrm_linux_{1}" -f $DockerPushRMVersion, $abbr_arch
+        "uri" = "https://github.com/christian-korneck/docker-pushrm/releases/download/v{0}/docker-pushrm_linux_{1}" -f $DockerPushRMVersion, $bin_arch
         "outfile" = Join-Path -Path $plugins_path -ChildPath "docker-pushrm"
     }
 }
@@ -134,8 +134,12 @@ foreach ($plugin in $plugins.GetEnumerator()) {
         Write-Information ("Installing Docker plugin: {0}" -f $plugin.Name)
         Write-Information ("`tDownloading from: {0}" -f $plugin.Value.uri)
 
-        $cmd = "Invoke-RestMethod -Uri {0} -OutFile {1}" -f $plugin.Value.uri, $plugin.Value.outfile
-        Invoke-Expression $cmd
+        $splat = @{
+            Uri = $plugin.Value.uri
+            OutFile = $plugin.Value.outfile
+        }
+        Invoke-RestMethod @splat
+        
     }
 }
 
