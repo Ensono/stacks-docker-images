@@ -81,7 +81,7 @@ if ($install_taskctl) {
 
 # Install EnsonoBuild
 # Ensure that the Module directory exists
-$module_path = "/usr/local/share/powershell/Modules/EnsonoBuild"
+$module_path = "{0}/.local/share/powershell/Modules/EnsonoBuild" -f $home
 if (!(Test-Path -Path $module_path)) {
     Write-Information "Creating EnsonoBuild module directory"
     New-Item -Path $module_path -Force -Type Directory
