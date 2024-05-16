@@ -10,8 +10,10 @@ variables:
     value: 1.5.1
 
   # DEFAULT IMAGE RUNNER
-  - name: pool_vm_image
+  - name: build_pool_amd64
     value: ubuntu-22.04
+  - name: build_pool_arm64
+    value: Stacks Builders
 
   - name: name_company
     value: ensono
