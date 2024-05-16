@@ -13,7 +13,7 @@ tasks:
     description: Build the foundation image on the machine without using a container
     command:
       - |
-        $cmd = "./build/scripts/Build-DockerImage.ps1 -platform linux/amd64,linux/arm64 -Name {{ .IMAGE_NAME }} -Arguments `"{{ .DOCKER_BUILD_ARGS }}`""
+        $cmd = "./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name {{ .IMAGE_NAME }} -Arguments `"{{ .DOCKER_BUILD_ARGS }}`""
         Write-Host $cmd
         Invoke-Expression $cmd
 
