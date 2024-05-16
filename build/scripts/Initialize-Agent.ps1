@@ -99,7 +99,10 @@ foreach ($module_file in $module_files) {
     # Get the filename of the file being downloaded
     $filename = Split-Path -Path $module_file -Leaf
 
-    Invoke-RestMethod -Uri $module_file -Outfile $module_path/$filename
+    Write-Information ("Downloading module file '{0}' from {1}" -f $filename, $module_file)
+
+    $output_path = Join-Path -Path $module_path -ChildPath $filename
+    Invoke-RestMethod -Uri $module_file -Outfile $output_path
 }
 
 # PowerShell modules
