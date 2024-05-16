@@ -219,6 +219,7 @@ stages:
 
         jobs:
           - job: BuildImage_amd64
+            displayName: Build Image - amd64
             pool: $(build_pool_amd64)
 
             steps:
@@ -228,6 +229,7 @@ stages:
                   EnsonoBuildVersion: $(EnsonoBuildVersion)
                   TerraformVersion: $(TerraformVersion)
                   Arch: amd64
+                  TaskctlArch: amd64
 
               - task: Bash@3
                 displayName: Build Image
@@ -240,6 +242,7 @@ stages:
                   PLATFORM: linux/amd64
 
           - job: BuildImage_arm64
+            displatyName: Build Image - arm64
             pool: $(build_pool_arm64)
 
             steps:
@@ -249,6 +252,7 @@ stages:
                   EnsonoBuildVersion: $(EnsonoBuildVersion)
                   TerraformVersion: $(TerraformVersion)
                   Arch: arm64
+                  TaskctlArch: armv7
 
               - task: Bash@3
                 displayName: Build Image

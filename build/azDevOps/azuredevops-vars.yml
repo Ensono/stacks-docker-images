@@ -11,9 +11,9 @@ variables:
 
   # DEFAULT IMAGE RUNNER
   - name: build_pool_amd64
-    value: ubuntu-22.04
+    value: Stacks Builders - amd64
   - name: build_pool_arm64
-    value: Stacks Builders
+    value: Stacks Builders - arm64
 
   - name: name_company
     value: ensono
