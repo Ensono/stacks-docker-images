@@ -227,9 +227,6 @@ stages:
                 parameters:
                   TasckctlVersion: $(TaskctlVersion)
                   EnsonoBuildVersion: $(EnsonoBuildVersion)
-                  TerraformVersion: $(TerraformVersion)
-                  Arch: amd64
-                  TaskctlArch: amd64
 
               - task: Bash@3
                 displayName: Build Image
@@ -250,9 +247,6 @@ stages:
                 parameters:
                   TasckctlVersion: $(TaskctlVersion)
                   EnsonoBuildVersion: $(EnsonoBuildVersion)
-                  TerraformVersion: $(TerraformVersion)
-                  Arch: arm64
-                  TaskctlArch: armv7
 
               - task: Bash@3
                 displayName: Build Image
