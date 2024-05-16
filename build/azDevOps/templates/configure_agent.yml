@@ -7,8 +7,10 @@ steps:
 
     - task: PowerShell@2
       displayName: Configure Agent
-      inputs: |
-        . ../../scripts/Initialize-Agent.ps1 -TaskctlVersion $(TaskctlVersion) -EnsonoBuildVersion $(EnsonoBuildVersion) -DockerPushRMVersion $(DockerPushRMVersion)
+      inputs:
+        targetType: inline
+        script: |
+          . ../../scripts/Initialize-Agent.ps1 -TaskctlVersion $(TaskctlVersion) -EnsonoBuildVersion $(EnsonoBuildVersion) -DockerPushRMVersion $(DockerPushRMVersion)
 
   # - task: Bash@3
   #   displayName: Install Taskctl
