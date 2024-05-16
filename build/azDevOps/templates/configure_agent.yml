@@ -3,6 +3,7 @@ parameters:
     EnsonoBuildVersion: 1.0.43
     TerraformVersion: 1.5.1
     DockerPushRMVersion: 1.9.0
+    Arch: amd64
 
 steps:
   - task: Bash@3
@@ -10,7 +11,7 @@ steps:
     inputs:
         targetType: inline
         script: |
-          wget https://github.com/Ensono/taskctl/releases/download/v${{ parameters.TaskctlVersion }}/taskctl_${{ parameters.TaskctlVersion }}_linux_amd64.tar.gz -O /tmp/taskctl.tar.gz
+          wget https://github.com/Ensono/taskctl/releases/download/v${{ parameters.TaskctlVersion }}/taskctl_${{ parameters.TaskctlVersion }}_linux_${{ parameters.Arch }}.tar.gz -O /tmp/taskctl.tar.gz
           echo "Unpacking Taskctl"
           tar zxf /tmp/taskctl.tar.gz -C /usr/local/bin taskctl
 
@@ -37,5 +38,5 @@ steps:
       targetType: inline
       script: |
         mkdir -p $HOME/.docker/cli-plugins
-        curl -L "https://github.com/christian-korneck/docker-pushrm/releases/download/v${{ parameters.DockerPushRMVersion }}/docker-pushrm_linux_amd64" -o $HOME/.docker/cli-plugins/docker-pushrm
+        curl -L "https://github.com/christian-korneck/docker-pushrm/releases/download/v${{ parameters.DockerPushRMVersion }}/docker-pushrm_linux_${{ parameters.Arch }}" -o $HOME/.docker/cli-plugins/docker-pushrm
         chmod +x $HOME/.docker/cli-plugins/docker-pushrm

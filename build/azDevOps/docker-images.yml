@@ -218,7 +218,8 @@ stages:
               - group: stacks-acr-creds
 
         jobs:
-          - job: BuildImage
+          - job: BuildImage_amd64
+            pool: $(build_pool_amd64)
 
             steps:
               - template: templates/configure_agent.yml
@@ -226,15 +227,7 @@ stages:
                   TasckctlVersion: $(TaskctlVersion)
                   EnsonoBuildVersion: $(EnsonoBuildVersion)
                   TerraformVersion: $(TerraformVersion)
-
-              # Install qemu to assist with the build of the ARM64 images
-              - task: Bash@3
-                displayName: "Install QEMU"
-                inputs:
-                  targetType: inline
-                  script: |
-                    sudo apt-get update
-                    sudo apt-get install -y qemu qemu-user-static
+                  Arch: amd64
 
               - task: Bash@3
                 displayName: Build Image
@@ -244,3 +237,25 @@ stages:
                     taskctl ${{ stage.taskName }}
                 env:
                   DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+                  PLATFORM: linux/amd64
+
+          - job: BuildImage_arm64
+            pool: $(build_pool_arm64)
+
+            steps:
+              - template: templates/configure_agent.yml
+                parameters:
+                  TasckctlVersion: $(TaskctlVersion)
+                  EnsonoBuildVersion: $(EnsonoBuildVersion)
+                  TerraformVersion: $(TerraformVersion)
+                  Arch: arm64
+
+              - task: Bash@3
+                displayName: Build Image
+                inputs:
+                  targetType: inline
+                  script: |
+                    taskctl ${{ stage.taskName }}
+                env:
+                  DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+                  PLATFORM: linux/amd64
