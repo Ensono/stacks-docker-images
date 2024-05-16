@@ -227,6 +227,12 @@ stages:
                   EnsonoBuildVersion: $(EnsonoBuildVersion)
                   TerraformVersion: $(TerraformVersion)
 
+              # Install qemu to assist with the build of the ARM64 images
+              - task: Bash@3
+                displayName: "Install QEMU"
+                inputs:
+                  script: "sudo apt-get install -y qemu qemu-user-static"
+
               - task: Bash@3
                 displayName: Build Image
                 inputs:
