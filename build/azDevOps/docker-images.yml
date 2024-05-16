@@ -242,7 +242,7 @@ stages:
                   PLATFORM: linux/amd64
 
           - job: BuildImage_arm64
-            displatyName: Build Image - arm64
+            displayName: Build Image - arm64
             pool: $(build_pool_arm64)
 
             steps:
