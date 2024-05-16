@@ -12,38 +12,3 @@ steps:
         script: |
           $InformationPreference = "Continue"
           . build/scripts/Initialize-Agent.ps1 -TaskctlVersion ${{ parameters.TaskctlVersion }} -EnsonoBuildVersion ${{ parameters.EnsonoBuildVersion }} -DockerPushRMVersion ${{ parameters.DockerPushRMVersion }}          
-
-  # - task: Bash@3
-  #   displayName: Install Taskctl
-  #   inputs:
-  #       targetType: inline
-  #       script: |
-  #         wget https://github.com/Ensono/taskctl/releases/download/v${{ parameters.TaskctlVersion }}/taskctl_${{ parameters.TaskctlVersion }}_linux_${{ parameters.TaskctlArch }}.tar.gz -O /tmp/taskctl.tar.gz
-  #         echo "Unpacking Taskctl"
-  #         tar zxf /tmp/taskctl.tar.gz -C /usr/local/bin taskctl
-
-  #   # Install the Independent Runner module for the base build
-  # - task: PowerShell@2
-  #   displayName: Install Independent Runner
-  #   inputs:
-  #       targetType: inline
-  #       script: |
-  #         New-Item -Type directory -Path /home/vsts/.local/share/powershell/Modules/EnsonoBuild
-  #         Invoke-WebRequest -Uri "https://github.com/Ensono/independent-runner/releases/download/v${{ parameters.EnsonoBuildVersion }}/EnsonoBuild.psd1" -OutFile /home/vsts/.local/share/powershell/Modules/EnsonoBuild/EnsonoBuild.psd1
-  #         Invoke-WebRequest -Uri "https://github.com/Ensono/independent-runner/releases/download/v${{ parameters.EnsonoBuildVersion }}/EnsonoBuild.psm1" -OutFile /home/vsts/.local/share/powershell/Modules/EnsonoBuild/EnsonoBuild.psm1
-
-  # - task: PowerShell@2
-  #   displayName: Install PowerShell-Yaml
-  #   inputs:
-  #       targetType: inline
-  #       script: |
-  #         Install-Module -Name Powershell-Yaml -Scope CurrentUser -Repository PSGallery -Force
-
-  # - task: Bash@3
-  #   displayName: Install Docker Push Readme
-  #   inputs:
-  #     targetType: inline
-  #     script: |
-  #       mkdir -p $HOME/.docker/cli-plugins
-  #       curl -L "https://github.com/christian-korneck/docker-pushrm/releases/download/v${{ parameters.DockerPushRMVersion }}/docker-pushrm_linux_${{ parameters.Arch }}" -o $HOME/.docker/cli-plugins/docker-pushrm
-  #       chmod +x $HOME/.docker/cli-plugins/docker-pushrm

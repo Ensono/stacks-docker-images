@@ -256,4 +256,4 @@ stages:
                     taskctl ${{ stage.taskName }}
                 env:
                   DOCKER_IMAGE_TAG: $(Build.BuildNumber)
-                  PLATFORM: linux/amd64
+                  PLATFORM: linux/arm64
