@@ -133,7 +133,8 @@ foreach ($plugin in $plugins.GetEnumerator()) {
 
         Write-Information "Installing Docker plugin: ${plugin.Name}"
 
-        Invoke-RestMethod -Uri $plugin.Value.uri -OutFile $plugin.Value.outfile
+        $cmd = "Invoke-RestMethod -Uri {0} -OutFile {1}" -f $plugin.Value.uri, $plugin.Value.outfile
+        Invoke-Expression $cmd
     }
 }
 
