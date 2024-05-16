@@ -13,6 +13,7 @@ steps:
           $InformationPreference = "Continue"
           . build/scripts/Initialize-Agent.ps1 -TaskctlVersion ${{ parameters.TaskctlVersion }} -EnsonoBuildVersion ${{ parameters.EnsonoBuildVersion }} -DockerPushRMVersion ${{ parameters.DockerPushRMVersion }}
           Get-Module -ListAvailable
+          Import-Module EnsonoBuild
 
   # - task: Bash@3
   #   displayName: Install Taskctl
