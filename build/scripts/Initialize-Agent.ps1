@@ -89,8 +89,8 @@ if (!(Test-Path -Path $module_path)) {
 
 # Download the EnsonoBuild module files
 $module_files = @(
-    "https://github.com/Ensono/independent-runner/releases/download/v{0}/EnsonoBuild.psd1" -f $EnsonoBuildVersion,
-    "https://github.com/Ensono/independent-runner/releases/download/v{0}/EnsonoBuild.psm1" -f $EnsonoBuildVersion
+    ("https://github.com/Ensono/independent-runner/releases/download/v{0}/EnsonoBuild.psd1" -f $EnsonoBuildVersion),
+    ("https://github.com/Ensono/independent-runner/releases/download/v{0}/EnsonoBuild.psm1" -f $EnsonoBuildVersion)
 )
 
 Write-Information "Installing EnsonoBuild module"
