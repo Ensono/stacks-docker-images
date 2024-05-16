@@ -233,7 +233,8 @@ stages:
                 inputs:
                   targetType: inline
                   script: |
-                    apt-get update && apt-get install -y qemu qemu-user-static
+                    sudo apt-get update
+                    sudo apt-get install -y qemu qemu-user-static
 
               - task: Bash@3
                 displayName: Build Image
