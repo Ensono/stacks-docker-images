@@ -10,8 +10,7 @@ steps:
       inputs:
         targetType: inline
         script: |
-          echo $pwd
-          dir $pwd
+          $InformationPreference = "Continue"
           . build/scripts/Initialize-Agent.ps1 -TaskctlVersion ${{ parameters.TaskctlVersion }} -EnsonoBuildVersion ${{ parameters.EnsonoBuildVersion }} -DockerPushRMVersion ${{ parameters.DockerPushRMVersion }}
 
   # - task: Bash@3
