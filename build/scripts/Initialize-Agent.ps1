@@ -131,7 +131,8 @@ foreach ($plugin in $plugins.GetEnumerator()) {
 
     if (!(Test-Path -Path $plugin.Value.outfile)) {
 
-        Write-Information "Installing Docker plugin: ${plugin.Name}"
+        Write-Information ("Installing Docker plugin: {0}" -f $plugin.Name)
+        Write-Information ("`tDownloading from: {0}" -f $plugin.Value.uri)
 
         $cmd = "Invoke-RestMethod -Uri {0} -OutFile {1}" -f $plugin.Value.uri, $plugin.Value.outfile
         Invoke-Expression $cmd
