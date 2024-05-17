@@ -277,6 +277,11 @@ stages:
               - BuildImage_arm64
 
             steps:
+              - template: templates/configure_agent.yml
+                parameters:
+                  TasckctlVersion: $(TaskctlVersion)
+                  EnsonoBuildVersion: $(EnsonoBuildVersion)
+
               - task: Bash@3
                 displayName: Create Multi-Arch Manifest
                 inputs:
