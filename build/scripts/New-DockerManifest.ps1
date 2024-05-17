@@ -74,9 +74,9 @@ $cmds += "docker manifest push {0}/{1}:{2}" -f $registry, $Name, $Version
 
 if ($Latest.IsPresent) {
     # Tag manifest with the latest tage
-    $cmds += "docker tag {0}/{1}:{2} {0}/{1}:latest" -f $registry, $Name, $Version
+    $cmds += "docker manifest create {0}/{1}:latest {2}" -f $registry, $Name, ($images -join " ")
 
-    $cmds += "docker push {0}/{1}:latest" -f $registry, $Name
+    $cmds += "docker manifest push {0}/{1}:latest" -f $registry, $Name
 }
 
 foreach ($cmd in $cmds) {
