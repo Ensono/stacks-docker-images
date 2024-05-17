@@ -16,3 +16,5 @@ RUN chmod +x /tmp/install.sh && \
     chmod +x /usr/local/bin/platform.sh && \
     /tmp/install.sh
 
+# Ensure that the /modules director is in the PSModulePath
+ENV PSModulePath="${PSModulePath}:/modules"
