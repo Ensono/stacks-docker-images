@@ -69,9 +69,8 @@ $cmds += "docker manifest create {0}/{1}:{2} {3}" -f $registry, $Name, $Version,
 $cmds += "docker manifest push {0}/{1}:{2}" -f $registry, $Name, $Version
 
 foreach ($cmd in $cmds) {
-    if ($dryrun.IsPresent) {
-        Write-Host $cmd
-    } else {
+    Write-Host $cmd
+    if (!$dryrun.IsPresent) {
         Invoke-Expression $cmd
     }
 }
