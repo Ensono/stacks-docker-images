@@ -57,17 +57,19 @@ if ([string]::IsNullOrEmpty($registry)) {
 $tags = @()
 # $tags += (" -t {0}/{1}:latest" -f $registry, $name)
 
+$image_name = "{0}/{1}:{2}-{3}" -f $registry, $name, $tag, $arch
+
 
 if (![string]::IsNullOrEmpty($tag)) {
-    $tags += ("-t {0}/{1}:{2}-{3}" -f $registry, $name, $tag, $arch)
+    $tags += ("-t {0}" -f $image_name)
 }
 
 # Build up the arguments for the full command
 $args = @(
-    "--platform",
-    ($platform -join ","),
-    ($tags -join " "),
-    "--push"
+    #"--platform",
+    #($platform -join ","),
+    ($tags -join " ")
+    #"--push"
 )
 
 if (![string]::IsNullOrEmpty($arguments)) {
@@ -85,6 +87,7 @@ if ($dryrun.IsPresent) {
 }
 
 # Create a new buildx driver to
+<#
 Write-Host "Creating new buildx profile"
 $cmd = "docker buildx create --use"
 
@@ -93,14 +96,22 @@ if ($dryrun.IsPresent) {
 } else {
     Invoke-Expression $cmd
 }
+#>
 
 # Build and push the image
 Write-Host ("Building docker image: {0}" -f ($platform -join ","))
-$cmd = "docker buildx build {0}" -f ($args -join " ")
+$cmd = "docker build {0}" -f ($args -join " ")
 
-if ($dryrun.IsPresent) {
-    Write-Host $cmd
-} else {
+Write-Host $cmd
+if (!$dryrun.IsPresent) {
+    Invoke-Expression $cmd
+}
+
+Write-Host ("Push docker image: {0}" -f $image_name)
+$cmd = "docker push {0}" -f $image_name
+
+Write-Host $cmd
+if (!$dryrun.IsPresent) {
     Invoke-Expression $cmd
 }
 
