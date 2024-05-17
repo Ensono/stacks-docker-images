@@ -38,18 +38,28 @@ param (
 # Enable experimental builds
 $env:DOCKER_CLI_AKV2_EXPERIMENTAL="enabled"
 
+# Determine the arch based on the platform info
+switch ($platform) {
+    "linux/amd64" {
+        $arch = "amd64"
+    }
+    "linux/arm64" {
+        $arch = "arm64"
+    }
+}
+
 # Define default values for parameters not set
 if ([string]::IsNullOrEmpty($registry)) {
     $registry = "docker.io"
 }
 
 # Create a list of the tags that are required
-$tags = @(
-    (" -t {0}/{1}:latest" -f $registry, $name)
-)
+$tags = @()
+# $tags += (" -t {0}/{1}:latest" -f $registry, $name)
+
 
 if (![string]::IsNullOrEmpty($tag)) {
-    $tags += ("-t {0}/{1}:{2}" -f $registry, $name, $tag)
+    $tags += ("-t {0}/{1}:{2}-{3}" -f $registry, $name, $tag, $arch)
 }
 
 # Build up the arguments for the full command

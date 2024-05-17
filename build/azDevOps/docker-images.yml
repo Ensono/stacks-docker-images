@@ -22,12 +22,14 @@ parameters:
         dependsOn:
           - Infrastructure
         taskName: build:foundation:powershell
+        imageName: ensono/eir-foundation-powershell
 
       - stage: FoundationBuilder
         displayName: "[CONTAINER] Foundation - Builder"
         dependsOn:
           - FoundationPowerShell
         taskName: build:foundation:builder
+        imageName: ensono/eir-foundation-builder
 
       - stage: FoundationAzureCli
         displayName: "[CONTAINER] Foundation - Azure CLI"
@@ -35,6 +37,7 @@ parameters:
           - FoundationBuilder
           - FoundationPowerShell
         taskName: build:foundation:azure-cli
+        imageName: ensono/eir-foundation-azure-cli
 
       - stage: FoundationTools
         displayName: "[CONTAINER] Foundation - Tools"
@@ -42,6 +45,7 @@ parameters:
           - FoundationBuilder
           - FoundationPowerShell
         taskName: build:foundation:tools
+        imageName: ensono/eir-foundation-tools
 
       - stage: Infra
         displayName: "[CONTAINER] Infrastructure"
@@ -49,18 +53,21 @@ parameters:
           - FoundationTools
           - FoundationAzureCli
         taskName: build:infrastructure
+        imageName: ensono/eir-infrastructure
 
       - stage: Java
         displayName: "[CONTAINER] Java"
         dependsOn:
           - FoundationTools
         taskName: build:java
+        imageName: ensono/eir-java
 
       - stage: DotNet
         displayName: "[CONTAINER] .NET"
         dependsOn:
           - Java
         taskName: build:dotnet
+        imageName: ensono/eir-dotnet
 
       - stage: Go
         displayName: "[CONTAINER] Go"
@@ -68,6 +75,7 @@ parameters:
           - FoundationBuilder
           - FoundationPowerShell
         taskName: build:golang
+        imageName: ensono/eir-golang
 
       - stage: Inspec
         displayName: "[CONTAINER] Inspec"
@@ -75,6 +83,7 @@ parameters:
           - FoundationBuilder
           - FoundationPowerShell
         taskName: build:inspec
+        imageName: ensono/eir-inspec
 
       - stage: Kong
         displayName: "[CONTAINER] Kong"
@@ -82,6 +91,7 @@ parameters:
           - FoundationBuilder
           - FoundationPowerShell
         taskName: build:kong
+        imageName: ensono/eir-kong
 
       - stage: NodeJS
         displayName: "[CONTAINER] NodeJS"
@@ -89,19 +99,21 @@ parameters:
           - FoundationBuilder
           - FoundationPowerShell
         taskName: build:node
+        imageName: ensono/eir-node
 
       - stage: AsciiDoctor
         displayName: "[CONTAINER] AsciiDoctor"
         dependsOn:
           - Java
         taskName: build:asciidoctor
+        imageName: ensono/eir-asciidoctor
 
       - stage: AzureData
         displayName: "[CONTAINER] Azure Data"
         dependsOn:
           - FoundationAzureCli
         taskName: build:data
-
+        imageName: ensono/eir-azure-data
 pr:
   - main
 
@@ -257,3 +269,20 @@ stages:
                 env:
                   DOCKER_IMAGE_TAG: $(Build.BuildNumber)
                   PLATFORM: linux/arm64
+
+          - job: create_manifest
+            displayName: Create Multi-Arch Manifest
+            dependsOn:
+              - BuildImage_amd64
+              - BuildImage_arm64
+
+            steps:
+              - task: Bash@3
+                displayName: Create Multi-Arch Manifest
+                inputs:
+                  targetType: inline
+                  script: |
+                    taskctl create:docker:manifest
+                  env:
+                    DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+                    DOCKER_IMAGE_NAME: ${{ stage.imageName }}
