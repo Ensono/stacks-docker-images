@@ -34,7 +34,7 @@ tasks:
     context: powershell_docker
     description: Create the Docker manifest for the images
     command: |
-      $cmd = "./build/scripts/Create-DockerManifest.ps1 -Name {{ .NAME }}"
+      $cmd = "./build/scripts/New-DockerManifest.ps1"
       Write-Host $cmd
       Invoke-Expression $cmd
 
