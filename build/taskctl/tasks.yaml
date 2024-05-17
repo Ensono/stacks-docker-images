@@ -30,6 +30,14 @@ tasks:
         Write-Host $cmd
         Invoke-Expression $cmd
 
+  create:docker:manifest:
+    context: powershell_docker
+    description: Create the Docker manifest for the images
+    command: |
+      $cmd = "./build/scripts/Create-DockerManifest.ps1 -Name {{ .NAME }}"
+      Write-Host $cmd
+      Invoke-Expression $cmd
+
   _docs:
     description: Build Docs for Stacks CLI
     context: docsenv
