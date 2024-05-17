@@ -41,7 +41,11 @@ param (
 
     [switch]
     # State that the scritp whould run in dryrun and not to execute any commands
-    $dryrun
+    $dryrun,
+
+    [switch]
+    # State if manifest should be tagged as Latest
+    $Latest
 )
 
 # Define cmd array from which all commands will be built
@@ -67,6 +71,13 @@ $cmds += "docker manifest create {0}/{1}:{2} {3}" -f $registry, $Name, $Version,
 
 # Now push the manifest to the registry
 $cmds += "docker manifest push {0}/{1}:{2}" -f $registry, $Name, $Version
+
+if ($Latest.IsPresent) {
+    # Tag manifest with the latest tage
+    $cmds += "docker tag {0}/{1}:{2} {0}/{1}:latest" -f $registry, $Name, $Version
+
+    $cmds += "docker push {0}/{1}:latest" -f $registry, $Name
+}
 
 foreach ($cmd in $cmds) {
     Write-Host $cmd
