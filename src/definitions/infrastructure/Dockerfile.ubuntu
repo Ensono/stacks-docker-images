@@ -31,3 +31,6 @@ RUN chmod +x /usr/local/bin/install.sh && /usr/local/bin/install.sh
 
 # Set the PATH so that the tools can be accessed
 ENV PATH="${PATH}:/usr/local/kubectl/bin:/usr/local/helm/bin:/usr/local/terraform/bin:/usr/local/ghcli/bin:/usr/local/kluctl/bin:/usr/local/kustomize/bin:/usr/local/jq/bin:/usr/local/terrascan/bin"
+
+# Ensure that the /modules director is in the PSModulePath
+ENV PSModulePath="${PSModulePath}:/modules"
