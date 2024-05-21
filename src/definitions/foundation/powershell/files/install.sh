@@ -5,7 +5,7 @@
 # The dependencies are from running PowerShell when they have not been installed:
 #   - Couldn't find a valid ICU package - Please install libicu (https://aka.ms/dotnet-missing-libicu)
 apt-get update
-apt-get install -y libicu70 lsb-release curl
+apt-get install -y libicu70 lsb-release curl git
 
 # Get the ARCH of the enviornment
 . /usr/local/bin/platform.sh
