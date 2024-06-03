@@ -47,15 +47,18 @@ RUN echo "assemble comprehensive main image" # keep here to help --cache-from al
 # hadolint ignore=DL3018,DL3013,DL3028
 RUN apk add --no-cache \
   ca-certificates \
+  build-base \
   findutils \
   font-bakoma-ttf \
   graphviz \
   inotify-tools \
+  libxml2-dev \
   make \
   py3-cairo \
   py3-pillow \
   py3-setuptools \
   ruby-bigdecimal \
+  ruby-dev \
   ruby-mathematical \
   ruby-rake \
   ttf-liberation \
@@ -91,11 +94,6 @@ ENV ASCIIDOCTOR_CONFLUENCE_VERSION=${asciidoctor_confluence_version} \
     ASCIIDOCTOR_BIBTEX_VERSION=${asciidoctor_bibtex_version} \
     ASCIIDOCTOR_KROKI_VERSION=${asciidoctor_kroki_version} \
     ASCIIDOCTOR_REDUCER_VERSION=${asciidoctor_reducer_version}
-
-RUN apk add --no-cache --virtual .rubymakedepends \
-  build-base \
-  libxml2-dev \
-  ruby-dev
 
 RUN gem install --no-document \
   "asciidoctor-confluence:${ASCIIDOCTOR_CONFLUENCE_VERSION}" \
