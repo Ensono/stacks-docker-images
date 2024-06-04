@@ -6,10 +6,10 @@ pr:
 trigger:
   branches:
     include:
-      - 'main'
+      - "main"
   paths:
     include:
-      - '*'
+      - "*"
 
 variables:
   - template: azuredevops-vars.yml
@@ -17,152 +17,150 @@ variables:
     value: "Continue"
 # Configure the stages
 stages:
-
   - stage: Build
 
     jobs:
+      - job: Build
 
-    - job: Build
+        steps:
+          # Install Taskctl for the build to run
+          - task: Bash@3
+            displayName: Install Taskctl
+            inputs:
+              targetType: inline
+              script: |
+                wget https://github.com/taskctl/taskctl/releases/download/${{ variables.TaskctlVersion }}/taskctl_${{ variables.TaskctlVersion }}_linux_amd64.tar.gz -O /tmp/taskctl.tar.gz
+                tar zxf /tmp/taskctl.tar.gz -C /usr/local/bin taskctl
 
-      steps:
+          # Install the stacks envfile
+          - task: Bash@3
+            displayName: Install Envfile
+            inputs:
+              targetType: inline
+              script: |
+                wget https://github.com/Ensono/stacks-envfile/releases/download/v${{ variables.StacksEnvfileVersion }}/stacks-envfile-linux-amd64-${{ variables.StacksEnvfileVersion }} -O /usr/local/bin/envfile
+                chmod +x /usr/local/bin/envfile
 
-        # Install Taskctl for the build to run
-        - task: Bash@3
-          displayName: Install Taskctl
-          inputs:
-            targetType: inline
-            script: |
-              wget https://github.com/taskctl/taskctl/releases/download/${{ variables.TaskctlVersion }}/taskctl_${{ variables.TaskctlVersion }}_linux_amd64.tar.gz -O /tmp/taskctl.tar.gz
-              tar zxf /tmp/taskctl.tar.gz -C /usr/local/bin taskctl
+          # Install the Independent Runner module for the base build
+          - task: PowerShell@2
+            displayName: Install Independent Runner
+            inputs:
+              targetType: inline
+              script: |
+                New-Item -Type directory -Path /home/vsts/modules/EnsonoBuild
+                Invoke-WebRequest -Uri "https://github.com/Ensono/independent-runner/releases/download/${{ variables.EnsonoBuild }}/EnsonoBuild.psd1" -OutFile /home/vsts/modules/EnsonoBuild/EnsonoBuild.psd1
+                Invoke-WebRequest -Uri "https://github.com/Ensono/independent-runner/releases/download/${{ variables.EnsonoBuild }}/EnsonoBuild.psm1" -OutFile /home/vsts/modules/EnsonoBuild/EnsonoBuild.psm1
 
-        # Install the stacks envfile
-        - task: Bash@3
-          displayName: Install Envfile
-          inputs:
-            targetType: inline
-            script: |
-              wget https://github.com/Ensono/stacks-envfile/releases/download/v${{ variables.StacksEnvfileVersion }}/stacks-envfile-linux-amd64-${{ variables.StacksEnvfileVersion }} -O /usr/local/bin/envfile
-              chmod +x /usr/local/bin/envfile
+          - task: Bash@3
+            displayName: Setup
+            inputs:
+              targetType: inline
+              script: |
+                taskctl setup
 
-        # Install the Independent Runner module for the base build
-        - task: PowerShell@2
-          displayName: Install Independent Runner
-          inputs:
-            targetType: inline
-            script: |
-              New-Item -Type directory -Path /home/vsts/modules/EnsonoBuild
-              Invoke-WebRequest -Uri "https://github.com/Ensono/independent-runner/releases/download/${{ variables.EnsonoBuild }}/EnsonoBuild.psd1" -OutFile /home/vsts/modules/EnsonoBuild/EnsonoBuild.psd1
-              Invoke-WebRequest -Uri "https://github.com/Ensono/independent-runner/releases/download/${{ variables.EnsonoBuild }}/EnsonoBuild.psm1" -OutFile /home/vsts/modules/EnsonoBuild/EnsonoBuild.psm1
+          - task: Bash@3
+            displayName: Build Base
+            inputs:
+              targetType: inline
+              script: |
+                taskctl build:base
+            env:
+              DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
+              DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)
 
-        - task: Bash@3
-          displayName: Setup
-          inputs:
-            targetType: inline
-            script: |
-              taskctl setup
+          - task: Bash@3
+            displayName: Build Kong Dev Tools
+            inputs:
+              targetType: inline
+              script: |
+                taskctl build:kong
+            env:
+              DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
+              DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)
 
-        - task: Bash@3
-          displayName: Build Base
-          inputs:
-            targetType: inline
-            script: |
-              taskctl build:base
-          env:
-            DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
-            DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)
+          - task: Bash@3
+            displayName: Build Inspec
+            inputs:
+              targetType: inline
+              script: |
+                taskctl debug
+                taskctl build:inspec
+            env:
+              DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
+              DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)
 
-        - task: Bash@3
-          displayName: Build Kong Dev Tools
-          inputs:
-            targetType: inline
-            script: |
-              taskctl build:kong
-          env:
-            DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
-            DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)
+          - task: Bash@3
+            displayName: Build Java
+            inputs:
+              targetType: inline
+              script: |
+                taskctl build:java
+            env:
+              DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
+              DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)
 
-        - task: Bash@3
-          displayName: Build Inspec
-          inputs:
-            targetType: inline
-            script: |
-              taskctl debug
-              taskctl build:inspec
-          env:
-            DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
-            DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)
+          - task: Bash@3
+            displayName: Build DotNet
+            inputs:
+              targetType: inline
+              script: |
+                taskctl build:dotnet
+            env:
+              DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
+              DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)
 
-        - task: Bash@3
-          displayName: Build Java
-          inputs:
-            targetType: inline
-            script: |
-              taskctl build:java
-          env:
-            DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
-            DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)
+          - task: Bash@3
+            displayName: Build Data
+            inputs:
+              targetType: inline
+              script: |
+                taskctl build:data
+            env:
+              DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
 
-        - task: Bash@3
-          displayName: Build DotNet
-          inputs:
-            targetType: inline
-            script: |
-              taskctl build:dotnet
-          env:
-            DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
-            DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)
+          - task: Bash@3
+            displayName: Build Golang
+            inputs:
+              targetType: inline
+              script: |
+                taskctl build:golang
+            env:
+              DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
+              DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)
 
-        - task: Bash@3
-          displayName: Build Data
-          inputs:
-            targetType: inline
-            script: |
-              taskctl build:data
-          env:
-            DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
+          - task: Bash@3
+            displayName: Build Asciidoctor
+            inputs:
+              targetType: inline
+              script: |
+                taskctl build:asciidoctor
+            env:
+              DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
+              DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)
+            enabled: false
 
-        - task: Bash@3
-          displayName: Build Golang
-          inputs:
-            targetType: inline
-            script: |
-              taskctl build:golang
-          env:
-            DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
-            DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)
+          - task: Bash@3
+            displayName: Publish to Dashboard
+            inputs:
+              targetType: inline
+              script: |
+                taskctl publish
+            env:
+              ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}: # On main branch runs
+                PUBLISH_RELEASE: $true
+              DASHBOARD_INFLUX_TOKEN: $(DASHBOARD_INFLUX_TOKEN) # requires explicit mapping to be used as an env var
 
-        - task: Bash@3
-          displayName: Build Asciidoctor
-          inputs:
-            targetType: inline
-            script: |
-              taskctl build:asciidoctor
-          env:
-            DOCKER_PASSWORD: $(DOCKER_PASSWORD) # requires explicit mapping to be used as an env var
-            DOCKER_IMAGE_TAG: $(DOCKER_IMAGE_TAG)
+          # Generate the documentation
+          - task: Bash@3
+            displayName: Generate Documentation
+            inputs:
+              targetType: inline
+              script: |
+                taskctl docs
 
-        - task: Bash@3
-          displayName: Publish to Dashboard
-          inputs:
-            targetType: inline
-            script: |
-              taskctl publish
-          env:
-            ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}: # On main branch runs
-              PUBLISH_RELEASE: $true
-            DASHBOARD_INFLUX_TOKEN: $(DASHBOARD_INFLUX_TOKEN) # requires explicit mapping to be used as an env var
-
-        # Generate the documentation
-        - task: Bash@3
-          displayName: Generate Documentation
-          inputs:
-            targetType: inline
-            script: |
-              taskctl docs
-
-        # Upload the documentation
-        - task: PublishBuildArtifacts@1
-          displayName: Publish Documentation
-          inputs:
-            pathToPublish: $(Build.SourcesDirectory)/outputs/docs
-            artifactName: docs
+          # Upload the documentation
+          - task: PublishBuildArtifacts@1
+            displayName: Publish Documentation
+            inputs:
+              pathToPublish: $(Build.SourcesDirectory)/outputs/docs
+              artifactName: docs
