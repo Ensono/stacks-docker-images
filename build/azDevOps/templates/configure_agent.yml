@@ -1,6 +1,6 @@
 parameters:
     TaskctlVersion: 1.5.3
-    EnsonoBuildVersion: 1.0.43
+    EnsonoBuildVersion: 1.0.45
     DockerPushRMVersion: 1.9.0
 
 steps:
