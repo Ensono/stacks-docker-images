@@ -9,6 +9,5 @@ FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
 
 COPY files/install.sh /usr/local/bin/install.sh
 
-RUN chmod +x /usr/local/bin/unittests.sh && \
-    chmod +x /usr/local/bin/install.sh && \
+RUN chmod +x /usr/local/bin/install.sh && \
     bash /usr/local/bin/install.sh
