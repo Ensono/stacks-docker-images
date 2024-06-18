@@ -16,3 +16,5 @@ COPY --from=tools /usr/local/terraform /usr/local/terraform
 # Install Inspec
 COPY files/install.sh /usr/local/bin/install.sh
 RUN chmod +x /usr/local/bin/install.sh && /usr/local/bin/install.sh
+
+ENV PATH="${PATH}:/usr/local/terraform/bin"
