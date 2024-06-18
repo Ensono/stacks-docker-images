@@ -23,7 +23,9 @@ All applications are installed by copying and then running the `files/install.sh
 | Binary | Kluctl | 2.22.1 | https://github.com/kluctl/kluctl/releases/download/2.22.1/kluctl_2.22.1_linux_amd64.tar.gz
 | Binary | Kubectl | 1.23.14 | https://dl.k8s.io/release/v1.23.14/bin/linux/amd64/kubectl
 | Binary | Kustomize | 5.2.1 | https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v5.2.1/kustomize_v5.2.1_linux_amd64.tar.gz
-| Binary | Terraform | 1.5.1 | https://releases.hashicorp.com/terraform/1.5.1/terraform_1.5.1_linux_x86_54.zip
+| Binary | Terraform | 1.5.1
+1.8.4 | https://releases.hashicorp.com/terraform/1.5.1/terraform_1.5.1_linux_x86_54.zip
+https://releases.hashicorp.com/terraform/1.8.4/terraform_1.8.4_linux_x86_54.zip
 | PS Module | Az | 10.0.0 | - 
 | PS Module | Arm-ttk | 20231122 | - 
 | PS Module | Pester | 5.4.1 | - 
@@ -32,3 +34,5 @@ All applications are installed by copying and then running the `files/install.sh
 |====
 
 NOTE: The table above only shows the download links for X64 machines, not ARM64 packages.
+
+Two versions of Terraform are installed. This is to support migration of Terraform from one version to another. Version `1.5.1` is configured as the default version, using a symlink to the `/usr/local/terraform/1.5.1/bin` directory.
