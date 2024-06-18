@@ -13,6 +13,8 @@ ARG INSPEC_VERSION=5.22.50
 # Copy additional tools
 COPY --from=tools /usr/local/terraform /usr/local/terraform
 
+COPY --from=tools /usr/local/share/powershell/Modules/powershell-yaml /usr/local/share/powershell/Modules/powershell-yaml
+
 # Install Inspec
 COPY files/install.sh /usr/local/bin/install.sh
 RUN chmod +x /usr/local/bin/install.sh && /usr/local/bin/install.sh
