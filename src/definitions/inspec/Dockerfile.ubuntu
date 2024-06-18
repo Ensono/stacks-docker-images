@@ -5,7 +5,7 @@ ARG ORG=ensono
 FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
 
 # Set the version of Inspec to install
-ARG INSPEC_VERSION=5.22.40
+ARG INSPEC_VERSION=5.22.50
 
 # Install Inspec
 COPY files/install.sh /usr/local/bin/install.sh
