@@ -42,7 +42,6 @@ for TFVERSION in ${TERRAFORM_VERSION}; do
 done
 
 # Create a symlink to the first version of the listed binaries as the default
-DEFAULT_TF_VERSION=$(echo ${TERRAFORM_VERSION} | cut -d "," -f 1)
 ln -s /usr/local/terraform/${DEFAULT_TF_VERSION}/bin /usr/local/terraform/bin
 # ---------------------------------------------------------------------------
 

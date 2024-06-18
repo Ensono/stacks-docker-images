@@ -2,10 +2,16 @@ ARG REGISTRY=docker.io
 ARG IMAGE_TAG=0.0.1-workstation
 ARG ORG=ensono
 
+# Bring in other images to copy necessary tools from them
+FROM ${REGISTRY}/${ORG}/eir-foundation-tools:${IMAGE_TAG} as tools
+
 FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
 
 # Set the version of Inspec to install
 ARG INSPEC_VERSION=5.22.50
+
+# Copy additional tools
+COPY --from=tools /usr/local/terraform /usr/local/terraform
 
 # Install Inspec
 COPY files/install.sh /usr/local/bin/install.sh
