@@ -32,7 +32,7 @@ chmod +x /usr/local/helm/bin/helm
 # Terraform -----------------------------------------------------------------
 # This needs to install the specified version of Terraform
 IFS=","
-for TFVERSION in ${TERRAFORM_VERSIONS}; do
+for TFVERSION in ${TERRAFORM_VERSION}; do
     echo "Installing: Terraform [${TFVERSION})]"
     mkdir -p /usr/local/terraform/${TFVERSION}/bin 
     curl -L "https://releases.hashicorp.com/terraform/${TFVERSION}/terraform_${TFVERSION}_linux_${BIN_ARCH}.zip" -o /tmp/terraform.zip 
