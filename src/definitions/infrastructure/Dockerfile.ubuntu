@@ -20,9 +20,8 @@ COPY --from=tools /usr/local/kustomize /usr/local/kustomize
 COPY --from=tools /usr/local/jq /usr/local/jq
 COPY --from=tools /usr/local/terrascan /usr/local/terrascan
 
-COPY --from=tools /usr/local/share/powershell/Modules/powershell-yaml /usr/local/share/powershell/Modules/powershell-yaml
-COPY --from=tools /usr/local/share/powershell/Modules/Pester /usr/local/share/powershell/Modules/Pester
-COPY --from=tools /usr/local/share/powershell/Modules/PSScriptAnalyzer /usr/local/share/powershell/Modules/PSScriptAnalyzer
+# Copy all modules from the tools image
+COPY --from=tools /usr/local/share/powershell/Modules /usr/local/share/powershell/Modules
 
 # Install the Cloud CLI applications
 COPY files/requirements.txt /tmp/requirements.txt
