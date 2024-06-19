@@ -6,6 +6,8 @@ ARG ORG=ensono
 # Bring in other images to copy necessary tools from them
 FROM ${REGISTRY}/${ORG}/eir-foundation-tools:${IMAGE_TAG} as tools
 
+FROM ${REGISTRY}/${ORG}/eir-foundation-builder:${IMAGE_TAG} as builder
+
 FROM ${REGISTRY}/${ORG}/eir-foundation-azure-cli:${IMAGE_TAG}
 
 ARG AWS_CLI_VERSION=2.15.8
@@ -22,6 +24,10 @@ COPY --from=tools /usr/local/terrascan /usr/local/terrascan
 
 # Copy all modules from the tools image
 COPY --from=tools /usr/local/share/powershell/Modules /usr/local/share/powershell/Modules
+
+# Copy docker adn extension from the builder image
+COPY --from=builder /usr/local/docker /usr/local/docker
+COPY --from=builder /usr/libexec/docker/cli-plugins/docker-buildx /usr/libexec/docker/cli-plugins/docker-buildx
 
 # Install the Cloud CLI applications
 COPY files/requirements.txt /tmp/requirements.txt
