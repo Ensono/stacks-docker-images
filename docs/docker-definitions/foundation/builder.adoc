@@ -1,0 +1,17 @@
+== EIR Foundation Builder
+
+This Docker image is built from the foundation PowerShell image and installs `docker` and the `buildx` extension. This is the second image that is built and all future images are built in this image.
+
+=== Specs
+
+**Platforms**: `linux/amd64`, `linux/arm64`
+
+**Base Image**: ensono/eir-powershell
+
+==== Software
+
+[cols="1,2,1,2",options=header]
+|====
+| Type | Name | Version | URL
+| Binary | Docker | 24.0.7 | https://download.docker.com/linux/static/stable
+| Extension | Docker Buildx | 0.12.0 | https://github.com/docker/buildx/releases

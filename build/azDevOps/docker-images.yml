@@ -1,0 +1,294 @@
+name: "$(Build.SourceBranchName)-init"
+
+parameters:
+  - name: force_deploy
+    displayName: Force build and publish to Live
+    type: boolean
+    default: false
+  - name: upload
+    displayName: Upload generated files
+    type: boolean
+    default: false
+  - name: debug
+    displayName: Turn on debug for the Independent Runner
+    type: boolean
+    default: false
+  - name: stages
+    displayName: Container Image Stages
+    type: object
+    default:
+      - stage: FoundationPowerShell
+        displayName: "[CONTAINER] Foundation - PowerShell"
+        dependsOn:
+          - Infrastructure
+        taskName: build:foundation:powershell
+        imageName: ensono/eir-foundation-powershell
+
+      - stage: FoundationBuilder
+        displayName: "[CONTAINER] Foundation - Builder"
+        dependsOn:
+          - FoundationPowerShell
+        taskName: build:foundation:builder
+        imageName: ensono/eir-foundation-builder
+
+      - stage: FoundationAzureCli
+        displayName: "[CONTAINER] Foundation - Azure CLI"
+        dependsOn:
+          - FoundationBuilder
+          - FoundationPowerShell
+        taskName: build:foundation:azure-cli
+        imageName: ensono/eir-foundation-azure-cli
+
+      - stage: FoundationTools
+        displayName: "[CONTAINER] Foundation - Tools"
+        dependsOn:
+          - FoundationBuilder
+          - FoundationPowerShell
+        taskName: build:foundation:tools
+        imageName: ensono/eir-foundation-tools
+
+      - stage: Infra
+        displayName: "[CONTAINER] Infrastructure"
+        dependsOn:
+          - FoundationTools
+          - FoundationAzureCli
+        taskName: build:infrastructure
+        imageName: ensono/eir-infrastructure
+
+      - stage: Java
+        displayName: "[CONTAINER] Java"
+        dependsOn:
+          - FoundationTools
+        taskName: build:java
+        imageName: ensono/eir-java
+
+      - stage: DotNet
+        displayName: "[CONTAINER] .NET"
+        dependsOn:
+          - Java
+        taskName: build:dotnet
+        imageName: ensono/eir-dotnet
+
+      - stage: Go
+        displayName: "[CONTAINER] Go"
+        dependsOn:
+          - FoundationBuilder
+          - FoundationPowerShell
+        taskName: build:golang
+        imageName: ensono/eir-golang
+
+      - stage: Inspec
+        displayName: "[CONTAINER] Inspec"
+        dependsOn:
+          - FoundationBuilder
+          - FoundationPowerShell
+          - FoundationTools
+        taskName: build:inspec
+        imageName: ensono/eir-inspec
+
+      - stage: Kong
+        displayName: "[CONTAINER] Kong"
+        dependsOn:
+          - FoundationBuilder
+          - FoundationPowerShell
+        taskName: build:kong
+        imageName: ensono/eir-kong
+
+      - stage: NodeJS
+        displayName: "[CONTAINER] NodeJS"
+        dependsOn:
+          - FoundationBuilder
+          - FoundationPowerShell
+        taskName: build:node
+        imageName: ensono/eir-node
+
+      - stage: AsciiDoctor
+        displayName: "[CONTAINER] AsciiDoctor"
+        dependsOn:
+          - Java
+        taskName: build:asciidoctor
+        imageName: ensono/eir-asciidoctor
+
+      - stage: AzureData
+        displayName: "[CONTAINER] Azure Data"
+        dependsOn:
+          - FoundationAzureCli
+        taskName: build:data
+        imageName: ensono/eir-azure-data
+pr:
+  - main
+
+trigger:
+  branches:
+    include:
+      - "main"
+  paths:
+    include:
+      - "*"
+
+variables:
+  - template: azuredevops-vars.yml
+  - name: DebugPreference
+    value: "Continue"
+
+# Configure the stages
+stages:
+  - stage: Infrastructure
+    condition: and(ne(variables['Build.SourceBranchName'], 'main'), eq(lower(${{ parameters['force_deploy'] }}), 'false'))
+    variables:
+      - group: azure-sp-creds
+
+    jobs:
+      - job: DeployInfrastructure
+        steps:
+          - template: templates/configure_agent.yml
+            parameters:
+              TasckctlVersion: $(TaskctlVersion)
+              EnsonoBuildVersion: $(EnsonoBuildVersion)
+              TerraformVersion: $(TerraformVersion)
+
+          - task: Bash@3
+            displayName: Setup
+            inputs:
+              targetType: inline
+              script: |
+                taskctl setup
+
+          - task: Bash@3
+            displayName: Terraform Variables
+            inputs:
+              targetType: inline
+              script: |
+                taskctl infrastructure_variables
+            env:
+              STAGE: acr
+              TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
+              TF_FILE_LOCATION: deploy/terraform/azure/acr
+
+              TF_VAR_name_company: $(name_company)
+              TF_VAR_name_component: $(name_component)
+              TF_VAR_name_project: $(name_project)
+
+          # Upload the Terraform variables file and the plan for debugging
+          - ${{ if eq(parameters.upload, true) }}:
+              - template: templates/upload.yml
+
+          - task: Bash@3
+            displayName: Infrastructure
+            inputs:
+              targetType: inline
+              script: |
+                taskctl infrastructure
+            env:
+              CLOUD_PLATFORM: azure
+              TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
+              TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
+              TF_FILE_LOCATION: deploy/terraform/azure/acr
+              STAGE: acr
+
+  - stage: documentation
+    displayName: Documentation
+
+    jobs:
+      - job: GenerateDocumentation
+        steps:
+          - template: templates/configure_agent.yml
+            parameters:
+              TasckctlVersion: $(TaskctlVersion)
+              EnsonoBuildVersion: $(EnsonoBuildVersion)
+              TerraformVersion: $(TerraformVersion)
+
+          # Generate the documentation
+          - task: Bash@3
+            displayName: Generate Documentation
+            inputs:
+              targetType: inline
+              script: |
+                taskctl docs
+
+          # Upload the documentation
+          - task: PublishBuildArtifacts@1
+            displayName: Publish Documentation
+            inputs:
+              pathToPublish: $(Build.SourcesDirectory)/outputs/docs
+              artifactName: docs
+
+          - task: Bash@3
+            displayName: Create image Overview
+            inputs:
+              targetType: inline
+              script: |
+                taskctl generate:docker:overview
+
+  - ${{ each stage in parameters.stages }}:
+      - stage: ${{ stage.stage }}
+        displayName: ${{ stage.displayName }}
+        dependsOn: ${{ stage.dependsOn }}
+        variables:
+          - ${{ if or(eq(parameters['force_deploy'], 'true'), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
+              - group: stacks-docker-creds
+          - ${{ else }}:
+              - group: stacks-acr-creds
+
+        jobs:
+          - job: BuildImage_amd64
+            displayName: Build Image - amd64
+            pool: $(build_pool_amd64)
+
+            steps:
+              - template: templates/configure_agent.yml
+                parameters:
+                  TasckctlVersion: $(TaskctlVersion)
+                  EnsonoBuildVersion: $(EnsonoBuildVersion)
+
+              - task: Bash@3
+                displayName: Build Image
+                inputs:
+                  targetType: inline
+                  script: |
+                    taskctl ${{ stage.taskName }}
+                env:
+                  DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+                  PLATFORM: linux/amd64
+
+          - job: BuildImage_arm64
+            displayName: Build Image - arm64
+            pool: $(build_pool_arm64)
+
+            steps:
+              - template: templates/configure_agent.yml
+                parameters:
+                  TasckctlVersion: $(TaskctlVersion)
+                  EnsonoBuildVersion: $(EnsonoBuildVersion)
+
+              - task: Bash@3
+                displayName: Build Image
+                inputs:
+                  targetType: inline
+                  script: |
+                    taskctl ${{ stage.taskName }}
+                env:
+                  DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+                  PLATFORM: linux/arm64
+
+          - job: create_manifest
+            displayName: Create Multi-Arch Manifest
+            dependsOn:
+              - BuildImage_amd64
+              - BuildImage_arm64
+
+            steps:
+              - template: templates/configure_agent.yml
+                parameters:
+                  TasckctlVersion: $(TaskctlVersion)
+                  EnsonoBuildVersion: $(EnsonoBuildVersion)
+
+              - task: Bash@3
+                displayName: Create Multi-Arch Manifest
+                inputs:
+                  targetType: inline
+                  script: |
+                    taskctl create:docker:manifest
+                env:
+                  DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+                  DOCKER_IMAGE_NAME: ${{ stage.imageName }}

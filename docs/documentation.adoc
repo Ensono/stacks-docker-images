@@ -1,0 +1,35 @@
+== Documentation
+
+All of the documentation for the {project_name} Docker Images is kept in the Git repository with the docker definitions in a directory called `docs/`. The documentation is written in https://docs.asciidoctor.org/[AsciiDoctor] format which allows it to be built in different formats such as HTML, PDF, and more.
+
+The AsciiDoctor application is written in Ruby and as such it is possible to add libraries that extend the functionality of the tool. In this case, a new library called `glob-include-processor` has been added to the AsciiDoctor Docker image.
+
+=== Glob Include Processor
+
+AsciiDoctor allows the inclusion of files into documents using the `include::` directive. This directive can be used to include files from the local file system or from a URL. The `glob-include-processor` library extends this functionality by allowing the use of wildcards in the file path.
+
+The Docker overview files are stored in the `docs/docker-definitions/` directory. Without this new library each of the files would need to be included individually in the main documentation file, for example:
+
+[source,asciidoc]
+----
+include::docker-definitions\asciidoctor.adoc
+include::docker-definitions\data.adoc
+include::docker-definitions\dotnet.adoc
+include::docker-definitions\golang.adoc
+include::docker-definitions\infrastructure.adoc
+include::docker-definitions\inspec.adoc
+include::docker-definitions\java.adoc
+include::docker-definitions\kong.adoc
+include::docker-definitions\foundation\azure-cli.adoc
+include::docker-definitions\foundation\powershell.adoc
+include::docker-definitions\foundation\tools.adoc
+----
+
+This has the downside that if the files are modified in the directory then they are not automatically included in the documentation. The `glob-include-processor` library allows the use of wildcards in the file path, so the above example can be replaced with:
+
+[source,asciidoc]
+----
+include::docker-definitions/**/*.adoc[]
+----
+
+NOTE: The example above is copied from the `docs/index.adoc` file.

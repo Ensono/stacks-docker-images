@@ -1,0 +1,7 @@
+== Appendices
+
+include::appendix/build-dockerimage.adoc[]
+
+include::appendix/ado-stages.adoc[]
+
+include::appendix/set-dockeroverview.adoc[]

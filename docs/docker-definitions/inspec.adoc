@@ -1,0 +1,19 @@
+== EIR Inspec
+
+So that we can detect configuration drift from what we expect to have deployed and track versions of applications (such as Kubernetes) we use Inspec[https://inspec.io].
+
+This is bundled as a separate image that can be called to run infrastructure tests. An example of such tests can be found in the Stacks Infrastructure AKS repository - https://github.com/Ensono/stacks-infrastructure-aks/tree/master/deploy/tests.
+
+=== Specs
+
+**Platforms**: `linux/amd64`, `linux/arm64`
+
+**Base Image**: ensono/eir-foundation-powershell
+
+==== Software
+
+[cols="1,2,1,2",options=header]
+|====
+| Type | Name | Version | URL 
+| Ruby Gem | Inspec | 5.22.40 | https://github.com/inspec/inspec
+|====

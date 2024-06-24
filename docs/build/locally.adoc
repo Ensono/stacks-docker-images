@@ -1,0 +1,146 @@
+=== Building Locally
+
+All of the Docker images used for {project_name} can be built using he Independent Runner. However some tools need to be installed locally as the first two images must be built on the local machine. The other images can then be built using EIR as they are built using the initial images.
+
+The tools required for building the initial images are as follows:
+
+* Docker Engine
+** Docker Server
+** Docker Desktop - https://www.docker.com/products/docker-desktop/
+** Rancher Desktop - https://rancherdesktop.io 
+** POD Man - https://podman.io
+* {module_name} PowerShell Module - https://github.com/ensono/independent-runner
+
+The following table shows the commands to build the images. For completeness the Docker commands that EIR will generate are also shown.
+
+.Docker commands to build images locally
+[cols="1,2a,3a",options="header",stripes=even]
+|===
+| Image Name | EIR Task | Command
+| Foundation PowerShell | `taskctl build:foundation:powershell` |
+
+----
+docker build `
+    -f ./src/definitions/foundation/powershell/Dockerfile.ubuntu `
+    -t {registry_local}/eir-foundation-powershell `
+    ./src/definitions/foundation/powershell
+----
+| Foundation Builder | `taskctl build:foundation:builder` |
+
+----
+docker build `
+    -f ./src/definitions/foundation/builder/Dockerfile.ubuntu `
+    -t {registry_local}/eir-foundation-builder `
+    ./src/definitions/foundation/builder
+----
+| Foundation Tools | `taskctl build:foundation:tools` |
+
+----
+docker build `
+    -f ./src/definitions/foundation/tools/Dockerfile.ubuntu `
+    -t {registry_local}/eir-foundation-tools `
+    --build-arg ORG={registry_org} `
+    --build-arg IMAGE_TAG=latest `
+    --build-arg REGISTRY={registry} `
+    ./src/definitions/foundation/tools
+----
+| Foundation Azure CLI | `taskctl build:foundation:azure-cli` |
+
+----
+docker build `
+    -f ./src/definitions/foundation/azure-cli/Dockerfile.ubuntu `
+    -t {registry_local}/eir-foundation-azure-cli `
+    --build-arg ORG={registry_org} `
+    --build-arg IMAGE_TAG=latest `
+    --build-arg REGISTRY={registry} `
+    ./src/definitions/foundation/azure-cli
+----
+| Infrastructure | `taskctl build:infrastructure` |
+
+----
+docker build `
+    -f ./src/definitions/infrastructure/Dockerfile.ubuntu `
+    -t {registry_local}/eir-infrastructure `
+    --build-arg ORG={registry_org} `
+    --build-arg IMAGE_TAG=latest `
+    --build-arg REGISTRY={registry} `
+    ./src/definitions/infrastructure
+----
+| Java | `taskctl build:java` |
+
+----
+docker build `
+    -f ./src/definitions/java/Dockerfile.ubuntu `
+    -t {registry_local}/eir-java `
+    --build-arg ORG={registry_org} `
+    --build-arg IMAGE_TAG=latest `
+    --build-arg REGISTRY={registry} `
+    ./src/definitions/java
+----
+| .NET | `taskctl build:dotnet` |
+
+----
+docker build `
+    -f ./src/definitions/dotnet/Dockerfile.ubuntu `
+    -t {registry_local}/eir-dotnet `
+    --build-arg ORG={registry_org} `
+    --build-arg IMAGE_TAG=latest `
+    --build-arg REGISTRY={registry} `
+    ./src/definitions/dotnet
+----
+| GoLang | `taskctl build:golang` |
+
+----
+docker build `
+    -f ./src/definitions/golang/Dockerfile.ubuntu `
+    -t {registry_local}/eir-golang `
+    --build-arg ORG={registry_org} `
+    --build-arg IMAGE_TAG=latest `
+    --build-arg REGISTRY={registry} `
+    ./src/definitions/golang
+----
+| InSpec | `taskctl build:inspec` |
+
+----
+docker build `
+    -f ./src/definitions/inspec/Dockerfile.ubuntu `
+    -t {registry_local}/eir-inspec `
+    --build-arg ORG={registry_org} `
+    --build-arg IMAGE_TAG=latest `
+    --build-arg REGISTRY={registry} `
+    ./src/definitions/inspec
+----
+| Kong | `taskctl build:kong` |
+
+----
+docker build `
+    -f ./src/definitions/kong/Dockerfile.ubuntu `
+    -t {registry_local}/eir-kong `
+    --build-arg ORG={registry_org} `
+    --build-arg IMAGE_TAG=latest `
+    --build-arg REGISTRY={registry} `
+    ./src/definitions/kong
+----
+| Node | `taskctl build:node` |
+
+----
+docker build `
+    -f ./src/definitions/node/Dockerfile.ubuntu `
+    -t {registry_local}/eir-node `
+    --build-arg ORG={registry_org} `
+    --build-arg IMAGE_TAG=latest `
+    --build-arg REGISTRY={registry} `
+    ./src/definitions/node
+----
+| Asciidoctor | `taskctl build:asciidoctor` |
+
+----
+docker build `
+    -f ./src/definitions/asciidoctor/Dockerfile.ubuntu `
+    -t {registry_local}/eir-asciidoctor `
+    --build-arg ORG={registry_org} `
+    --build-arg IMAGE_TAG=latest `
+    --build-arg REGISTRY={registry} `
+    ./src/definitions/asciidoctor
+----
+|===

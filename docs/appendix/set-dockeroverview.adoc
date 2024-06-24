@@ -1,0 +1,8 @@
+=== Set-DockerOverview Script
+
+The script for building the docker image is displayed below, or can be found at https://github.com/Ensono/stacks-docker-images/blob/main/build/scripts/Set-DockerOverview.ps1.
+
+[source,powershell,linenums]
+----
+include::../../build/scripts/Set-DockerOverview.ps1[]
+----

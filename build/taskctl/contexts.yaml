@@ -1,6 +1,5 @@
 # independent-runner
 contexts:
-
   powershell_docker:
     executable:
       bin: docker
@@ -17,12 +16,16 @@ contexts:
         - PSModulePath=/modules
         - -w
         - /app
-        - amidostacks/runner-pwsh:0.4.60-stable
+        - ensonostackseuweirdfmu.azurecr.io/ensono/eir-foundation-builder:1.1.81
         - pwsh
         - -NoProfile
         - -Command
     quote: "'"
-    before: envfile -e home,path
+    envfile:
+      exclude:
+        - home
+        - path
+      generate: true
 
   powershell:
     executable:
@@ -46,8 +49,12 @@ contexts:
         - /app
         - --env-file
         - envfile
-        - amidostacks/runner-pwsh-asciidoctor:0.4.60-stable
+        - ensonostackseuweirdfmu.azurecr.io/ensono/eir-asciidoctor:latest
         - pwsh
         - -NoProfile
         - -Command
-    before: envfile -e home,path
+    envfile:
+      exclude:
+        - home
+        - path
+      generate: true
