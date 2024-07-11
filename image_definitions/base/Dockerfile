@@ -34,7 +34,7 @@ FROM mcr.microsoft.com/powershell:${IMAGE_TAG}
 
 # Add the arguments for the apps to install in the base image
 ARG TERRAFORM_VERSION=1.5.1
-ARG ENSONOBUILD=v1.0.43
+ARG ENSONOBUILD=v1.0.51
 ARG TASKCTL_VERSION=1.4.2
 ARG KUBE_VERSION=v1.23.14
 ARG AZURE_CLI_VERSION=2.48.1
