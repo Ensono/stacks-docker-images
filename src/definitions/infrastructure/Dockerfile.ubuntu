@@ -6,6 +6,8 @@ ARG ORG=ensono
 # Bring in other images to copy necessary tools from them
 FROM ${REGISTRY}/${ORG}/eir-foundation-tools:${IMAGE_TAG} as tools
 
+FROM ${REGISTRY}/${ORG}/eir-foundation-builder:${IMAGE_TAG} as builder
+
 FROM ${REGISTRY}/${ORG}/eir-foundation-azure-cli:${IMAGE_TAG}
 
 ARG AWS_CLI_VERSION=2.15.8
@@ -20,9 +22,12 @@ COPY --from=tools /usr/local/kustomize /usr/local/kustomize
 COPY --from=tools /usr/local/jq /usr/local/jq
 COPY --from=tools /usr/local/terrascan /usr/local/terrascan
 
-COPY --from=tools /usr/local/share/powershell/Modules/powershell-yaml /usr/local/share/powershell/Modules/powershell-yaml
-COPY --from=tools /usr/local/share/powershell/Modules/Pester /usr/local/share/powershell/Modules/Pester
-COPY --from=tools /usr/local/share/powershell/Modules/PSScriptAnalyzer /usr/local/share/powershell/Modules/PSScriptAnalyzer
+# Copy all modules from the tools image
+COPY --from=tools /usr/local/share/powershell/Modules /usr/local/share/powershell/Modules
+
+# Copy docker adn extension from the builder image
+COPY --from=builder /usr/local/docker /usr/local/docker
+COPY --from=builder /usr/libexec/docker/cli-plugins/docker-buildx /usr/libexec/docker/cli-plugins/docker-buildx
 
 # Install the Cloud CLI applications
 COPY files/requirements.txt /tmp/requirements.txt
@@ -30,4 +35,4 @@ COPY files/install.sh /usr/local/bin/install.sh
 RUN chmod +x /usr/local/bin/install.sh && /usr/local/bin/install.sh
 
 # Set the PATH so that the tools can be accessed
-ENV PATH="${PATH}:/usr/local/kubectl/bin:/usr/local/helm/bin:/usr/local/terraform/bin:/usr/local/ghcli/bin:/usr/local/kluctl/bin:/usr/local/kustomize/bin:/usr/local/jq/bin:/usr/local/terrascan/bin"
+ENV PATH="${PATH}:/usr/local/kubectl/bin:/usr/local/helm/bin:/usr/local/terraform/bin:/usr/local/ghcli/bin:/usr/local/kluctl/bin:/usr/local/kustomize/bin:/usr/local/jq/bin:/usr/local/terrascan/bin:/usr/local/docker/bin"

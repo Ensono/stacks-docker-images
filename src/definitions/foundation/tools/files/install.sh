@@ -30,11 +30,19 @@ chmod +x /usr/local/helm/bin/helm
 # ---------------------------------------------------------------------------
 
 # Terraform -----------------------------------------------------------------
-echo "Installing: Terraform"
-mkdir -p /usr/local/terraform/bin 
-curl -L "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${BIN_ARCH}.zip" -o /tmp/terraform.zip 
-unzip /tmp/terraform.zip -d /usr/local/terraform/bin 
-chmod +x /usr/local/terraform/bin/terraform
+# This needs to install the specified version of Terraform
+IFS=","
+for TFVERSION in ${TERRAFORM_VERSION}; do
+    echo "Installing: Terraform [${TFVERSION})]"
+    mkdir -p /usr/local/terraform/${TFVERSION}/bin 
+    curl -L "https://releases.hashicorp.com/terraform/${TFVERSION}/terraform_${TFVERSION}_linux_${BIN_ARCH}.zip" -o /tmp/terraform.zip 
+    unzip /tmp/terraform.zip -d /usr/local/terraform/${TFVERSION}/bin 
+    rm /tmp/terraform.zip
+    chmod +x /usr/local/terraform/${TFVERSION}/bin/terraform
+done
+
+# Create a symlink to the first version of the listed binaries as the default
+ln -s /usr/local/terraform/${DEFAULT_TF_VERSION}/bin /usr/local/terraform/bin
 # ---------------------------------------------------------------------------
 
 # Terrascan -----------------------------------------------------------------

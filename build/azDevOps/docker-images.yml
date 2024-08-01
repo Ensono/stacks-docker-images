@@ -82,6 +82,7 @@ parameters:
         dependsOn:
           - FoundationBuilder
           - FoundationPowerShell
+          - FoundationTools
         taskName: build:inspec
         imageName: ensono/eir-inspec
 
