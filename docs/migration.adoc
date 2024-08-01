@@ -5,7 +5,7 @@ We have chosen to migrate away from using Alpine based Docker images and to usin
 * Intel based machines (AMD64)
 * Apple Silicon machines (ARM64)
 
-Although there are ARM versions of Alpine and PowerShell, Microsoft have not released PowerShell for Alpine ARM64. This has meant that it is not possible to run the EIR Docker images on an Apple Silicon based Mac. We have now moved away from Alpine and use Ubuntu which can be easily built for the two targeted platforms.
+Although there are ARM versions of Alpine and PowerShell, Microsoft have not released PowerShell for Alpine ARM64. It is possible but as it is not supported by Microsoft, so any issues we have are not supportable. This has meant that it is not possible to run the EIR Docker images on an Apple Silicon based Mac. We have now moved away from Alpine and use Ubuntu which can be easily built for the two targeted platforms.
 
 The decision has been made to split the images up a bit, to more correctly reflect the scenarios in which they will be used. The following table shows the mapping from the old AmidoStacks images to these new ones.
 
