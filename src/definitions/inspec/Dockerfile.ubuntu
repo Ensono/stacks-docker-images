@@ -16,7 +16,7 @@ COPY --from=tools /usr/local/terraform /usr/local/terraform
 COPY --from=tools /usr/local/share/powershell/Modules/powershell-yaml /usr/local/share/powershell/Modules/powershell-yaml
 
 # Install Inspec
-COPY files/install.sh /usr/local/bin/install.sh
-RUN chmod +x /usr/local/bin/install.sh && /usr/local/bin/install.sh
+COPY files/install.bash /usr/local/bin/install.bash
+RUN chmod +x /usr/local/bin/install.bash && /usr/local/bin/install.bash
 
 ENV PATH="${PATH}:/usr/local/terraform/bin"

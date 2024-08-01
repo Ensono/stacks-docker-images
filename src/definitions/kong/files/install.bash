@@ -1,6 +1,6 @@
 
 # Get the architecture of the container
-. /usr/local/bin/platform.sh
+. /usr/local/bin/platform.bash
 
 # Install Deck
 curl -L "https://github.com/kong/deck/releases/download/v${DECK_VERSION}/deck_${DECK_VERSION}_linux_${BIN_ARCH}.tar.gz" -o /tmp/deck.tar.gz

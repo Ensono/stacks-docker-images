@@ -7,7 +7,7 @@ Installs different versions of the .NET SDKS
 Many .NET SDKS can be installed on the same machine using the same install script from
 Microsoft. However that tool cannot install multiple versions at the same time. This script
 takes a comma delimited list of the versions to install and iterates around them installing
-each one using the dotnet-install.sh script
+each one using the dotnet-install.bash script
 
 #>
 
@@ -36,7 +36,7 @@ if (!(Test-Path -Path $toolpath)) {
     Write-Host "Downloading Dotnet installation tool"
 
     # Download the script to the tmp directory
-    Invoke-RestMethod -Method GET -Uri https://dot.net/v1/dotnet-install.sh -OutFile /tmp/dotnet-install.sh -FollowRelLink
+    Invoke-RestMethod -Method GET -Uri https://dot.net/v1/dotnet-install.bash -OutFile /tmp/dotnet-install.bash -FollowRelLink
 }
 
 # Split the version into an array to iterate around
@@ -59,7 +59,7 @@ if ($versions.length -eq 0) {
 
         # Build up the commands that need to be executed
         # --- Install Framework
-        $cmds += "bash /tmp/dotnet-install.sh --install-dir {0} --version {1}" -f $toolpath, $version
+        $cmds += "bash /tmp/dotnet-install.bash --install-dir {0} --version {1}" -f $toolpath, $version
 
         # --- Install SonarScanner
         $cmds += "dotnet tool install dotnet-sonarscanner --version {0} --tool-path {1} --framework {2}" -f $sonarscanner_version, $toolpath, $moniker

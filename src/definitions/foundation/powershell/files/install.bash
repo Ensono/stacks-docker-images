@@ -8,7 +8,7 @@ apt-get update
 apt-get install -y libicu70 lsb-release curl git
 
 # Get the ARCH of the enviornment
-. /usr/local/bin/platform.sh
+. /usr/local/bin/platform.bash
 
 # Download the PowerShell binary for the platform
 URL="https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELL_VERSION}/powershell-${POWERSHELL_VERSION}-linux-${ABBR_ARCH}.tar.gz"

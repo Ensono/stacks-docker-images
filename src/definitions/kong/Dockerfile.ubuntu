@@ -2,12 +2,12 @@ ARG REGISTRY=docker.io
 ARG IMAGE_TAG=0.0.1-workstation
 ARG ORG=ensono
 
-ARG DECK_VERSION=1.37.0
-ARG PORTAL_CLI_VERSION=2.0.0
+ARG DECK_VERSION=1.39.2
+ARG PORTAL_CLI_VERSION=2.1.1
 
 FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
 
-COPY files/install.sh /usr/local/bin/install.sh
+COPY files/install.bash /usr/local/bin/install.bash
 
-RUN chmod +x /usr/local/bin/install.sh && \
-    bash /usr/local/bin/install.sh
+RUN chmod +x /usr/local/bin/install.bash && \
+    bash /usr/local/bin/install.bash

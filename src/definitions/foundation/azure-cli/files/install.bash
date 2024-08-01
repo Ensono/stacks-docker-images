@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Get the ARCH of the enviornment
-. /usr/local/bin/platform.sh
+. /usr/local/bin/platform.bash
 
 # Script to install python and the cloud CLI tools
 apt-get update

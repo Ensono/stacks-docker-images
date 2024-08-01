@@ -29,8 +29,8 @@ COPY --from=builder /usr/local/docker /usr/local/docker
 COPY --from=builder /usr/libexec/docker/cli-plugins/docker-buildx /usr/libexec/docker/cli-plugins/docker-buildx
 
 # Copy the install script over and then run it
-COPY files/install.sh /usr/local/bin/install.sh
-RUN chmod +x /usr/local/bin/install.sh && /usr/local/bin/install.sh
+COPY files/install.bash /usr/local/bin/install.bash
+RUN chmod +x /usr/local/bin/install.bash && /usr/local/bin/install.bash
 
 # Setup the Path variable so that the tools can be found
 ENV PATH="$PATH:/usr/local/docker/bin:/usr/local/terraform/bin"
