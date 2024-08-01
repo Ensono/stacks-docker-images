@@ -19,5 +19,5 @@ ENV PATH="$PATH:/usr/lib/jvm/zulu21/bin"
 ENV JAVA_HOME=/usr/local/java
 
 # Install Maven
-COPY files/install.sh /usr/local/bin/install.sh
-RUN chmod +x /usr/local/bin/install.sh && /usr/local/bin/install.sh
+COPY files/install.bash /usr/local/bin/install.bash
+RUN chmod +x /usr/local/bin/install.bash && /usr/local/bin/install.bash

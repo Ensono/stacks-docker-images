@@ -3,7 +3,7 @@
 # Script to install python and the cloud CLI tools
 
 # Get the architecture of the container
-. /usr/local/bin/platform.sh
+. /usr/local/bin/platform.bash
 
 # Install necessary linux packages
 apt-get update

@@ -9,5 +9,5 @@ ARG NVM_VERSION=0.39.7
 ARG NODE_VERSIONS="v20.12.2,v18.20.2"
 
 # Copy the necessary files to the image
-COPY files/install.sh /tmp/install.sh
-RUN chmod +x /tmp/install.sh && /tmp/install.sh
+COPY files/install.bash /tmp/install.bash
+RUN chmod +x /tmp/install.bash && /tmp/install.bash

@@ -4,7 +4,7 @@
 # echo "Acquire::http::Proxy \"http://127.0.0.1:3142\";" > /etc/apt/apt.conf.d/00aptproxy
 
 # Get the ARCH of the enviornment
-. /usr/local/bin/platform.sh
+. /usr/local/bin/platform.bash
 
 # Install necessary packages
 apt-get update

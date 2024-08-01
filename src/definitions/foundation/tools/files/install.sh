@@ -10,7 +10,7 @@ unlink /etc/localtime
 ln -s /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
 
 # Get the architecture of the container
-. /usr/local/bin/platform.sh
+. /usr/local/bin/platform.bash
 
 # Kubectl -------------------------------------------------------------------
 echo "Installing: Kubectl"

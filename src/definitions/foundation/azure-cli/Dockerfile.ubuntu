@@ -7,5 +7,5 @@ FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
 ARG AZURE_CLI_VERSION=2.48.1
 
 # Install the Azure CLI application
-COPY files/install.sh /usr/local/bin/install.sh
-RUN chmod +x /usr/local/bin/install.sh && /usr/local/bin/install.sh
+COPY files/install.bash /usr/local/bin/install.bash
+RUN chmod +x /usr/local/bin/install.bash && /usr/local/bin/install.bash

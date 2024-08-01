@@ -22,8 +22,8 @@ ARG HUGO_VERSION=0.123.7
 ARG PANDOC_VERSION=3.1.12.2
 
 # Copy the install script over and then run it
-COPY files/install.sh /usr/local/bin/install.sh
-RUN chmod +x /usr/local/bin/install.sh && /usr/local/bin/install.sh
+COPY files/install.bash /usr/local/bin/install.bash
+RUN chmod +x /usr/local/bin/install.bash && /usr/local/bin/install.bash
 
 # Copy in the AsciiDoctor library
 COPY files/lib /usr/local/ensono/lib
