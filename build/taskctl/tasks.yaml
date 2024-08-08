@@ -13,6 +13,7 @@ tasks:
     description: Build the foundation image on the machine without using a container
     command:
       - |
+        $ErrorActionPreference = Stop
         $cmd = "./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name {{ .IMAGE_NAME }} -Arguments `"{{ .DOCKER_BUILD_ARGS }}`""
         Write-Host $cmd
         Invoke-Expression $cmd
@@ -22,6 +23,7 @@ tasks:
     description: Build the foundation image on the machine using the tools container
     command:
       - |
+        $ErrorActionPreference = Stop
         $sep = (Test-Path -Path "C:\") ? ";" : ":"
         $env:PSModulePath += "${sep}/home/vsts/modules"
         Import-Module EnsonoBuild
@@ -34,6 +36,7 @@ tasks:
     context: powershell_docker
     description: Create the Docker manifest for the images
     command: |
+      $ErrorActionPreference = Stop
       $cmd = "./build/scripts/New-DockerManifest.ps1 -Latest"
       Write-Host $cmd
       Invoke-Expression $cmd
@@ -92,14 +95,16 @@ tasks:
   build:container:
     context: powershell_docker
     description: Create container image for application
-    command:
-      - Write-Host "Build-DockerImage -push -provider generic -Name {{ .IMAGE_NAME }} -buildargs `"{{ .DOCKER_BUILD_ARGS }}`""
-      - Build-DockerImage -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}" -latest
+    command: |
+      $ErrorActionPreference = Stop
+      Write-Host "Build-DockerImage -push -provider generic -Name {{ .IMAGE_NAME }} -buildargs `"{{ .DOCKER_BUILD_ARGS }}`""
+      Build-DockerImage -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}" -latest
 
   generate:docker:overview:
     context: powershell
     description: Generate Docker overview files from main docs
     command: |
+      $ErrorActionPreference = Stop
       $cmd = "./build/scripts/Set-DockerOverview.ps1"
       Write-Host $cmd
       Invoke-Expression $cmd
