@@ -78,12 +78,12 @@ apt-get autoremove -y
 apt-get clean
 
 # Install ERD binary
-curl -L "https://github.com/kaishuu0123/erd-go/releases/download/v${ERD_VERSION}/linux_${BIN_ARCH}_erd-go" -o /usr/local/bin/erd
+curl --fail-with-body -L "https://github.com/kaishuu0123/erd-go/releases/download/v${ERD_VERSION}/linux_${BIN_ARCH}_erd-go" -o /usr/local/bin/erd
 chmod +x /usr/local/bin/erd
 
 # Install the Pandoc command
 mkdir -p /usr/local/pandoc/bin
-curl -L "https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-linux-${BIN_ARCH}.tar.gz" -o /tmp/pandoc.tar.gz
+curl --fail-with-body -L "https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-linux-${BIN_ARCH}.tar.gz" -o /tmp/pandoc.tar.gz
 pushd /tmp
 tar zxf /tmp/pandoc.tar.gz
 mv pandoc-${PANDOC_VERSION}/bin/pandoc /usr/local/pandoc/bin
