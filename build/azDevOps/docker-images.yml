@@ -185,7 +185,7 @@ stages:
               TF_FILE_LOCATION: deploy/terraform/azure/acr
               STAGE: acr
 
-      ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+      - ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/main') }}:
           - job: NoOp
             steps:
               - task: Bash@3
