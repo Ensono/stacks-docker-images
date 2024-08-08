@@ -1,0 +1,8 @@
+pytest==8.0.1
+pylint==3.0.3
+pylint-exit==1.2.0
+pytest-azurepipelines==1.0.5
+pytest-cov==4.1.0
+poetry==1.7.1
+databricks-cli==0.18.0
+tomli==2.0.1

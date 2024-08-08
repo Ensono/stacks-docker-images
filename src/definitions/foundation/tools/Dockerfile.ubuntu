@@ -1,0 +1,36 @@
+ARG REGISTRY=docker.io
+ARG IMAGE_TAG=0.0.1-workstation
+ARG ORG=ensono
+
+FROM ${REGISTRY}/${ORG}/eir-foundation-builder:${IMAGE_TAG} AS builder
+
+FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
+
+# Set the versions for the applications to install
+ARG ARM_TTK_VERSION="20231122"
+ARG AZURE_AZ_MODULE_VERSON=12.0.0
+ARG GHCLI_VERSION="2.40.1"
+ARG HELM_VERSION=3.12.0
+ARG JQ_VERSION=1.7.1
+ARG KLUCTL_VERSION=v2.22.1
+ARG KUBE_VERSION=v1.23.14
+ARG KUSTOMIZE_VERSION=v5.2.1
+ARG PESTER_VERSION=5.4.1
+ARG POWERSHELL_YAML_VERSION=0.4.7
+ARG PSSCRIPTANALYZER_VERSION="1.22.0"
+ARG SYNK_VERSION=1.1289.0
+ARG TERRAFORM_VERSION="1.5.7,1.9.3"
+ARG TERRASCAN_VERSION=1.19.1
+
+ARG DEFAULT_TF_VERSION="1.5.1"
+
+# Copy the Docker binary files from the builder image
+COPY --from=builder /usr/local/docker /usr/local/docker
+COPY --from=builder /usr/libexec/docker/cli-plugins/docker-buildx /usr/libexec/docker/cli-plugins/docker-buildx
+
+# Copy the install script over and then run it
+COPY files/install.bash /usr/local/bin/install.bash
+RUN chmod +x /usr/local/bin/install.bash && /usr/local/bin/install.bash
+
+# Setup the Path variable so that the tools can be found
+ENV PATH="$PATH:/usr/local/docker/bin:/usr/local/terraform/bin"

@@ -1,0 +1,19 @@
+ARG REGISTRY=docker.io
+ARG IMAGE_TAG=0.0.1-workstation
+ARG ORG=ensono
+
+FROM ${REGISTRY}/${ORG}/eir-java:${IMAGE_TAG} AS base
+
+ARG SONARSCANNER_VERSION=5.14
+ARG REPORTGENERATOR_VERSION=5.1.26
+ARG DOTNET_VERSION=6.0.300,8.0.100
+ARG TOOLPATH="/usr/local/dotnet"
+
+# Upate the PATH environment variable so that the tool can be found
+ENV PATH="${TOOLPATH}:${PATH}"
+
+# Set the DOTNET_ROOT env var so that the reportgenerator binary works properly
+ENV DOTNET_ROOT="${TOOLPATH}"
+
+COPY files/install.ps1 /tmp/install.ps1
+RUN pwsh /tmp/install.ps1 -list ${DOTNET_VERSION} -sonarscanner_version ${SONARSCANNER_VERSION} -reportgenerator_version ${REPORTGENERATOR_VERSION}
