@@ -2,7 +2,7 @@ ARG REGISTRY=docker.io
 ARG IMAGE_TAG=0.0.1-workstation
 ARG ORG=ensono
 
-FROM ${REGISTRY}/${ORG}/eir-foundation-builder:${IMAGE_TAG} as builder
+FROM ${REGISTRY}/${ORG}/eir-foundation-builder:${IMAGE_TAG} AS builder
 
 FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
 
