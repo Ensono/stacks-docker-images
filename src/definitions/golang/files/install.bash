@@ -10,7 +10,7 @@ unlink /etc/localtime
 ln -s /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
 
 # Download the specified version of GO
-curl -L https://go.dev/dl/go${GOLANG_VERSION}.linux-${BIN_ARCH}.tar.gz -o /tmp/golang.tar.gz
+curl --fail-with-body -L https://go.dev/dl/go${GOLANG_VERSION}.linux-${BIN_ARCH}.tar.gz -o /tmp/golang.tar.gz
 tar zxf /tmp/golang.tar.gz -C /usr/local
 
 # Remove downloaded

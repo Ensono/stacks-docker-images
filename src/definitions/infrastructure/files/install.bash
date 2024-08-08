@@ -12,7 +12,7 @@ unlink /etc/localtime
 ln -s /usr/share/zoneinfo/UTC /etc/localtime
 
 # Install AWS CLI
-curl -L "https://awscli.amazonaws.com/awscli-exe-linux-${UNAME_ARCH}-${AWS_CLI_VERSION}.zip" -o /tmp/awscliv2.zip
+curl --fail-with-body -L "https://awscli.amazonaws.com/awscli-exe-linux-${UNAME_ARCH}-${AWS_CLI_VERSION}.zip" -o /tmp/awscliv2.zip
 cd /tmp
 unzip awscliv2.zip
 ./aws/install

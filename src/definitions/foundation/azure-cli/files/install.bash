@@ -9,7 +9,7 @@ apt-get install -y gnupg lsb-release
 
 # Install AZ CLI
 mkdir -p /etc/apt/keyrings
-curl -sLS https://packages.microsoft.com/keys/microsoft.asc |
+curl --fail-with-body -sLS https://packages.microsoft.com/keys/microsoft.asc |
     gpg --dearmor |
     tee /etc/apt/keyrings/microsoft.gpg > /dev/null
 chmod go+r /etc/apt/keyrings/microsoft.gpg
