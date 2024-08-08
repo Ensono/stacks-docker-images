@@ -20,7 +20,8 @@ parameters:
       - stage: FoundationPowerShell
         displayName: "[CONTAINER] Foundation - PowerShell"
         dependsOn:
-          - Infrastructure
+          - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+              - Infrastructure
         taskName: build:foundation:powershell
         imageName: ensono/eir-foundation-powershell
 
