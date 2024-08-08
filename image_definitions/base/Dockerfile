@@ -34,7 +34,7 @@ FROM mcr.microsoft.com/powershell:${IMAGE_TAG}
 
 # Add the arguments for the apps to install in the base image
 ARG TERRAFORM_VERSION=1.5.7
-ARG ENSONOBUILD=v1.1.2
+ARG ENSONOBUILD=v1.1.8
 ARG TASKCTL_VERSION=1.4.2
 ARG KUBE_VERSION=v1.23.14
 ARG AZURE_CLI_VERSION=2.48.1
@@ -127,8 +127,8 @@ RUN curl -L https://github.com/Azure/arm-ttk/releases/download/${ARM_TTK_VERSION
 # -- EnsonoBuild module
 RUN echo "Downloading EnsonoBuild version - ${ENSONOBUILD}" && \
     mkdir -p /modules/EnsonoBuild && \
-    curl -L "https://github.com/Ensono/independent-runner/releases/download/${ENSONOBUILD}/EnsonoBuild.psd1" -o /modules/EnsonoBuild/EnsonoBuild.psd1 && \
-    curl -L "https://github.com/Ensono/independent-runner/releases/download/${ENSONOBUILD}/EnsonoBuild.psm1" -o /modules/EnsonoBuild/EnsonoBuild.psm1
+    curl --fail-with-body -L "https://github.com/Ensono/independent-runner/releases/download/${ENSONOBUILD}/EnsonoBuild.psd1" -o /modules/EnsonoBuild/EnsonoBuild.psd1 && \
+    curl --fail-with-body -L "https://github.com/Ensono/independent-runner/releases/download/${ENSONOBUILD}/EnsonoBuild.psm1" -o /modules/EnsonoBuild/EnsonoBuild.psm1
 
 # -- AWSCLI COPY FILES
 COPY --from=awscli /usr/local/lib/aws-cli/ /usr/local/lib/aws-cli/
