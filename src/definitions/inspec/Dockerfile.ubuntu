@@ -3,7 +3,7 @@ ARG IMAGE_TAG=0.0.1-workstation
 ARG ORG=ensono
 
 # Bring in other images to copy necessary tools from them
-FROM ${REGISTRY}/${ORG}/eir-foundation-tools:${IMAGE_TAG} as tools
+FROM ${REGISTRY}/${ORG}/eir-foundation-tools:${IMAGE_TAG} AS tools
 
 FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
 

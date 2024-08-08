@@ -4,7 +4,7 @@ ARG ORG=ensono
 ARG JAVA_VERSION=17.0.12
 
 # Pull in Azul Java from image
-FROM azul/zulu-openjdk:${JAVA_VERSION} as java
+FROM azul/zulu-openjdk:${JAVA_VERSION} AS java
 
 FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
 
