@@ -20,8 +20,7 @@ parameters:
       - stage: FoundationPowerShell
         displayName: "[CONTAINER] Foundation - PowerShell"
         dependsOn:
-          - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
-              - Infrastructure
+          - Infrastructure
         taskName: build:foundation:powershell
         imageName: ensono/eir-foundation-powershell
 
@@ -135,12 +134,11 @@ variables:
 # Configure the stages
 stages:
   - stage: Infrastructure
-    condition: and(ne(variables['Build.SourceBranchName'], 'main'), eq(lower(${{ parameters['force_deploy'] }}), 'false'))
     variables:
       - group: azure-sp-creds
-
     jobs:
       - job: DeployInfrastructure
+        condition: and(ne(variables['Build.SourceBranchName'], 'main'), eq(lower(${{ parameters['force_deploy'] }}), 'false'))
         steps:
           - template: templates/configure_agent.yml
             parameters:
@@ -187,9 +185,18 @@ stages:
               TF_FILE_LOCATION: deploy/terraform/azure/acr
               STAGE: acr
 
+      ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+          - job: NoOp
+            steps:
+              - task: Bash@3
+                displayName: NoOp
+                inputs:
+                  targetType: inline
+                  script: |
+                    exit
+
   - stage: documentation
     displayName: Documentation
-
     jobs:
       - job: GenerateDocumentation
         steps:
@@ -230,12 +237,10 @@ stages:
               - group: stacks-docker-creds
           - ${{ else }}:
               - group: stacks-acr-creds
-
         jobs:
           - job: BuildImage_amd64
             displayName: Build Image - amd64
             pool: $(build_pool_amd64)
-
             steps:
               - template: templates/configure_agent.yml
                 parameters:
@@ -255,7 +260,6 @@ stages:
           - job: BuildImage_arm64
             displayName: Build Image - arm64
             pool: $(build_pool_arm64)
-
             steps:
               - template: templates/configure_agent.yml
                 parameters:
@@ -277,7 +281,6 @@ stages:
             dependsOn:
               - BuildImage_amd64
               - BuildImage_arm64
-
             steps:
               - template: templates/configure_agent.yml
                 parameters:
