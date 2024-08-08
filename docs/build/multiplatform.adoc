@@ -1,0 +1,8 @@
+=== Multi Platform Builds
+
+Although Docker supports multi-platform builds, the way it works across different engines differs. For example if using Docker Desktop multi platform builds are very easy to do, however if running using a Docker server (as is the case on an ADO agent) a slightly different approach is required.
+
+The main difference is that a Docker server is not able to store the manifests for multi-platform build images so when a build is kicked off push details must be provided as well. This does not lend itself to a good locally experience as it is highly likely that local builds should not be pushed to the Docker registry.
+
+Currently, This means that we have a different approach for pipelines in a CI/CD system as we do for local machines.
+

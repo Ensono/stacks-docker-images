@@ -1,0 +1,18 @@
+ARG REGISTRY=docker.io
+ARG IMAGE_TAG=0.0.1-workstation
+ARG ORG=ensono
+
+FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
+
+ARG GOLANG_VERSION=1.21.5
+
+# Copy the install script over and then run it
+COPY files/unittests.bash /usr/local/bin/unittests.bash
+COPY files/install.bash /usr/local/bin/install.bash
+
+RUN chmod +x /usr/local/bin/unittests.bash && \
+    chmod +x /usr/local/bin/install.bash && \
+    bash /usr/local/bin/install.bash
+
+# Update the path to include the go binary
+ENV PATH="$PATH:/usr/local/go/bin"

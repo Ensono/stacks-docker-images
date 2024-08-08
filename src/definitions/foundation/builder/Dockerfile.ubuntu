@@ -1,0 +1,16 @@
+ARG REGISTRY=docker.io
+ARG IMAGE_TAG=0.0.1-workstation
+ARG ORG=ensono
+
+FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
+
+# Set versions for applications to install
+ARG DOCKER_BUILDX_VERSION="0.12.0"
+ARG DOCKER_VERSION="24.0.7"
+
+# Copy the install script over and then run it
+COPY files/install.bash /usr/local/bin/install.bash
+RUN chmod +x /usr/local/bin/install.bash && /usr/local/bin/install.bash
+
+# Setup the Path variable so that the tools can be found
+ENV PATH="$PATH:/usr/local/docker/bin"
