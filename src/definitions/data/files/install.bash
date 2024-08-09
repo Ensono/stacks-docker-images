@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euxo pipefail
+
 # Install Python and pip
 apt-get update
 apt-get install -y \
