@@ -13,8 +13,9 @@ tasks:
     description: Build the foundation image on the machine without using a container
     command:
       - |
+        $PSNativeCommandErrorActionPreference = $true
         $ErrorActionPreference = "Stop"
-        ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name {{ .IMAGE_NAME }} -Arguments "{{ .DOCKER_BUILD_ARGS }}" -ErrorAction "Stop"
+        ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name {{ .IMAGE_NAME }} -Arguments "{{ .DOCKER_BUILD_ARGS }}"
         echo $?
 
   build:image:container:
@@ -22,18 +23,20 @@ tasks:
     description: Build the foundation image on the machine using the tools container
     command:
       - |
+        $PSNativeCommandErrorActionPreference = $true
         $ErrorActionPreference = "Stop"
         $sep = (Test-Path -Path "C:\") ? ";" : ":"
         $env:PSModulePath += "${sep}/home/vsts/modules"
         Import-Module EnsonoBuild
-        ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name {{ .IMAGE_NAME }} -Arguments "{{ .DOCKER_BUILD_ARGS }}" -ErrorAction "Stop"
+        ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name {{ .IMAGE_NAME }} -Arguments "{{ .DOCKER_BUILD_ARGS }}"
 
   create:docker:manifest:
     context: powershell_docker
     description: Create the Docker manifest for the images
     command: |
+      $PSNativeCommandErrorActionPreference = $true
       $ErrorActionPreference = "Stop"
-      ./build/scripts/New-DockerManifest.ps1 -Latest -ErrorAction "Stop"
+      ./build/scripts/New-DockerManifest.ps1 -Latest
 
   _docs:
     description: Build Docs for Stacks CLI
