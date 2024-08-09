@@ -86,13 +86,21 @@ Write-Host ("Building docker image: {0}" -f ($platform -join ","))
 
 if (!$dryrun.IsPresent) {
     Write-Host "docker $($buildArgs -join " ")"
-    & docker $($buildArgs -join " ")
+    & docker @buildArgs
+
+    if ($? -eq $false) {
+        throw "Docker Build failed..."
+    }
 }
 
 Write-Host ("Push docker image: {0}" -f $image_name)
 
 if (!$dryrun.IsPresent) {
     docker push $image_name
+
+    if ($? -eq $false) {
+        throw "Docker Push failed..."
+    }
 }
 
 # Push the readme if the registry is docker.io
@@ -108,5 +116,9 @@ if ($registry -ieq "docker.io") {
         Write-Host ("Pushing README file: {0}" -f $readme_path)
 
         docker pushrm --provider dockerhub "${registry}/${name}" --file "$readme_path"
+
+        if ($? -eq $false) {
+            throw "Docker Pushrm failed..."
+        }
     }
 }
