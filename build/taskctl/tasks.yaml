@@ -15,6 +15,7 @@ tasks:
       - |
         $ErrorActionPreference = "Stop"
         . ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name {{ .IMAGE_NAME }} -Arguments "{{ .DOCKER_BUILD_ARGS }}"
+        echo $?
 
   build:image:container:
     context: powershell_docker
