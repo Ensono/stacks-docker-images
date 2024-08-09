@@ -14,7 +14,7 @@ tasks:
     command:
       - |
         $ErrorActionPreference = "Stop"
-        $cmd = "$ErrorActionPreference = "Stop"; ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name {{ .IMAGE_NAME }} -Arguments `"{{ .DOCKER_BUILD_ARGS }}`""
+        $cmd = "$ErrorActionPreference = `"Stop`"; ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name {{ .IMAGE_NAME }} -Arguments `"{{ .DOCKER_BUILD_ARGS }}`""
         Write-Host $cmd
         pwsh -Command $cmd
 
@@ -28,7 +28,7 @@ tasks:
         $env:PSModulePath += "${sep}/home/vsts/modules"
         Import-Module EnsonoBuild
         # Build-DockerImage -push -provider generic -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}"
-        $cmd = " $ErrorActionPreference = "Stop"; ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name {{ .IMAGE_NAME }} -Arguments `"{{ .DOCKER_BUILD_ARGS }}`""
+        $cmd = " $ErrorActionPreference = `"Stop`"; ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name {{ .IMAGE_NAME }} -Arguments `"{{ .DOCKER_BUILD_ARGS }}`""
         Write-Host $cmd
         pwsh -ErrorActionPreference Stop -Command $cmd
 
@@ -37,7 +37,7 @@ tasks:
     description: Create the Docker manifest for the images
     command: |
       $ErrorActionPreference = "Stop"
-      $cmd = "$ErrorActionPreference = "Stop"; ./build/scripts/New-DockerManifest.ps1 -Latest"
+      $cmd = "$ErrorActionPreference = `"Stop`"; ./build/scripts/New-DockerManifest.ps1 -Latest"
       Write-Host $cmd
       pwsh -Command $cmd
 
