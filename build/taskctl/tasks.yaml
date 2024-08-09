@@ -15,7 +15,7 @@ tasks:
       - |
         $PSNativeCommandErrorActionPreference = $true
         $ErrorActionPreference = "Stop"
-        ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name {{ .IMAGE_NAME }} -Arguments "{{ .DOCKER_BUILD_ARGS }}"
+        . ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name {{ .IMAGE_NAME }} -Arguments "{{ .DOCKER_BUILD_ARGS }}"
         echo $?
 
   build:image:container:
@@ -28,7 +28,7 @@ tasks:
         $sep = (Test-Path -Path "C:\") ? ";" : ":"
         $env:PSModulePath += "${sep}/home/vsts/modules"
         Import-Module EnsonoBuild
-        ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name {{ .IMAGE_NAME }} -Arguments "{{ .DOCKER_BUILD_ARGS }}"
+        . ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name {{ .IMAGE_NAME }} -Arguments "{{ .DOCKER_BUILD_ARGS }}"
 
   create:docker:manifest:
     context: powershell_docker
@@ -36,7 +36,7 @@ tasks:
     command: |
       $PSNativeCommandErrorActionPreference = $true
       $ErrorActionPreference = "Stop"
-      ./build/scripts/New-DockerManifest.ps1 -Latest
+      . ./build/scripts/New-DockerManifest.ps1 -Latest
 
   _docs:
     description: Build Docs for Stacks CLI
