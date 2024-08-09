@@ -43,6 +43,7 @@ else
     export ABBR_ARCH=$BIN_ARCH
 fi
 
+set +x
 echo "PLATFORM DETECTION =================================="
 echo "Uname:             ${UNAME_ARCH} (UNAME_ARCH)"
 echo "Binary arch:       ${BIN_ARCH}   (BIN_ARCH)"
@@ -50,3 +51,4 @@ echo "Abbreviated arch:  ${ABBR_ARCH}  (ABBR_ARCH)"
 echo "Musl Arch:         ${MUSL_ARCH}  (MUSL_ARCH)"
 echo "OS Distribution:   ${AZ_DIST}    (AZ_DIST)"
 echo "====================================================="
+set -x
