@@ -65,54 +65,30 @@ if (![string]::IsNullOrEmpty($tag)) {
 }
 
 # Build up the arguments for the full command
-$args = @(
-    #"--platform",
-    #($platform -join ","),
-    ($tags -join " ")
-    #"--push"
-)
+$buildArgs = @(($tags -join " "))
 
 if (![string]::IsNullOrEmpty($arguments)) {
-    $args += $arguments
+    $buildArgs += $arguments
 }
 
 # Login to the specified container registry
 Write-Host ("Logging into registry: {0}" -f $registry)
-$cmd = "docker login -u {0} -p {1} {2}" -f $username, $password, $registry
 
-if ($dryrun.IsPresent) {
-    Write-Host $cmd
-} else {
-    Invoke-Expression $cmd
+if (!$dryrun.IsPresent) {
+    docker login -u $username -p $password $registry
 }
-
-# Create a new buildx driver to
-<#
-Write-Host "Creating new buildx profile"
-$cmd = "docker buildx create --use"
-
-if ($dryrun.IsPresent) {
-    Write-Host $cmd
-} else {
-    Invoke-Expression $cmd
-}
-#>
 
 # Build and push the image
 Write-Host ("Building docker image: {0}" -f ($platform -join ","))
-$cmd = "docker build {0}" -f ($args -join " ")
 
-Write-Host $cmd
 if (!$dryrun.IsPresent) {
-    Invoke-Expression $cmd
+    docker build ($buildArgs -join " ")
 }
 
 Write-Host ("Push docker image: {0}" -f $image_name)
-$cmd = "docker push {0}" -f $image_name
 
-Write-Host $cmd
 if (!$dryrun.IsPresent) {
-    Invoke-Expression $cmd
+    docker push $image_name
 }
 
 # Push the readme if the registry is docker.io
