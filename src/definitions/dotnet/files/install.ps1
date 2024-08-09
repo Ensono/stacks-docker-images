@@ -55,26 +55,13 @@ if ($versions.length -eq 0) {
         # https://learn.microsoft.com/en-us/dotnet/standard/frameworks#latest-versions
         $moniker = "net{0}.0" -f $($version -split "\.")[0]
 
-        $cmds = @()
-
-        # Build up the commands that need to be executed
         # --- Install Framework
-        $cmds += "bash /tmp/dotnet-install.bash --install-dir {0} --version {1}" -f $toolpath, $version
+        bash /tmp/dotnet-install.bash --install-dir $toolpath --version $version
 
         # --- Install SonarScanner
-        $cmds += "dotnet tool install dotnet-sonarscanner --version {0} --tool-path {1} --framework {2}" -f $sonarscanner_version, $toolpath, $moniker
+        dotnet tool install dotnet-sonarscanner --version $sonarscanner_version --tool-path $toolpath --framework $moniker
 
         # --- Install ReportGenerator
-        $cmds += "dotnet tool install dotnet-reportgenerator-globaltool --version {0} --tool-path {1} --framework {2}" -f $reportgenerator_version, $toolpath, $moniker
-
-        # iterate around the commands
-        foreach ($cmd in $cmds) {
-            Write-Host $cmd
-
-            # Execute the command
-            Invoke-Expression $cmd
-        }
-
-        
+        dotnet tool install dotnet-reportgenerator-globaltool --version $reportgenerator_version --tool-path $toolpath --framework $moniker
     }
 }
