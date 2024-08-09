@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euxo pipefail
+
 # Script that installs tools that are not in the Linux distro package list, or
 # the versions required are not available
 

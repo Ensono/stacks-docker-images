@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euxo pipefail
+
 # Install dependencies for PowerShell
 #
 # The dependencies are from running PowerShell when they have not been installed:

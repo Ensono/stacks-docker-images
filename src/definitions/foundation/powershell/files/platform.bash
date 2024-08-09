@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euxo pipefail
+
 # Script to detect the Architecture of the platform and set appropriate variables
 # for us in other scripts.
 
@@ -42,7 +44,7 @@ else
 fi
 
 echo "PLATFORM DETECTION =================================="
-echo "Uname:             ${UNAME_ARCH} (UNAME_ARCH)" 
+echo "Uname:             ${UNAME_ARCH} (UNAME_ARCH)"
 echo "Binary arch:       ${BIN_ARCH}   (BIN_ARCH)"
 echo "Abbreviated arch:  ${ABBR_ARCH}  (ABBR_ARCH)"
 echo "Musl Arch:         ${MUSL_ARCH}  (MUSL_ARCH)"

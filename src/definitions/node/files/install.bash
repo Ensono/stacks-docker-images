@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euxo pipefail
+
 # Download and install the specified version of NVM
 curl --fail-with-body -L -o /tmp/nvm_install https://raw.githubusercontent.com/nvm-sh/nvm/v${NVM_VERSION}/install.sh
 chmod +x /tmp/nvm_install

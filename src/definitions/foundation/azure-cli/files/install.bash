@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euxo pipefail
+
 # Get the ARCH of the enviornment
 . /usr/local/bin/platform.bash
 
