@@ -14,9 +14,7 @@ tasks:
     command:
       - |
         $ErrorActionPreference = "Stop"
-        $cmd = "$ErrorActionPreference = `"Stop`"; ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name {{ .IMAGE_NAME }} -Arguments `"{{ .DOCKER_BUILD_ARGS }}`""
-        Write-Host $cmd
-        pwsh -Command $cmd
+        /build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name {{ .IMAGE_NAME }} -Arguments "{{ .DOCKER_BUILD_ARGS }}"
 
   build:image:container:
     context: powershell_docker
@@ -27,19 +25,14 @@ tasks:
         $sep = (Test-Path -Path "C:\") ? ";" : ":"
         $env:PSModulePath += "${sep}/home/vsts/modules"
         Import-Module EnsonoBuild
-        # Build-DockerImage -push -provider generic -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}"
-        $cmd = " $ErrorActionPreference = `"Stop`"; ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name {{ .IMAGE_NAME }} -Arguments `"{{ .DOCKER_BUILD_ARGS }}`""
-        Write-Host $cmd
-        pwsh -ErrorActionPreference Stop -Command $cmd
+        ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name {{ .IMAGE_NAME }} -Arguments "{{ .DOCKER_BUILD_ARGS }}"
 
   create:docker:manifest:
     context: powershell_docker
     description: Create the Docker manifest for the images
     command: |
       $ErrorActionPreference = "Stop"
-      $cmd = "$ErrorActionPreference = `"Stop`"; ./build/scripts/New-DockerManifest.ps1 -Latest"
-      Write-Host $cmd
-      pwsh -Command $cmd
+      ./build/scripts/New-DockerManifest.ps1 -Latest
 
   _docs:
     description: Build Docs for Stacks CLI
