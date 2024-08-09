@@ -127,9 +127,6 @@ if ($registry -ieq "docker.io") {
 
         Write-Host ("Pushing README file: {0}" -f $readme_path)
 
-        # build up the command to run
-        $cmd = "docker pushrm --provider dockerhub {0}/{1} --file {2}" -f $registry, $name, $readme_path
-
-        Invoke-Expression $cmd
+        docker pushrm --provider dockerhub "${registry}/${name}" --file "$readme_path"
     }
 }
