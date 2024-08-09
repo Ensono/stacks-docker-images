@@ -16,7 +16,7 @@ tasks:
         $ErrorActionPreference = "Stop"
         $cmd = "./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name {{ .IMAGE_NAME }} -Arguments `"{{ .DOCKER_BUILD_ARGS }}`""
         Write-Host $cmd
-        Invoke-Expression $cmd
+        pwsh -Command $cmd
 
   build:image:container:
     context: powershell_docker
@@ -30,7 +30,7 @@ tasks:
         # Build-DockerImage -push -provider generic -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}"
         $cmd = "./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name {{ .IMAGE_NAME }} -Arguments `"{{ .DOCKER_BUILD_ARGS }}`""
         Write-Host $cmd
-        Invoke-Expression $cmd
+        pwsh -Command $cmd
 
   create:docker:manifest:
     context: powershell_docker
@@ -39,7 +39,7 @@ tasks:
       $ErrorActionPreference = "Stop"
       $cmd = "./build/scripts/New-DockerManifest.ps1 -Latest"
       Write-Host $cmd
-      Invoke-Expression $cmd
+      pwsh -Command $cmd
 
   _docs:
     description: Build Docs for Stacks CLI

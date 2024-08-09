@@ -15,7 +15,7 @@ set -euxo pipefail
 #   - MUSL_ARCH - architecture when running with MUSL
 
 # Detect MUSL
-MUSL="$(ldd /bin/ls | grep 'musl' | head -1 | cut -d ' ' -f1)"
+MUSL="$(ldd /bin/ls | grep 'musl' || true | head -1 | cut -d ' ' -f1)"
 
 # Get the distcodename of the platform
 export AZ_DIST=$(lsb_release -cs)
