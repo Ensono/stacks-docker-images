@@ -35,8 +35,8 @@ param (
     $dryrun
 )
 
-$PSNativeCommandErrorActionPreference = $true
 $ErrorActionPreference = "Stop"
+$PSNativeCommandErrorActionPreference = $true
 
 # Enable experimental builds
 $env:DOCKER_CLI_AKV2_EXPERIMENTAL="enabled"
