@@ -48,9 +48,6 @@ param (
     $Latest
 )
 
-# Define cmd array from which all commands will be built
-$cmds = @()
-
 # Define default values for parameters not set
 if ([string]::IsNullOrEmpty($registry)) {
     $registry = "docker.io"
@@ -64,25 +61,17 @@ foreach ($tag in $Tags) {
 
 # Login to the specified container registry
 Write-Host ("Logging into registry: {0}" -f $registry)
-$cmds += "docker login -u {0} -p {1} {2}" -f $username, $password, $registry
+docker login -u $username -p $password $registry
 
 # Build up the command to use to create the manifest
-$cmds += "docker manifest create {0}/{1}:{2} {3}" -f $registry, $Name, $Version, ($images -join " ")
+docker manifest create "${registry}/${Name}:${Version}" ($images -join " ")
 
 # Now push the manifest to the registry
-$cmds += "docker manifest push {0}/{1}:{2}" -f $registry, $Name, $Version
+docker manifest push "${registry}/${Name}:${Version}"
 
 if ($Latest.IsPresent) {
     # Tag manifest with the latest tage
-    $cmds += "docker manifest create {0}/{1}:latest {2}" -f $registry, $Name, ($images -join " ")
+    docker manifest create "${registry}/${Name}:latest" ($images -join " ")
 
-    $cmds += "docker manifest push {0}/{1}:latest" -f $registry, $Name
+    docker manifest push "${registry}/${Name}:latest"
 }
-
-foreach ($cmd in $cmds) {
-    Write-Host $cmd
-    if (!$dryrun.IsPresent) {
-        Invoke-Expression $cmd
-    }
-}
-
