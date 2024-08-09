@@ -82,6 +82,7 @@ if (!$dryrun.IsPresent) {
 Write-Host ("Building docker image: {0}" -f ($platform -join ","))
 
 if (!$dryrun.IsPresent) {
+    Write-Host "docker build $($buildArgs -join " ")"
     docker build ($buildArgs -join " ")
 }
 
