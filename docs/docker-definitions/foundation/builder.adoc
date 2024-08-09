@@ -15,3 +15,4 @@ This Docker image is built from the foundation PowerShell image and installs `do
 | Type | Name | Version | URL
 | Binary | Docker | 24.0.7 | https://download.docker.com/linux/static/stable
 | Extension | Docker Buildx | 0.12.0 | https://github.com/docker/buildx/releases
+|====

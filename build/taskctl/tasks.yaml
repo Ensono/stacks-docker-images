@@ -101,13 +101,9 @@ tasks:
       Build-DockerImage -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}" -latest
 
   generate:docker:overview:
-    context: powershell
+    context: docsenv
     description: Generate Docker overview files from main docs
-    command: |
-      $ErrorActionPreference = "Stop"
-      $cmd = "./build/scripts/Set-DockerOverview.ps1"
-      Write-Host $cmd
-      Invoke-Expression $cmd
+    command: ./build/scripts/Set-DockerOverview.ps1
 
   debug:
     context: powershell_docker

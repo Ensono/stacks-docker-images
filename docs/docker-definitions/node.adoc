@@ -18,3 +18,4 @@ The latest version of NodeJS is set as the default version.
 | Javascript | NVM | 0.39.7 | https://github.com/nvm-sh/nvm
 | Binary | NodeJS | 18.20.2 | https://nodejs.org/dist/v18.20.2/node-v18.20.2-linux-x64.tar.xz
 | Binary | NodeJS | 20.12.2 | https://nodejs.org/dist/v20.12.2/node-v20.12.2-linux-x64.tar.xz
+|====
