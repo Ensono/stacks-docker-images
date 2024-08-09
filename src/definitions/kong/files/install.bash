@@ -1,3 +1,6 @@
+#!/bin/bash
+
+set -euxo pipefail
 
 # Get the architecture of the container
 . /usr/local/bin/platform.bash

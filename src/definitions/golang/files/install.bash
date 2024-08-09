@@ -1,5 +1,7 @@
 #/bin/bash
 
+set -euxo pipefail
+
 # Determine the architecture of the image
 . /usr/local/bin/platform.bash
 
