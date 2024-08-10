@@ -61,7 +61,7 @@ $image_name = "{0}/{1}:{2}-{3}" -f $registry, $name, $tag, $arch
 
 # Login to the specified container registry
 Write-Host ("Logging into registry: {0}" -f $registry)
-Invoke-External -Command "docker login -u {0} -p {1} {2}" -f $username, $password, $registry -Dryrun:$dryrun
+Invoke-External -Command "docker login -u ${username} -p ${password} ${registry}" -Dryrun:$dryrun
 
 if (![string]::IsNullOrEmpty($tag)) {
     $tags += ("-t {0}" -f $image_name)
@@ -76,10 +76,10 @@ if (![string]::IsNullOrEmpty($arguments)) {
 
 # Build and push the image
 Write-Host ("Building docker image: {0}" -f ($platform -join ","))
-Invoke-External -Command "docker build {0}" -f ($args -join " ") -Dryrun:$dryrun
+Invoke-External -Command "docker build $($args -join " ")" -Dryrun:$dryrun
 
 Write-Host ("Push docker image: {0}" -f $image_name)
-Invoke-External -Command "docker push {0}" -f $image_name -Dryrun:$dryrun
+Invoke-External -Command "docker push ${image_name}" -Dryrun:$dryrun
 
 # Push the readme if the registry is docker.io
 if ($registry -ieq "docker.io") {
@@ -92,6 +92,6 @@ if ($registry -ieq "docker.io") {
         $readme_path = [IO.Path]::Combine([IO.Path]::Combine($path_parts), "README.md")
 
         Write-Host ("Pushing README file: {0}" -f $readme_path)
-        Invoke-External -Command "docker pushrm --provider dockerhub {0}/{1} --file {2}" -f $registry, $name, $readme_path -Dryrun:$dryrun
+        Invoke-External -Command "docker pushrm --provider dockerhub ${registry}/${name} --file ${readme_path}" -Dryrun:$dryrun
     }
 }
