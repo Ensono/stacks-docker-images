@@ -296,5 +296,5 @@ stages:
                   script: |
                     taskctl create:docker:manifest
                 env:
-                  DOCKER_IMAGE_TAG: $(Build.BuildNumber)
                   DOCKER_IMAGE_NAME: ${{ stage.imageName }}
+                  DOCKER_IMAGE_TAG: $(Build.BuildNumber)

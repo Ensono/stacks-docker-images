@@ -16,7 +16,7 @@ tasks:
         $ErrorActionPreference = "Stop"
         $PSNativeCommandErrorActionPreference = $true
         . ./build/scripts/temp/Invoke-ExternalWrapper.ps1
-        . ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name {{ .DOCKER_IMAGE_NAME }} -Tag {{ .DOCKER_IMAGE_TAG }} -Tag -Arguments "{{ .DOCKER_BUILD_ARGS }}"
+        . ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name ${env:DOCKER_IMAGE_NAME} -Tag ${env:DOCKER_IMAGE_TAG} -Arguments "{{ .DOCKER_BUILD_ARGS }}"
 
   build:image:container:
     context: powershell_docker
@@ -29,7 +29,7 @@ tasks:
         $sep = (Test-Path -Path "C:\") ? ";" : ":"
         $env:PSModulePath += "${sep}/home/vsts/modules"
         Import-Module EnsonoBuild
-        . ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name {{ .DOCKER_IMAGE_NAME }} -Tag {{ .DOCKER_IMAGE_TAG }} -Arguments "{{ .DOCKER_BUILD_ARGS }}"
+        . ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name ${env:DOCKER_IMAGE_NAME} -Tag ${env:DOCKER_IMAGE_TAG} -Arguments "{{ .DOCKER_BUILD_ARGS }}"
 
   create:docker:manifest:
     context: powershell_docker
@@ -96,7 +96,7 @@ tasks:
     description: Create container image for application
     command: |
       $ErrorActionPreference = "Stop"
-      Build-DockerImage -Name {{ .DOCKER_IMAGE_NAME }} -Tag {{ .DOCKER_IMAGE_TAG }} -buildargs "{{ .DOCKER_BUILD_ARGS }}" -latest
+      Build-DockerImage -Name ${env:DOCKER_IMAGE_NAME} -Tag ${env:DOCKER_IMAGE_TAG} -buildargs "{{ .DOCKER_BUILD_ARGS }}" -latest
 
   generate:docker:overview:
     context: docsenv
