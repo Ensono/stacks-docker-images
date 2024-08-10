@@ -25,8 +25,6 @@ ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
 # Remove the package
 rm /tmp/powershell.tar.gz
 
-exit 1
-
 # Taskctl Runner ------------------------------------------------------------
 
 # Update the arch to fit in with the pattern for the Taskctl binary
