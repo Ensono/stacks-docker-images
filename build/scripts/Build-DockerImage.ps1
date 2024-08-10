@@ -68,7 +68,7 @@ if (![string]::IsNullOrEmpty($tag)) {
 }
 
 # Build up the arguments for the full command
-$buildArgs = @("build", ($tags -join " "))
+$buildArgs = @(($tags -join " "))
 
 if (![string]::IsNullOrEmpty($arguments)) {
     $buildArgs += $arguments
