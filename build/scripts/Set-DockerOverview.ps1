@@ -36,6 +36,6 @@ foreach ($overview in $overviews) {
     $target = [IO.Path]::Combine($output, $dd, ("{0}/README.md" -f $definition_name))
 
     # Generate the docbook file and then finally the markdown
-    asciidoctor -b docbook -o $db_path $overview
-    pandoc -f docbook -t markdown_strict $db_path -o $target
+    Invoke-External -Command "asciidoctor -b docbook -o $db_path $overview"
+    Invoke-External -Command "pandoc -f docbook -t markdown_strict $db_path -o $target"
 }

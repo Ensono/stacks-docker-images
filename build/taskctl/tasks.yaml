@@ -13,9 +13,9 @@ tasks:
     description: Build the foundation image on the machine without using a container
     command:
       - |
-        pwsh --version
         $ErrorActionPreference = "Stop"
         $PSNativeCommandErrorActionPreference = $true
+        . ./build/scripts/temp/Invoke-ExternalWrapper.ps1
         . ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name {{ .IMAGE_NAME }} -Arguments "{{ .DOCKER_BUILD_ARGS }}"
         echo $?
 
@@ -26,6 +26,7 @@ tasks:
       - |
         $ErrorActionPreference = "Stop"
         $PSNativeCommandErrorActionPreference = $true
+        . ./build/scripts/temp/Invoke-ExternalWrapper.ps1
         $sep = (Test-Path -Path "C:\") ? ";" : ":"
         $env:PSModulePath += "${sep}/home/vsts/modules"
         Import-Module EnsonoBuild
@@ -37,6 +38,7 @@ tasks:
     command: |
       $ErrorActionPreference = "Stop"
       $PSNativeCommandErrorActionPreference = $true
+      . ./build/scripts/temp/Invoke-ExternalWrapper.ps1
       . ./build/scripts/New-DockerManifest.ps1 -Latest
 
   _docs:

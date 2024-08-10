@@ -61,17 +61,16 @@ foreach ($tag in $Tags) {
 
 # Login to the specified container registry
 Write-Host ("Logging into registry: {0}" -f $registry)
-docker login -u $username -p $password $registry
+Invoke-External -Command "docker login -u $username -p $password $registry" -Dryrun:`$$dryrun
 
-# Build up the command to use to create the manifest
-docker manifest create "${registry}/${Name}:${Version}" ($images -join " ")
+Invoke-External -Command "docker manifest create "${registry}/${Name}:${Version}" $($images -join " ")" -Dryrun:`$$dryrun
 
 # Now push the manifest to the registry
-docker manifest push "${registry}/${Name}:${Version}"
+Invoke-External -Command "docker manifest push `"${registry}/${Name}:${Version}`"" -Dryrun:`$$dryrun
 
 if ($Latest.IsPresent) {
     # Tag manifest with the latest tage
-    docker manifest create "${registry}/${Name}:latest" ($images -join " ")
+    Invoke-External -Command "docker manifest create `"${registry}/${Name}:latest`" $($images -join " ")" -Dryrun:`$$dryrun
 
-    docker manifest push "${registry}/${Name}:latest"
+    Invoke-External -Command "docker manifest push `"${registry}/${Name}:latest`"" -Dryrun:`$$dryrun
 }

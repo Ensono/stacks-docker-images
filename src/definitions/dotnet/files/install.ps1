@@ -46,8 +46,6 @@ $versions = $list -Split ","
 if ($versions.length -eq 0) {
     Write-Host -Object "Please provide a list of versions to install"
 } else {
-
-
     # Iterate around each version
     foreach ($version in $versions) {
 
@@ -55,6 +53,8 @@ if ($versions.length -eq 0) {
         # https://learn.microsoft.com/en-us/dotnet/standard/frameworks#latest-versions
         $moniker = "net{0}.0" -f $($version -split "\.")[0]
 
+        # TODO: Replace these calls with Invoke-External once the EnsonoBuild module has exported them...
+        # See: https://github.com/Ensono/independent-runner/pull/57
         # --- Install Framework
         bash /tmp/dotnet-install.bash --install-dir $toolpath --version $version
 
