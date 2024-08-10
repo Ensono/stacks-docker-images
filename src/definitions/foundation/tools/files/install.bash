@@ -88,7 +88,7 @@ chmod +x /usr/local/jq/bin/jq
 
 # Install Snyk Tools --------------------------------------------------------
 echo "Installing: Snyk"
-mkdir -p /usr/local/synk/bin
+mkdir -p /usr/local/snyk/bin
 
 # As the package does not have an ARCH in the filename, the filename needs to be set correctly
 if [ "${BIN_ARCH}" == "amd64" ]; then
@@ -97,7 +97,7 @@ else
     FILENAME="snyk-linux-arm64"
 fi
 
-curl --fail-with-body -L "https://github.com/snyk/cli/releases/download/v${SYNK_VERSION}/${FILENAME}" -o /usr/local/snyk/bin/snyk
+curl --fail-with-body -L "https://github.com/snyk/cli/releases/download/v${SNYK_VERSION}/${FILENAME}" -o /usr/local/snyk/bin/snyk
 
 # ---------------------------------------------------------------------------
 
