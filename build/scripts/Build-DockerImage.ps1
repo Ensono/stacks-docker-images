@@ -16,7 +16,7 @@ param (
 
     [string]
     # Tag to assign to the image
-    $tag = ${env:DOCKER_IMAGE_TAG},
+    $tag,
 
     [string]
     # Additional arguments to pass to the build command

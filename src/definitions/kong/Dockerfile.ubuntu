@@ -2,10 +2,10 @@ ARG REGISTRY=docker.io
 ARG IMAGE_TAG=0.0.1-workstation
 ARG ORG=ensono
 
+FROM ${REGISTRY}/${ORG}/eir-dotnet:${IMAGE_TAG}
+
 ARG DECK_VERSION=1.39.2
 ARG PORTAL_CLI_VERSION=2.1.1
-
-FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
 
 COPY files/install.bash /usr/local/bin/install.bash
 
