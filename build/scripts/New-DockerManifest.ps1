@@ -66,7 +66,7 @@ Invoke-External -Command "docker login -u $username -p $password $registry" -Dry
 Invoke-External -Command "docker manifest create `"${registry}/${Name}:${Version}`" $($images -join " ")" -Dryrun:$dryrun
 
 # Now push the manifest to the registry
-Invoke-External -Command "docker manifest push `"${registry}/${Name}:${Version}`"" -Dryrun:`$$dryrun
+Invoke-External -Command "docker manifest push `"${registry}/${Name}:${Version}`"" -Dryrun:$dryrun
 
 if ($Latest.IsPresent) {
     # Tag manifest with the latest tage

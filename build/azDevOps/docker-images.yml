@@ -115,6 +115,7 @@ parameters:
           - FoundationAzureCli
         taskName: build:data
         imageName: ensono/eir-azure-data
+
 pr:
   - main
 
