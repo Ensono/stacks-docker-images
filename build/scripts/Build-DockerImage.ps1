@@ -76,6 +76,7 @@ if (![string]::IsNullOrEmpty($arguments)) {
 
 # Build and push the image
 Write-Host ("Building docker image: {0}" -f ($platform -join ","))
+Write-Host "docker build $($buildArgs -join " ")"
 Invoke-External -Command "docker build $($buildArgs -join " ")" -Dryrun:$dryrun
 
 Write-Host ("Push docker image: {0}" -f $image_name)
