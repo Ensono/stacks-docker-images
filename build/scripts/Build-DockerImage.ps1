@@ -35,9 +35,6 @@ param (
     $dryrun
 )
 
-$ErrorActionPreference = "Stop"
-$PSNativeCommandErrorActionPreference = $true
-
 # Enable experimental builds
 $env:DOCKER_CLI_AKV2_EXPERIMENTAL="enabled"
 
@@ -62,6 +59,9 @@ $tags = @()
 
 $image_name = "{0}/{1}:{2}-{3}" -f $registry, $name, $tag, $arch
 
+# Login to the specified container registry
+Write-Host ("Logging into registry: {0}" -f $registry)
+Invoke-External -Command "docker login -u {0} -p {1} {2}" -f $username, $password, $registry -Dryrun:`$$dryrun
 
 if (![string]::IsNullOrEmpty($tag)) {
     $tags += ("-t {0}" -f $image_name)
@@ -74,34 +74,12 @@ if (![string]::IsNullOrEmpty($arguments)) {
     $buildArgs += $arguments
 }
 
-# Login to the specified container registry
-Write-Host ("Logging into registry: {0}" -f $registry)
-
-if (!$dryrun.IsPresent) {
-    docker login -u $username -p $password $registry
-}
-
 # Build and push the image
 Write-Host ("Building docker image: {0}" -f ($platform -join ","))
-
-if (!$dryrun.IsPresent) {
-    Write-Host "docker $($buildArgs -join " ")"
-    & docker @buildArgs
-
-    if ($? -eq $false) {
-        throw "Docker Build failed..."
-    }
-}
+Invoke-External -Command "docker build {0}" -f ($args -join " ") -Dryrun:`$$dryrun
 
 Write-Host ("Push docker image: {0}" -f $image_name)
-
-if (!$dryrun.IsPresent) {
-    docker push $image_name
-
-    if ($? -eq $false) {
-        throw "Docker Push failed..."
-    }
-}
+Invoke-External -Command "docker push {0}" -f $image_name -Dryrun:`$$dryrun
 
 # Push the readme if the registry is docker.io
 if ($registry -ieq "docker.io") {
@@ -114,11 +92,6 @@ if ($registry -ieq "docker.io") {
         $readme_path = [IO.Path]::Combine([IO.Path]::Combine($path_parts), "README.md")
 
         Write-Host ("Pushing README file: {0}" -f $readme_path)
-
-        docker pushrm --provider dockerhub "${registry}/${name}" --file "$readme_path"
-
-        if ($? -eq $false) {
-            throw "Docker Pushrm failed..."
-        }
+        Invoke-External -Command "docker pushrm --provider dockerhub {0}/{1} --file {2}" -f $registry, $name, $readme_path -Dryrun:`$$dryrun
     }
 }
