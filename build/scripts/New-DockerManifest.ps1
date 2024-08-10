@@ -15,7 +15,7 @@ The main aim of the script is to being together multiple archictures under one m
 param (
 
     [string]
-    # Build number to be use to find the iumages to group together and
+    # Build number to be use to find the images to group together and
     # the new manifest
     $Version = $env:DOCKER_IMAGE_TAG,
 
@@ -24,7 +24,7 @@ param (
     $Name = $env:DOCKER_IMAGE_NAME,
 
     [string[]]
-    # List of the additional tags that nee to be used to find the images
+    # List of the additional tags that need to be used to find the images
     $Tags = @("amd64", "arm64"),
 
     [string]
