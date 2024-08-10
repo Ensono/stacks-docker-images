@@ -63,7 +63,7 @@ foreach ($tag in $Tags) {
 Write-Host ("Logging into registry: {0}" -f $registry)
 Invoke-External -Command "docker login -u $username -p $password $registry" -Dryrun:$dryrun
 
-Invoke-External -Command "docker manifest create "${registry}/${Name}:${Version}" $($images -join " ")" -Dryrun:$dryrun
+Invoke-External -Command "docker manifest create `"${registry}/${Name}:${Version}`" $($images -join " ")" -Dryrun:$dryrun
 
 # Now push the manifest to the registry
 Invoke-External -Command "docker manifest push `"${registry}/${Name}:${Version}`"" -Dryrun:`$$dryrun
