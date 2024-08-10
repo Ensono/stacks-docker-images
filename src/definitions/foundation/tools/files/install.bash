@@ -92,12 +92,12 @@ mkdir -p /usr/local/synk/bin
 
 # As the package does not have an ARCH in the filename, the filename needs to be set correctly
 if [ "${BIN_ARCH}" == "amd64" ]; then
-    FILENAME="synk-linux"
+    FILENAME="snyk-linux"
 else
-    FILENAME="synk-linux-arm64"
+    FILENAME="snyk-linux-arm64"
 fi
 
-curl --fail-with-body -L "https://github.com/snyk/cli/releases/download/v${SYNK_VERSION}/${FILENAME}" -o /usr/local/synk/bin/snyk
+curl --fail-with-body -L "https://github.com/snyk/cli/releases/download/v${SYNK_VERSION}/${FILENAME}" -o /usr/local/snyk/bin/snyk
 
 # ---------------------------------------------------------------------------
 
