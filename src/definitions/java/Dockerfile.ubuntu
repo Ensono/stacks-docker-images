@@ -16,7 +16,7 @@ ARG JAVA_MAJOR
 ARG MAVEN_VERSION=3.8.8
 
 # Copy Java from the java image into this image
-COPY --from=java /usr/lib/jvm/zulu${JAVA_MAJOR}/* /usr/local/java
+COPY --from=java /usr/lib/jvm/zulu${JAVA_MAJOR} /usr/local/java/
 
 # Update PATH to include the java binary
 ENV PATH="$PATH:/usr/local/java/bin"
