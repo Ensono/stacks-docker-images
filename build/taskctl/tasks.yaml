@@ -96,6 +96,7 @@ tasks:
     description: Create container image for application
     command: |
       $ErrorActionPreference = "Stop"
+      $PSNativeCommandErrorActionPreference = $true
       Build-DockerImage -Name ${env:DOCKER_IMAGE_NAME} -Tag ${env:DOCKER_IMAGE_TAG} -buildargs "{{ .DOCKER_BUILD_ARGS }}" -latest
 
   generate:docker:overview:
