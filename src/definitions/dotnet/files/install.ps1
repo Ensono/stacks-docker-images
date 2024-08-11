@@ -45,23 +45,26 @@ $versions = $list -Split ","
 # If there are no versions specified, exit with a message
 if ($versions.length -eq 0) {
     Write-Host -Object "Please provide a list of versions to install"
-} else {
-    # Iterate around each version
-    foreach ($version in $versions) {
-
-        # Determine the framework moniker
-        # https://learn.microsoft.com/en-us/dotnet/standard/frameworks#latest-versions
-        $moniker = "net{0}.0" -f $($version -split "\.")[0]
-
-        # TODO: Replace these calls with Invoke-External once the EnsonoBuild module has exported them...
-        # See: https://github.com/Ensono/independent-runner/pull/57
-        # --- Install Framework
-        bash /tmp/dotnet-install.bash --install-dir $toolpath --version $version
-
-        # --- Install SonarScanner
-        dotnet tool install dotnet-sonarscanner --version $sonarscanner_version --tool-path $toolpath --framework $moniker
-
-        # --- Install ReportGenerator
-        dotnet tool install dotnet-reportgenerator-globaltool --version $reportgenerator_version --tool-path $toolpath --framework $moniker
-    }
+    throw
 }
+
+# Iterate around each version
+foreach ($version in $versions) {
+
+    # Determine the framework moniker
+    # https://learn.microsoft.com/en-us/dotnet/standard/frameworks#latest-versions
+    $moniker = "net{0}.0" -f $($version -split "\.")[0]
+
+    # TODO: Replace these calls with Invoke-External once the EnsonoBuild module has exported them...
+    # See: https://github.com/Ensono/independent-runner/pull/57
+    # --- Install Framework
+    bash /tmp/dotnet-install.bash --install-dir $toolpath --version $version
+}
+
+# TODO: Replace these calls with Invoke-External once the EnsonoBuild module has exported them...
+# --- Install SonarScanner
+dotnet tool install dotnet-sonarscanner --version $sonarscanner_version --tool-path $toolpath --framework $moniker
+
+# TODO: Replace these calls with Invoke-External once the EnsonoBuild module has exported them...
+# --- Install ReportGenerator
+dotnet tool install dotnet-reportgenerator-globaltool --version $reportgenerator_version --tool-path $toolpath --framework $moniker
