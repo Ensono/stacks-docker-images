@@ -1,14 +1,15 @@
 parameters:
-    TaskctlVersion: 1.5.3
-    EnsonoBuildVersion: 1.0.45
-    DockerPushRMVersion: 1.9.0
-
+  - name: TaskctlVersion
+    type: string
+  - name: EnsonoBuildVersion
+    type: string
+  - name: DockerPushRMVersion
+    type: string
 steps:
-
     - task: PowerShell@2
       displayName: Configure Agent
       inputs:
         targetType: inline
         script: |
           $InformationPreference = "Continue"
-          . build/scripts/Initialize-Agent.ps1 -TaskctlVersion ${{ parameters.TaskctlVersion }} -EnsonoBuildVersion ${{ parameters.EnsonoBuildVersion }} -DockerPushRMVersion ${{ parameters.DockerPushRMVersion }}          
+          . build/scripts/Initialize-Agent.ps1 -TaskctlVersion ${{ parameters.TaskctlVersion }} -EnsonoBuildVersion ${{ parameters.EnsonoBuildVersion }} -DockerPushRMVersion ${{ parameters.DockerPushRMVersion }}
