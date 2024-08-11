@@ -79,8 +79,15 @@ apt-get remove -y build-essential
 apt-get autoremove -y
 apt-get clean
 
+# Update the arch to fit in with the pattern for the erd binary
+if [ "${BIN_ARCH}" == "arm64" ]; then
+    ERD_ARCH="arm"
+else
+    ERD_ARCH="${BIN_ARCH}"
+fi
+
 # Install ERD binary
-curl --fail-with-body -L "https://github.com/kaishuu0123/erd-go/releases/download/v${ERD_VERSION}/linux_${BIN_ARCH}_erd-go" -o /usr/local/bin/erd
+curl --fail-with-body -L "https://github.com/kaishuu0123/erd-go/releases/download/v${ERD_VERSION}/linux_${ERD_ARCH}_erd-go" -o /usr/local/bin/erd
 chmod +x /usr/local/bin/erd
 
 # Install the Pandoc command
