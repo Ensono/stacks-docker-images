@@ -22,7 +22,6 @@ apt-get install -y \
     rubygems \
     ruby-dev \
     python3-pip \
-    libjpeg9-dev \
     libfreetype-dev \
     libcairo2-dev \
     libpango1.0-dev \
