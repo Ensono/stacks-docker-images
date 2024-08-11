@@ -202,9 +202,9 @@ stages:
         steps:
           - template: templates/configure_agent.yml
             parameters:
-              TasckctlVersion: $(TaskctlVersion)
+              TaskctlVersion: $(TaskctlVersion)
               EnsonoBuildVersion: $(EnsonoBuildVersion)
-              TerraformVersion: $(TerraformVersion)
+              DockerPushRMVersion: $(DockerPushRMVersion)
 
           # Generate the documentation
           - task: Bash@3
@@ -244,8 +244,9 @@ stages:
             steps:
               - template: templates/configure_agent.yml
                 parameters:
-                  TasckctlVersion: $(TaskctlVersion)
+                  TaskctlVersion: $(TaskctlVersion)
                   EnsonoBuildVersion: $(EnsonoBuildVersion)
+                  DockerPushRMVersion: $(DockerPushRMVersion)
 
               - task: Bash@3
                 displayName: Build Image
@@ -264,8 +265,9 @@ stages:
             steps:
               - template: templates/configure_agent.yml
                 parameters:
-                  TasckctlVersion: $(TaskctlVersion)
+                  TaskctlVersion: $(TaskctlVersion)
                   EnsonoBuildVersion: $(EnsonoBuildVersion)
+                  DockerPushRMVersion: $(DockerPushRMVersion)
 
               - task: Bash@3
                 displayName: Build Image
@@ -286,8 +288,9 @@ stages:
             steps:
               - template: templates/configure_agent.yml
                 parameters:
-                  TasckctlVersion: $(TaskctlVersion)
+                  TaskctlVersion: $(TaskctlVersion)
                   EnsonoBuildVersion: $(EnsonoBuildVersion)
+                  DockerPushRMVersion: $(DockerPushRMVersion)
 
               - task: Bash@3
                 displayName: Create Multi-Arch Manifest
