@@ -144,7 +144,7 @@ stages:
             parameters:
               TasckctlVersion: $(TaskctlVersion)
               EnsonoBuildVersion: $(EnsonoBuildVersion)
-              TerraformVersion: $(TerraformVersion)
+              DockerPushRMVersion: $(DockerPushRMVersion)
 
           - task: Bash@3
             displayName: Setup
