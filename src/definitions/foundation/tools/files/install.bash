@@ -44,6 +44,11 @@ for TFVERSION in ${TERRAFORM_VERSION}; do
 done
 
 # Create a symlink to the first version of the listed binaries as the default
+if [ ! -d "/usr/local/terraform/${DEFAULT_TF_VERSION}/bin" ]; then
+    echo "ERROR: Can't find Terraform version '${DEFAULT_TF_VERSION}'... Double check the Dockerfile arg 'DEFAULT_TF_VERSION'" >&2
+    exit 1
+fi
+
 ln -s /usr/local/terraform/${DEFAULT_TF_VERSION}/bin /usr/local/terraform/bin
 # ---------------------------------------------------------------------------
 
