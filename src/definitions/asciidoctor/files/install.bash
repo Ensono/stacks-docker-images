@@ -31,6 +31,7 @@ apt-get install -y \
     libzstd-dev \
     libpng-dev \
     zlib1g-dev \
+    libmagickwand-dev
 
 # Install python packages
 pip install --no-cache-dir \
