@@ -142,7 +142,7 @@ stages:
         steps:
           - template: templates/configure_agent.yml
             parameters:
-              TasckctlVersion: $(TaskctlVersion)
+              TaskctlVersion: $(TaskctlVersion)
               EnsonoBuildVersion: $(EnsonoBuildVersion)
               DockerPushRMVersion: $(DockerPushRMVersion)
 
