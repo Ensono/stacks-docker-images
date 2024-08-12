@@ -15,7 +15,6 @@ tasks:
       - |
         $ErrorActionPreference = "Stop"
         $PSNativeCommandErrorActionPreference = $true
-        . ./build/scripts/temp/Invoke-ExternalWrapper.ps1
         . ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name ${env:DOCKER_IMAGE_NAME} -Tag ${env:DOCKER_IMAGE_TAG} -Arguments "{{ .DOCKER_BUILD_ARGS }}"
 
   build:image:container:
@@ -25,7 +24,6 @@ tasks:
       - |
         $ErrorActionPreference = "Stop"
         $PSNativeCommandErrorActionPreference = $true
-        . ./build/scripts/temp/Invoke-ExternalWrapper.ps1
         $sep = (Test-Path -Path "C:\") ? ";" : ":"
         $env:PSModulePath += "${sep}/home/vsts/modules"
         Import-Module EnsonoBuild
@@ -37,7 +35,6 @@ tasks:
     command: |
       $ErrorActionPreference = "Stop"
       $PSNativeCommandErrorActionPreference = $true
-      . ./build/scripts/temp/Invoke-ExternalWrapper.ps1
       . ./build/scripts/New-DockerManifest.ps1 -Latest
 
   _docs:
