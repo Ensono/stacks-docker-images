@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euxo pipefail
+
 # Configure the system to use the apt-cacher-ng container
 # echo "Acquire::http::Proxy \"http://127.0.0.1:3142\";" > /etc/apt/apt.conf.d/00aptproxy
 
@@ -20,7 +22,6 @@ apt-get install -y \
     rubygems \
     ruby-dev \
     python3-pip \
-    libjpeg9-dev \
     libfreetype-dev \
     libcairo2-dev \
     libpango1.0-dev \
@@ -30,6 +31,7 @@ apt-get install -y \
     libzstd-dev \
     libpng-dev \
     zlib1g-dev \
+    libmagickwand-dev
 
 # Install python packages
 pip install --no-cache-dir \
@@ -77,8 +79,15 @@ apt-get remove -y build-essential
 apt-get autoremove -y
 apt-get clean
 
+# Update the arch to fit in with the pattern for the erd binary
+if [ "${BIN_ARCH}" == "arm64" ]; then
+    ERD_ARCH="arm"
+else
+    ERD_ARCH="${BIN_ARCH}"
+fi
+
 # Install ERD binary
-curl --fail-with-body -L "https://github.com/kaishuu0123/erd-go/releases/download/v${ERD_VERSION}/linux_${BIN_ARCH}_erd-go" -o /usr/local/bin/erd
+curl --fail-with-body -L "https://github.com/kaishuu0123/erd-go/releases/download/v${ERD_VERSION}/linux_${ERD_ARCH}_erd-go" -o /usr/local/bin/erd
 chmod +x /usr/local/bin/erd
 
 # Install the Pandoc command

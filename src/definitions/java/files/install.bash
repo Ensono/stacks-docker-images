@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euxo pipefail
+
 # Update Apt and install unzup
 apt-get update
 apt-get install -y unzip

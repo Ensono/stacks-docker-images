@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euxo pipefail
+
 # Script that installs tools that are not in the Linux distro package list, or
 # the versions required are not available
 
@@ -42,13 +44,25 @@ for TFVERSION in ${TERRAFORM_VERSION}; do
 done
 
 # Create a symlink to the first version of the listed binaries as the default
+if [ ! -d "/usr/local/terraform/${DEFAULT_TF_VERSION}/bin" ]; then
+    echo "ERROR: Can't find Terraform version '${DEFAULT_TF_VERSION}'... Double check the Dockerfile arg 'DEFAULT_TF_VERSION'" >&2
+    exit 1
+fi
+
 ln -s /usr/local/terraform/${DEFAULT_TF_VERSION}/bin /usr/local/terraform/bin
 # ---------------------------------------------------------------------------
+
+# Update the arch to fit in with the pattern for the terrascan binary
+if [ "${UNAME_ARCH}" == "aarch64" ]; then
+    TERRASCAN_ARCH="arm64"
+else
+    TERRASCAN_ARCH="${UNAME_ARCH}"
+fi
 
 # Terrascan -----------------------------------------------------------------
 echo "Installing: TerraScan"
 mkdir -p /usr/local/terrascan/bin
-curl --fail-with-body -L "https://github.com/tenable/terrascan/releases/download/v${TERRASCAN_VERSION}/terrascan_${TERRASCAN_VERSION}_Linux_${UNAME_ARCH}.tar.gz" -o /tmp/terrascan.tar.gz
+curl --fail-with-body -L "https://github.com/tenable/terrascan/releases/download/v${TERRASCAN_VERSION}/terrascan_${TERRASCAN_VERSION}_Linux_${TERRASCAN_ARCH}.tar.gz" -o /tmp/terrascan.tar.gz
 tar zxf /tmp/terrascan.tar.gz -C /tmp
 mv /tmp/terrascan /usr/local/terrascan/bin
 chmod +x /usr/local/terrascan/bin/terrascan
@@ -86,16 +100,16 @@ chmod +x /usr/local/jq/bin/jq
 
 # Install Snyk Tools --------------------------------------------------------
 echo "Installing: Snyk"
-mkdir -p /usr/local/synk/bin
+mkdir -p /usr/local/snyk/bin
 
 # As the package does not have an ARCH in the filename, the filename needs to be set correctly
 if [ "${BIN_ARCH}" == "amd64" ]; then
-    FILENAME="synk-linux"
+    FILENAME="snyk-linux"
 else
-    FILENAME="synk-linux-arm64"
+    FILENAME="snyk-linux-arm64"
 fi
 
-curl --fail-with-body -L "https://github.com/snyk/cli/releases/download/v${SYNK_VERSION}/${FILENAME}" -o /usr/local/synk/bin/snyk
+curl --fail-with-body -L "https://github.com/snyk/cli/releases/download/v${SNYK_VERSION}/${FILENAME}" -o /usr/local/snyk/bin/snyk
 
 # ---------------------------------------------------------------------------
 

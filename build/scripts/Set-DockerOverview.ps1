@@ -35,13 +35,7 @@ foreach ($overview in $overviews) {
     $dd = (Split-Path -Path $overview.Fullname -Parent).Replace($base, "").TrimStart("\").TrimStart("/")
     $target = [IO.Path]::Combine($output, $dd, ("{0}/README.md" -f $definition_name))
 
-    # Define the cmds to generate the docbook file and then finally the markdown
-    $cmds = @()
-    $cmds += "asciidoctor -b docbook -o {0} {1}" -f $db_path, $overview
-    $cmds += "pandoc -f docbook -t markdown_strict {0} -o {1}" -f $db_path, $target
-    
-    $cmd = $cmds -join " && "
-
-    Invoke-Expression $cmd
-    
+    # Generate the docbook file and then finally the markdown
+    Invoke-External -Command "asciidoctor -b docbook -o $db_path $overview"
+    Invoke-External -Command "pandoc -f docbook -t markdown_strict $db_path -o $target"
 }

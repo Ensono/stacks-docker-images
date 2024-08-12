@@ -16,7 +16,7 @@ param (
 
     [string]
     # Tag to assign to the image
-    $tag = ${env:DOCKER_IMAGE_TAG},
+    $tag,
 
     [string]
     # Additional arguments to pass to the build command
@@ -31,7 +31,7 @@ param (
     $password = $env:DOCKER_PASSWORD,
 
     [switch]
-    # State that the scritp whould run in dryrun and not to execute any commands
+    # State that the script would run in dryrun and not to execute any commands
     $dryrun
 )
 
@@ -59,61 +59,28 @@ $tags = @()
 
 $image_name = "{0}/{1}:{2}-{3}" -f $registry, $name, $tag, $arch
 
+# Login to the specified container registry
+Write-Host ("Logging into registry: {0}" -f $registry)
+Invoke-External -Command "docker login -u ${username} -p ${password} ${registry}" -Dryrun:$dryrun
 
 if (![string]::IsNullOrEmpty($tag)) {
     $tags += ("-t {0}" -f $image_name)
 }
 
 # Build up the arguments for the full command
-$args = @(
-    #"--platform",
-    #($platform -join ","),
-    ($tags -join " ")
-    #"--push"
-)
+$buildArgs = @(($tags -join " "))
 
 if (![string]::IsNullOrEmpty($arguments)) {
-    $args += $arguments
+    $buildArgs += $arguments
 }
-
-# Login to the specified container registry
-Write-Host ("Logging into registry: {0}" -f $registry)
-$cmd = "docker login -u {0} -p {1} {2}" -f $username, $password, $registry
-
-if ($dryrun.IsPresent) {
-    Write-Host $cmd
-} else {
-    Invoke-Expression $cmd
-}
-
-# Create a new buildx driver to
-<#
-Write-Host "Creating new buildx profile"
-$cmd = "docker buildx create --use"
-
-if ($dryrun.IsPresent) {
-    Write-Host $cmd
-} else {
-    Invoke-Expression $cmd
-}
-#>
 
 # Build and push the image
 Write-Host ("Building docker image: {0}" -f ($platform -join ","))
-$cmd = "docker build {0}" -f ($args -join " ")
-
-Write-Host $cmd
-if (!$dryrun.IsPresent) {
-    Invoke-Expression $cmd
-}
+Write-Host "docker build $($buildArgs -join " ")"
+Invoke-External -Command "docker build $($buildArgs -join " ")" -Dryrun:$dryrun
 
 Write-Host ("Push docker image: {0}" -f $image_name)
-$cmd = "docker push {0}" -f $image_name
-
-Write-Host $cmd
-if (!$dryrun.IsPresent) {
-    Invoke-Expression $cmd
-}
+Invoke-External -Command "docker push ${image_name}" -Dryrun:$dryrun
 
 # Push the readme if the registry is docker.io
 if ($registry -ieq "docker.io") {
@@ -126,10 +93,6 @@ if ($registry -ieq "docker.io") {
         $readme_path = [IO.Path]::Combine([IO.Path]::Combine($path_parts), "README.md")
 
         Write-Host ("Pushing README file: {0}" -f $readme_path)
-
-        # build up the command to run
-        $cmd = "docker pushrm --provider dockerhub {0}/{1} --file {2}" -f $registry, $name, $readme_path
-
-        Invoke-Expression $cmd
+        Invoke-External -Command "docker pushrm --provider dockerhub ${registry}/${name} --file ${readme_path}" -Dryrun:$dryrun
     }
 }
