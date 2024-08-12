@@ -35,6 +35,7 @@ tasks:
     command: |
       $ErrorActionPreference = "Stop"
       $PSNativeCommandErrorActionPreference = $true
+      Import-Module EnsonoBuild
       . ./build/scripts/New-DockerManifest.ps1 -Latest
 
   _docs:
