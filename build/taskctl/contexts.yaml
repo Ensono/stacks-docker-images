@@ -16,7 +16,7 @@ contexts:
         - PSModulePath=/modules
         - -w
         - /app
-        - ensonostackseuweirdfmu.azurecr.io/ensono/eir-foundation-builder:1.1.159
+        - ensonostackseuweirdfmu.azurecr.io/ensono/eir-foundation-builder:1.1.165
         - pwsh
         - -NoProfile
         - -Command
@@ -49,7 +49,7 @@ contexts:
         - /app
         - --env-file
         - envfile
-        - ensonostackseuweirdfmu.azurecr.io/ensono/eir-asciidoctor:1.1.159
+        - ensonostackseuweirdfmu.azurecr.io/ensono/eir-asciidoctor:1.1.165
         - pwsh
         - -NoProfile
         - -Command
