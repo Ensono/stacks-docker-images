@@ -30,12 +30,11 @@ tasks:
         . ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name ${env:DOCKER_IMAGE_NAME} -Tag ${env:DOCKER_IMAGE_TAG} -Arguments "{{ .DOCKER_BUILD_ARGS }}"
 
   create:docker:manifest:
-    context: powershell_docker
+    context: powershell
     description: Create the Docker manifest for the images
     command: |
       $ErrorActionPreference = "Stop"
       $PSNativeCommandErrorActionPreference = $true
-      Import-Module EnsonoBuild
       . ./build/scripts/New-DockerManifest.ps1 -Latest
 
   _docs:
