@@ -5,7 +5,7 @@ variables:
   - name: TaskctlVersion
     value: 1.5.3
   - name: EnsonoBuildVersion
-    value: 1.1.15
+    value: 1.1.19
   - name: DockerPushRMVersion
     value: 1.9.0
 
