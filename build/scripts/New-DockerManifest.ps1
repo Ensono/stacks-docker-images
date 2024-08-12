@@ -15,7 +15,7 @@ The main aim of the script is to being together multiple archictures under one m
 param (
 
     [string]
-    # Build number to be use to find the iumages to group together and
+    # Build number to be use to find the images to group together and
     # the new manifest
     $Version = $env:DOCKER_IMAGE_TAG,
 
@@ -24,7 +24,7 @@ param (
     $Name = $env:DOCKER_IMAGE_NAME,
 
     [string[]]
-    # List of the additional tags that nee to be used to find the images
+    # List of the additional tags that need to be used to find the images
     $Tags = @("amd64", "arm64"),
 
     [string]
@@ -48,9 +48,6 @@ param (
     $Latest
 )
 
-# Define cmd array from which all commands will be built
-$cmds = @()
-
 # Define default values for parameters not set
 if ([string]::IsNullOrEmpty($registry)) {
     $registry = "docker.io"
@@ -64,25 +61,16 @@ foreach ($tag in $Tags) {
 
 # Login to the specified container registry
 Write-Host ("Logging into registry: {0}" -f $registry)
-$cmds += "docker login -u {0} -p {1} {2}" -f $username, $password, $registry
+Invoke-External -Command "docker login -u $username -p $password $registry" -Dryrun:$dryrun
 
-# Build up the command to use to create the manifest
-$cmds += "docker manifest create {0}/{1}:{2} {3}" -f $registry, $Name, $Version, ($images -join " ")
+Invoke-External -Command "docker manifest create `"${registry}/${Name}:${Version}`" $($images -join " ")" -Dryrun:$dryrun
 
 # Now push the manifest to the registry
-$cmds += "docker manifest push {0}/{1}:{2}" -f $registry, $Name, $Version
+Invoke-External -Command "docker manifest push `"${registry}/${Name}:${Version}`"" -Dryrun:$dryrun
 
 if ($Latest.IsPresent) {
     # Tag manifest with the latest tage
-    $cmds += "docker manifest create {0}/{1}:latest {2}" -f $registry, $Name, ($images -join " ")
+    Invoke-External -Command "docker manifest create `"${registry}/${Name}:latest`" $($images -join " ")" -Dryrun:$dryrun
 
-    $cmds += "docker manifest push {0}/{1}:latest" -f $registry, $Name
+    Invoke-External -Command "docker manifest push `"${registry}/${Name}:latest`"" -Dryrun:$dryrun
 }
-
-foreach ($cmd in $cmds) {
-    Write-Host $cmd
-    if (!$dryrun.IsPresent) {
-        Invoke-Expression $cmd
-    }
-}
-

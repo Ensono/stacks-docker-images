@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euxo pipefail
+
 # Install dependencies for PowerShell
 #
 # The dependencies are from running PowerShell when they have not been installed:
@@ -26,7 +28,7 @@ rm /tmp/powershell.tar.gz
 # Taskctl Runner ------------------------------------------------------------
 
 # Update the arch to fit in with the pattern for the Taskctl binary
-if [ "BIN_ARCH" == "arm64" ];
+if [ "${BIN_ARCH}" == "arm64" ];
 then
     BIN_ARCH="armv7"
 fi

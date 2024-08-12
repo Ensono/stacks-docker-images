@@ -13,30 +13,29 @@ tasks:
     description: Build the foundation image on the machine without using a container
     command:
       - |
-        $cmd = "./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name {{ .IMAGE_NAME }} -Arguments `"{{ .DOCKER_BUILD_ARGS }}`""
-        Write-Host $cmd
-        Invoke-Expression $cmd
+        $ErrorActionPreference = "Stop"
+        $PSNativeCommandErrorActionPreference = $true
+        . ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name ${env:DOCKER_IMAGE_NAME} -Tag ${env:DOCKER_IMAGE_TAG} -Arguments "{{ .DOCKER_BUILD_ARGS }}"
 
   build:image:container:
     context: powershell_docker
     description: Build the foundation image on the machine using the tools container
     command:
       - |
+        $ErrorActionPreference = "Stop"
+        $PSNativeCommandErrorActionPreference = $true
         $sep = (Test-Path -Path "C:\") ? ";" : ":"
         $env:PSModulePath += "${sep}/home/vsts/modules"
         Import-Module EnsonoBuild
-        # Build-DockerImage -push -provider generic -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}"
-        $cmd = "./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name {{ .IMAGE_NAME }} -Arguments `"{{ .DOCKER_BUILD_ARGS }}`""
-        Write-Host $cmd
-        Invoke-Expression $cmd
+        . ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name ${env:DOCKER_IMAGE_NAME} -Tag ${env:DOCKER_IMAGE_TAG} -Arguments "{{ .DOCKER_BUILD_ARGS }}"
 
   create:docker:manifest:
-    context: powershell_docker
+    context: powershell
     description: Create the Docker manifest for the images
     command: |
-      $cmd = "./build/scripts/New-DockerManifest.ps1 -Latest"
-      Write-Host $cmd
-      Invoke-Expression $cmd
+      $ErrorActionPreference = "Stop"
+      $PSNativeCommandErrorActionPreference = $true
+      . ./build/scripts/New-DockerManifest.ps1 -Latest
 
   _docs:
     description: Build Docs for Stacks CLI
@@ -92,17 +91,15 @@ tasks:
   build:container:
     context: powershell_docker
     description: Create container image for application
-    command:
-      - Write-Host "Build-DockerImage -push -provider generic -Name {{ .IMAGE_NAME }} -buildargs `"{{ .DOCKER_BUILD_ARGS }}`""
-      - Build-DockerImage -Name {{ .IMAGE_NAME }} -buildargs "{{ .DOCKER_BUILD_ARGS }}" -latest
+    command: |
+      $ErrorActionPreference = "Stop"
+      $PSNativeCommandErrorActionPreference = $true
+      Build-DockerImage -Name ${env:DOCKER_IMAGE_NAME} -Tag ${env:DOCKER_IMAGE_TAG} -buildargs "{{ .DOCKER_BUILD_ARGS }}" -latest
 
   generate:docker:overview:
-    context: powershell
+    context: docsenv
     description: Generate Docker overview files from main docs
-    command: |
-      $cmd = "./build/scripts/Set-DockerOverview.ps1"
-      Write-Host $cmd
-      Invoke-Expression $cmd
+    command: ./build/scripts/Set-DockerOverview.ps1
 
   debug:
     context: powershell_docker

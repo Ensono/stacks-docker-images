@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euxo pipefail
+
 # Script to detect the Architecture of the platform and set appropriate variables
 # for us in other scripts.
 
@@ -13,7 +15,7 @@
 #   - MUSL_ARCH - architecture when running with MUSL
 
 # Detect MUSL
-MUSL="$(ldd /bin/ls | grep 'musl' | head -1 | cut -d ' ' -f1)"
+MUSL="$(ldd /bin/ls | grep 'musl' || true | head -1 | cut -d ' ' -f1)"
 
 # Get the distcodename of the platform
 export AZ_DIST=$(lsb_release -cs)
@@ -41,10 +43,12 @@ else
     export ABBR_ARCH=$BIN_ARCH
 fi
 
+set +x
 echo "PLATFORM DETECTION =================================="
-echo "Uname:             ${UNAME_ARCH} (UNAME_ARCH)" 
+echo "Uname:             ${UNAME_ARCH} (UNAME_ARCH)"
 echo "Binary arch:       ${BIN_ARCH}   (BIN_ARCH)"
 echo "Abbreviated arch:  ${ABBR_ARCH}  (ABBR_ARCH)"
 echo "Musl Arch:         ${MUSL_ARCH}  (MUSL_ARCH)"
 echo "OS Distribution:   ${AZ_DIST}    (AZ_DIST)"
 echo "====================================================="
+set -x

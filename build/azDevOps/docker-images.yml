@@ -89,8 +89,7 @@ parameters:
       - stage: Kong
         displayName: "[CONTAINER] Kong"
         dependsOn:
-          - FoundationBuilder
-          - FoundationPowerShell
+          - DotNet
         taskName: build:kong
         imageName: ensono/eir-kong
 
@@ -100,7 +99,7 @@ parameters:
           - FoundationBuilder
           - FoundationPowerShell
         taskName: build:node
-        imageName: ensono/eir-node
+        imageName: ensono/eir-nodejs
 
       - stage: AsciiDoctor
         displayName: "[CONTAINER] AsciiDoctor"
@@ -115,6 +114,7 @@ parameters:
           - FoundationAzureCli
         taskName: build:data
         imageName: ensono/eir-azure-data
+
 pr:
   - main
 
@@ -134,18 +134,17 @@ variables:
 # Configure the stages
 stages:
   - stage: Infrastructure
-    condition: and(ne(variables['Build.SourceBranchName'], 'main'), eq(lower(${{ parameters['force_deploy'] }}), 'false'))
     variables:
       - group: azure-sp-creds
-
     jobs:
       - job: DeployInfrastructure
+        condition: and(ne(variables['Build.SourceBranchName'], 'main'), eq(lower(${{ parameters['force_deploy'] }}), 'false'))
         steps:
           - template: templates/configure_agent.yml
             parameters:
-              TasckctlVersion: $(TaskctlVersion)
+              TaskctlVersion: $(TaskctlVersion)
               EnsonoBuildVersion: $(EnsonoBuildVersion)
-              TerraformVersion: $(TerraformVersion)
+              DockerPushRMVersion: $(DockerPushRMVersion)
 
           - task: Bash@3
             displayName: Setup
@@ -186,17 +185,26 @@ stages:
               TF_FILE_LOCATION: deploy/terraform/azure/acr
               STAGE: acr
 
+      - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+          - job: NoOp
+            steps:
+              - task: Bash@3
+                displayName: NoOp
+                inputs:
+                  targetType: inline
+                  script: |
+                    exit
+
   - stage: documentation
     displayName: Documentation
-
     jobs:
       - job: GenerateDocumentation
         steps:
           - template: templates/configure_agent.yml
             parameters:
-              TasckctlVersion: $(TaskctlVersion)
+              TaskctlVersion: $(TaskctlVersion)
               EnsonoBuildVersion: $(EnsonoBuildVersion)
-              TerraformVersion: $(TerraformVersion)
+              DockerPushRMVersion: $(DockerPushRMVersion)
 
           # Generate the documentation
           - task: Bash@3
@@ -229,17 +237,16 @@ stages:
               - group: stacks-docker-creds
           - ${{ else }}:
               - group: stacks-acr-creds
-
         jobs:
           - job: BuildImage_amd64
             displayName: Build Image - amd64
             pool: $(build_pool_amd64)
-
             steps:
               - template: templates/configure_agent.yml
                 parameters:
-                  TasckctlVersion: $(TaskctlVersion)
+                  TaskctlVersion: $(TaskctlVersion)
                   EnsonoBuildVersion: $(EnsonoBuildVersion)
+                  DockerPushRMVersion: $(DockerPushRMVersion)
 
               - task: Bash@3
                 displayName: Build Image
@@ -248,18 +255,19 @@ stages:
                   script: |
                     taskctl ${{ stage.taskName }}
                 env:
+                  DOCKER_IMAGE_NAME: ${{ stage.imageName }}
                   DOCKER_IMAGE_TAG: $(Build.BuildNumber)
                   PLATFORM: linux/amd64
 
           - job: BuildImage_arm64
             displayName: Build Image - arm64
             pool: $(build_pool_arm64)
-
             steps:
               - template: templates/configure_agent.yml
                 parameters:
-                  TasckctlVersion: $(TaskctlVersion)
+                  TaskctlVersion: $(TaskctlVersion)
                   EnsonoBuildVersion: $(EnsonoBuildVersion)
+                  DockerPushRMVersion: $(DockerPushRMVersion)
 
               - task: Bash@3
                 displayName: Build Image
@@ -268,6 +276,7 @@ stages:
                   script: |
                     taskctl ${{ stage.taskName }}
                 env:
+                  DOCKER_IMAGE_NAME: ${{ stage.imageName }}
                   DOCKER_IMAGE_TAG: $(Build.BuildNumber)
                   PLATFORM: linux/arm64
 
@@ -276,12 +285,12 @@ stages:
             dependsOn:
               - BuildImage_amd64
               - BuildImage_arm64
-
             steps:
               - template: templates/configure_agent.yml
                 parameters:
-                  TasckctlVersion: $(TaskctlVersion)
+                  TaskctlVersion: $(TaskctlVersion)
                   EnsonoBuildVersion: $(EnsonoBuildVersion)
+                  DockerPushRMVersion: $(DockerPushRMVersion)
 
               - task: Bash@3
                 displayName: Create Multi-Arch Manifest
@@ -290,5 +299,5 @@ stages:
                   script: |
                     taskctl create:docker:manifest
                 env:
-                  DOCKER_IMAGE_TAG: $(Build.BuildNumber)
                   DOCKER_IMAGE_NAME: ${{ stage.imageName }}
+                  DOCKER_IMAGE_TAG: $(Build.BuildNumber)

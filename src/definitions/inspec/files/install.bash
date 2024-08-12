@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euxo pipefail
+
 # Update Apt and install the necessary tools
 apt-get update
 apt-get install -y build-essential ruby ruby-dev

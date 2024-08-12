@@ -3,7 +3,7 @@ ARG UBUNTU_VERSION=22.04
 FROM ubuntu:${UBUNTU_VERSION}
 
 ARG POWERSHELL_VERSION=7.4.4
-ARG ENSONOBUILD_VERSION=1.1.8
+ARG ENSONOBUILD_VERSION=1.1.15
 ARG TASKCTL_VERSION=1.5.3
 
 ARG TIMEZONE="Europe/London"
@@ -15,6 +15,3 @@ COPY files/platform.bash /usr/local/bin/platform.bash
 RUN chmod +x /tmp/install.bash && \
     chmod +x /usr/local/bin/platform.bash && \
     /tmp/install.bash
-
-# Ensure that the /modules director is in the PSModulePath
-ENV PSModulePath="${PSModulePath}:/modules"

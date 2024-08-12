@@ -5,6 +5,7 @@ ARG ORG=ensono
 FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
 
 ARG GOLANG_VERSION=1.21.5
+ARG TIMEZONE="Europe/London"
 
 # Copy the install script over and then run it
 COPY files/unittests.bash /usr/local/bin/unittests.bash

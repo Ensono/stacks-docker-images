@@ -36,7 +36,7 @@ if (!(Test-Path -Path $toolpath)) {
     Write-Host "Downloading Dotnet installation tool"
 
     # Download the script to the tmp directory
-    Invoke-RestMethod -Method GET -Uri https://dot.net/v1/dotnet-install.bash -OutFile /tmp/dotnet-install.bash -FollowRelLink
+    Invoke-RestMethod -Method GET -Uri https://dot.net/v1/dotnet-install.sh -OutFile /tmp/dotnet-install.bash -FollowRelLink
 }
 
 # Split the version into an array to iterate around
@@ -45,36 +45,26 @@ $versions = $list -Split ","
 # If there are no versions specified, exit with a message
 if ($versions.length -eq 0) {
     Write-Host -Object "Please provide a list of versions to install"
-} else {
-
-
-    # Iterate around each version
-    foreach ($version in $versions) {
-
-        # Determine the framework moniker
-        # https://learn.microsoft.com/en-us/dotnet/standard/frameworks#latest-versions
-        $moniker = "net{0}.0" -f $($version -split "\.")[0]
-
-        $cmds = @()
-
-        # Build up the commands that need to be executed
-        # --- Install Framework
-        $cmds += "bash /tmp/dotnet-install.bash --install-dir {0} --version {1}" -f $toolpath, $version
-
-        # --- Install SonarScanner
-        $cmds += "dotnet tool install dotnet-sonarscanner --version {0} --tool-path {1} --framework {2}" -f $sonarscanner_version, $toolpath, $moniker
-
-        # --- Install ReportGenerator
-        $cmds += "dotnet tool install dotnet-reportgenerator-globaltool --version {0} --tool-path {1} --framework {2}" -f $reportgenerator_version, $toolpath, $moniker
-
-        # iterate around the commands
-        foreach ($cmd in $cmds) {
-            Write-Host $cmd
-
-            # Execute the command
-            Invoke-Expression $cmd
-        }
-
-        
-    }
+    throw
 }
+
+# Iterate around each version
+foreach ($version in $versions) {
+
+    # Determine the framework moniker
+    # https://learn.microsoft.com/en-us/dotnet/standard/frameworks#latest-versions
+    $moniker = "net{0}.0" -f $($version -split "\.")[0]
+
+    # TODO: Replace these calls with Invoke-External once the EnsonoBuild module has exported them...
+    # See: https://github.com/Ensono/independent-runner/pull/57
+    # --- Install Framework
+    bash /tmp/dotnet-install.bash --install-dir $toolpath --version $version
+}
+
+# TODO: Replace these calls with Invoke-External once the EnsonoBuild module has exported them...
+# --- Install SonarScanner
+dotnet tool install dotnet-sonarscanner --version $sonarscanner_version --tool-path $toolpath --framework $moniker
+
+# TODO: Replace these calls with Invoke-External once the EnsonoBuild module has exported them...
+# --- Install ReportGenerator
+dotnet tool install dotnet-reportgenerator-globaltool --version $reportgenerator_version --tool-path $toolpath --framework $moniker

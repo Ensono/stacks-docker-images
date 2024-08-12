@@ -5,9 +5,9 @@ variables:
   - name: TaskctlVersion
     value: 1.5.3
   - name: EnsonoBuildVersion
-    value: 1.0.43
-  - name: TerraformVersion
-    value: 1.5.1
+    value: 1.1.15
+  - name: DockerPushRMVersion
+    value: 1.9.0
 
   # DEFAULT IMAGE RUNNER
   - name: build_pool_amd64

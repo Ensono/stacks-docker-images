@@ -1,22 +1,28 @@
 ARG REGISTRY=docker.io
 ARG IMAGE_TAG=0.0.1-workstation
 ARG ORG=ensono
-ARG JAVA_VERSION=17.0.12
+
+ARG JAVA_MAJOR=17
+ARG JAVA_VERSION=${JAVA_MAJOR}.0.12
 
 # Pull in Azul Java from image
 FROM azul/zulu-openjdk:${JAVA_VERSION} AS java
 
 FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
 
+# Defined above
+ARG JAVA_MAJOR
+
 ARG MAVEN_VERSION=3.8.8
 
 # Copy Java from the java image into this image
-COPY --from=java /usr/lib/jvm /usr/lib/jvm
+COPY --from=java /usr/lib/jvm/zulu${JAVA_MAJOR} /usr/local/java/
 
 # Update PATH to include the java binary
-ENV PATH="$PATH:/usr/lib/jvm/zulu21/bin"
+ENV PATH="$PATH:/usr/local/java/bin"
 
 ENV JAVA_HOME=/usr/local/java
+ENV JRE_HOME=/usr/local/java
 
 # Install Maven
 COPY files/install.bash /usr/local/bin/install.bash
