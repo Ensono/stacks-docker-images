@@ -4,6 +4,10 @@ This Docker image is the foundation image from which all other EIR images are bu
 
 The image is built from Ubuntu, PowerShell and the EnsonoBuild PowerShell module are installed.
 
+During the build of the image a profile file for PowerShell is copied in. This sets the PSModulePath globally so that the EnsonoBuild module is always available without having to pass the environment variables in the Docker command line arguments.
+
+The profile file is copied to `/opt/microsoft/powershell/7/Microsoft.PowerShell_profile.ps1`
+
 === Specs
 
 **Platforms**: `linux/amd64`, `linux/arm64`

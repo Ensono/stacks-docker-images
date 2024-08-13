@@ -15,3 +15,6 @@ COPY files/platform.bash /usr/local/bin/platform.bash
 RUN chmod +x /tmp/install.bash && \
     chmod +x /usr/local/bin/platform.bash && \
     /tmp/install.bash
+
+# Copy over the PowerShell profile script
+COPY files/Microsoft.PowerShell_profile.ps1 /opt/microsoft/powershell/7/Microsoft.PowerShell_profile.ps1
