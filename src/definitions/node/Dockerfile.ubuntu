@@ -6,12 +6,12 @@ FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
 
 # Specify the versions of software to install
 ARG NVM_VERSION=0.39.7
-ARG NODE_VERSIONS="v20.12.2,v18.20.2"
+ARG NODE_VERSIONS="v20.16.0,v18.20.2"
 
 # Copy the necessary files to the image
 COPY files/install.bash /tmp/install.bash
 RUN chmod +x /tmp/install.bash && /tmp/install.bash
 
-# Copy and run the Powershell instal script
+# Copy and run the Powershell install script
 COPY files/install.ps1 /tmp/install.ps1
 RUN pwsh /tmp/install.ps1
