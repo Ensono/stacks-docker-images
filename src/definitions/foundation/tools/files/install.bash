@@ -54,15 +54,15 @@ ln -s /usr/local/terraform/${DEFAULT_TF_VERSION}/bin /usr/local/terraform/bin
 
 # Update the arch to fit in with the pattern for the terrascan binary
 if [ "${UNAME_ARCH}" == "aarch64" ]; then
-    TERRASCAN_ARCH="arm64"
+    NONCONFORM_ARCH="arm64"
 else
-    TERRASCAN_ARCH="${UNAME_ARCH}"
+    NONCONFORM_ARCH="${UNAME_ARCH}"
 fi
 
 # Terrascan -----------------------------------------------------------------
 echo "Installing: TerraScan"
 mkdir -p /usr/local/terrascan/bin
-curl --fail-with-body -L "https://github.com/tenable/terrascan/releases/download/v${TERRASCAN_VERSION}/terrascan_${TERRASCAN_VERSION}_Linux_${TERRASCAN_ARCH}.tar.gz" -o /tmp/terrascan.tar.gz
+curl --fail-with-body -L "https://github.com/tenable/terrascan/releases/download/v${TERRASCAN_VERSION}/terrascan_${TERRASCAN_VERSION}_Linux_${NONCONFORM_ARCH}.tar.gz" -o /tmp/terrascan.tar.gz
 tar zxf /tmp/terrascan.tar.gz -C /tmp
 mv /tmp/terrascan /usr/local/terrascan/bin
 chmod +x /usr/local/terrascan/bin/terrascan
@@ -111,6 +111,13 @@ fi
 
 curl --fail-with-body -L "https://github.com/snyk/cli/releases/download/v${SNYK_VERSION}/${FILENAME}" -o /usr/local/snyk/bin/snyk
 
+# ---------------------------------------------------------------------------
+
+# Install envsubst ----------------------------------------------------------------
+echo "Installing: envsubst"
+mkdir -p /usr/local/envsubst/bin
+curl --fail-with-body -L "https://github.com/a8m/envsubst/releases/download/${ENVSUBST_VERSION}/envsubst-Linux-${NONCONFORM_ARCH}" -o /usr/local/envsubst/bin/envsubst
+chmod +x /usr/local/envsubst/bin/envsubst
 # ---------------------------------------------------------------------------
 
 # PowerShell Modules --------------------------------------------------------
