@@ -29,7 +29,7 @@ This has the downside that if the files are modified in the directory then they 
 
 [source,asciidoc]
 ----
-include::docker-definitions/**/*.adoc[]
+\include::docker-definitions/**/*.adoc[]
 ----
 
 NOTE: The example above is copied from the `docs/index.adoc` file.
