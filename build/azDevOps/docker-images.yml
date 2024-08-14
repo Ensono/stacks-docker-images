@@ -105,6 +105,7 @@ parameters:
         displayName: "[CONTAINER] AsciiDoctor"
         dependsOn:
           - Java
+          - NodeJS
         taskName: build:asciidoctor
         imageName: ensono/eir-asciidoctor
 

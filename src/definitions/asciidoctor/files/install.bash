@@ -74,6 +74,9 @@ gem install \
     bigdecimal \
     rmagick
 
+# Install mermaid-cli using node
+/usr/local/node/bin/npm install -g @mermaid-js/mermaid-cli
+
 # Remove obsolete packages
 apt-get remove -y build-essential
 apt-get autoremove -y
