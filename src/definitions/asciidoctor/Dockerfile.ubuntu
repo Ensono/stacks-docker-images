@@ -4,7 +4,7 @@ ARG ORG=ensono
 
 # Get a copy of Node from the Node image, so that it is 
 # available to run mermaid
-FROM ${REGISTRY}/${ORG}/eir-node:${IMAGE_TAG} AS node
+FROM ${REGISTRY}/${ORG}/eir-nodejs:${IMAGE_TAG} AS node
 
 FROM ${REGISTRY}/${ORG}/eir-java:${IMAGE_TAG}
 
