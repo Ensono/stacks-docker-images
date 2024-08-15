@@ -34,9 +34,15 @@ COPY --from=node /root/.nvm/versions/node/${NODE_VERSION} /usr/local/node
 # Update the PATH so some tools are accessible
 ENV PATH="${PATH}:/usr/local/pandoc/bin:/usr/local/node/bin"
 
+# Copy files for mmdc
+COPY files/mermaid /usr/local/bin/mermaid
+COPY files/puppeteer.json /etc/puppeteer.json
+
 # Copy the install script over and then run it
 COPY files/install.bash /usr/local/bin/install.bash
 RUN chmod +x /usr/local/bin/install.bash && /usr/local/bin/install.bash
 
 # Copy in the AsciiDoctor library
 COPY files/lib /usr/local/ensono/lib
+
+

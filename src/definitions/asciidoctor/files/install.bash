@@ -31,7 +31,18 @@ apt-get install -y \
     libzstd-dev \
     libpng-dev \
     zlib1g-dev \
-    libmagickwand-dev
+    libmagickwand-dev \
+    libnss3 \
+    libatk1.0-0 \
+    libatk-bridge2.0-0 \
+    libdrm2 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxfixes3 \
+    libxrandr2 \
+    libgbm1 \
+    libxkbcommon0 \
+    libasound2
 
 # Install python packages
 pip install --no-cache-dir \
@@ -101,6 +112,9 @@ pushd /tmp
 tar zxf /tmp/pandoc.tar.gz
 mv pandoc-${PANDOC_VERSION}/bin/pandoc /usr/local/pandoc/bin
 popd
+
+# Ensure the wrapper script is executable
+chmod +x /usr/local/bin/mermaid
 
 # Remove files
 rm -rf /tmp/*
