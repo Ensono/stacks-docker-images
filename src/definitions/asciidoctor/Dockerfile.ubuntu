@@ -32,7 +32,7 @@ ARG PANDOC_VERSION=3.1.12.2
 COPY --from=node /root/.nvm/versions/node/${NODE_VERSION} /usr/local/node
 
 # Update the PATH so some tools are accessible
-ENV PATH="${PATH}:/usr/local/pandoc/bin;/usr/local/node/bin"
+ENV PATH="${PATH}:/usr/local/pandoc/bin:/usr/local/node/bin"
 
 # Copy the install script over and then run it
 COPY files/install.bash /usr/local/bin/install.bash
