@@ -75,6 +75,7 @@ gem install \
     rmagick
 
 # Install mermaid-cli using node
+export PATH="${PATH}:/usr/local/node/bin"
 /usr/local/node/bin/npm install -g @mermaid-js/mermaid-cli
 
 # Remove obsolete packages
