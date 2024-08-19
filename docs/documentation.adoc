@@ -12,24 +12,24 @@ The Docker overview files are stored in the `docs/docker-definitions/` directory
 
 [source,asciidoc]
 ----
-include::docker-definitions\asciidoctor.adoc
-include::docker-definitions\data.adoc
-include::docker-definitions\dotnet.adoc
-include::docker-definitions\golang.adoc
-include::docker-definitions\infrastructure.adoc
-include::docker-definitions\inspec.adoc
-include::docker-definitions\java.adoc
-include::docker-definitions\kong.adoc
-include::docker-definitions\foundation\azure-cli.adoc
-include::docker-definitions\foundation\powershell.adoc
-include::docker-definitions\foundation\tools.adoc
+\include::docker-definitions\asciidoctor.adoc[]
+\include::docker-definitions\data.adoc[]
+\include::docker-definitions\dotnet.adoc[]
+\include::docker-definitions\golang.adoc[]
+\include::docker-definitions\infrastructure.adoc[]
+\include::docker-definitions\inspec.adoc[]
+\include::docker-definitions\java.adoc[]
+\include::docker-definitions\kong.adoc[]
+\include::docker-definitions\foundation\azure-cli.adoc[]
+\include::docker-definitions\foundation\powershell.adoc[]
+\include::docker-definitions\foundation\tools.adoc[]
 ----
 
 This has the downside that if the files are modified in the directory then they are not automatically included in the documentation. The `glob-include-processor` library allows the use of wildcards in the file path, so the above example can be replaced with:
 
 [source,asciidoc]
 ----
-include::docker-definitions/**/*.adoc[]
+\include::docker-definitions/**/*.adoc[]
 ----
 
 NOTE: The example above is copied from the `docs/index.adoc` file.
