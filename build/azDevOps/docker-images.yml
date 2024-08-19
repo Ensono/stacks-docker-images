@@ -148,6 +148,14 @@ stages:
               TaskctlVersion: $(TaskctlVersion)
               EnsonoBuildVersion: $(EnsonoBuildVersion)
               DockerPushRMVersion: $(DockerPushRMVersion)
+              YqVersion: $(YqVersion)
+              # NOTE: These won't be set properly for this job...
+              # $(BuildNumber) is set below from `taskctl setup`
+              # $(DockerContainerRegistryName) is from a variable group not
+              # defined here
+              # The build doesn't currently use these as the TF runs on the host
+              BuildNumber: "notused"
+              DockerContainerRegistryName: "notused"
 
           - task: Bash@3
             displayName: Setup
@@ -209,6 +217,11 @@ stages:
               TaskctlVersion: $(TaskctlVersion)
               EnsonoBuildVersion: $(EnsonoBuildVersion)
               DockerPushRMVersion: $(DockerPushRMVersion)
+              YqVersion: $(YqVersion)
+              BuildNumber: $(Build.BuildNumber)
+              # NOTE: This variable isn't imported into this job, we don't use
+              # it for this job anyway...
+              DockerContainerRegistryName: "notused"
 
           # Generate the documentation
           - task: Bash@3
@@ -263,6 +276,9 @@ stages:
                   TaskctlVersion: $(TaskctlVersion)
                   EnsonoBuildVersion: $(EnsonoBuildVersion)
                   DockerPushRMVersion: $(DockerPushRMVersion)
+                  YqVersion: $(YqVersion)
+                  BuildNumber: $(Build.BuildNumber)
+                  DockerContainerRegistryName: $(DOCKER_CONTAINER_REGISTRY_NAME)
 
               - task: Bash@3
                 displayName: Build Image
@@ -289,6 +305,9 @@ stages:
                   TaskctlVersion: $(TaskctlVersion)
                   EnsonoBuildVersion: $(EnsonoBuildVersion)
                   DockerPushRMVersion: $(DockerPushRMVersion)
+                  YqVersion: $(YqVersion)
+                  BuildNumber: $(Build.BuildNumber)
+                  DockerContainerRegistryName: $(DOCKER_CONTAINER_REGISTRY_NAME)
 
               - task: Bash@3
                 displayName: Build Image
@@ -312,6 +331,9 @@ stages:
                   TaskctlVersion: $(TaskctlVersion)
                   EnsonoBuildVersion: $(EnsonoBuildVersion)
                   DockerPushRMVersion: $(DockerPushRMVersion)
+                  YqVersion: $(YqVersion)
+                  BuildNumber: $(Build.BuildNumber)
+                  DockerContainerRegistryName: $(DOCKER_CONTAINER_REGISTRY_NAME)
 
               - task: Bash@3
                 displayName: Create Multi-Arch Manifest

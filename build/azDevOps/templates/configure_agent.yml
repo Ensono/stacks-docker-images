@@ -5,6 +5,12 @@ parameters:
     type: string
   - name: DockerPushRMVersion
     type: string
+  - name: YqVersion
+    type: string
+  - name: BuildNumber
+    type: string
+  - name: DockerContainerRegistryName
+    type string
 steps:
     - task: PowerShell@2
       displayName: Configure Agent
@@ -12,4 +18,10 @@ steps:
         targetType: inline
         script: |
           $InformationPreference = "Continue"
-          . build/scripts/Initialize-Agent.ps1 -TaskctlVersion ${{ parameters.TaskctlVersion }} -EnsonoBuildVersion ${{ parameters.EnsonoBuildVersion }} -DockerPushRMVersion ${{ parameters.DockerPushRMVersion }}
+          . build/scripts/Initialize-Agent.ps1 `
+            -TaskctlVersion ${{ parameters.TaskctlVersion }} `
+            -EnsonoBuildVersion ${{ parameters.EnsonoBuildVersion }} `
+            -DockerPushRMVersion ${{ parameters.DockerPushRMVersion }} `
+            -YqVersion ${{ parameters.YqVersion }} `
+            -BuildNumber ${{ parameters.BuildNumber }} `
+            -DockerContainerRegistryName ${{ parameters.DockerContainerRegistryName }}
