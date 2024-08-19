@@ -14,7 +14,7 @@ The image is built from the Ensono Azure CLI image, this is so that the necessar
 
 [cols="1,2,1,2",options=header]
 |====
-| Type | Name | Version | URL 
+| Type | Name | Version | URL
 | Extension | datafactory | - | https://learn.microsoft.com/en-us/cli/azure/azure-cli-extensions-overview
 | Python | pytest | 8.0.1 | https://pypi.org/project/pytest/
 | Python | pylint | 3.0.3 | https://pypi.org/project/pylint/
