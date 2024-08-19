@@ -7,5 +7,6 @@ envfile*
 node_modules
 *tfplan
 *.tfvars
+markdown/
 
 src/definitions/**/README.md

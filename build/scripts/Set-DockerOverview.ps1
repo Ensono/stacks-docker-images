@@ -26,7 +26,9 @@ $base = $base | Resolve-Path
 foreach ($overview in $overviews) {
     $definition_name = [IO.Path]::GetFileNameWithoutExtension($overview)
 
-    New-Item -ItemType Directory -Path $definition_name
+    $new_directory = [IO.Path]::GetDirectoryName($overview.FullName) -replace $base, $output
+
+    New-Item -ItemType Directory -Path ("{0}/{1}" -f $new_directory, $definition_name)
 
     # Determine the paths that are needed for the conversions
     $db_path = "{0}.xml" -f [IO.Path]::Combine($temp, $definition_name)
