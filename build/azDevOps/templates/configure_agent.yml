@@ -10,7 +10,7 @@ parameters:
   - name: BuildNumber
     type: string
   - name: DockerContainerRegistryName
-    type string
+    type: string
 steps:
     - task: PowerShell@2
       displayName: Configure Agent

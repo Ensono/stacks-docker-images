@@ -41,7 +41,7 @@ param (
 
     [switch]
     # State that the scritp whould run in dryrun and not to execute any commands
-    $dryrun,
+    $Dryrun,
 
     [switch]
     # State if manifest should be tagged as Latest
@@ -64,18 +64,18 @@ foreach ($tag in $Tags) {
 
 # Login to the specified container registry
 Write-Host ("Logging into registry: {0}" -f $registry)
-Invoke-External -Command "docker login -u $username -p $password $registry" -Dryrun:$dryrun
+Invoke-External -Command "docker login -u $username -p $password $registry" -Dryrun:$Dryrun
 
-Invoke-External -Command "docker manifest create `"${registry}/${Name}:${Version}`" $($images -join " ")" -Dryrun:$dryrun
+Invoke-External -Command "docker manifest create `"${registry}/${Name}:${Version}`" $($images -join " ")" -Dryrun:$Dryrun
 
 # Now push the manifest to the registry
-Invoke-External -Command "docker manifest push `"${registry}/${Name}:${Version}`"" -Dryrun:$dryrun
+Invoke-External -Command "docker manifest push `"${registry}/${Name}:${Version}`"" -Dryrun:$Dryrun
 
 if ($Latest.IsPresent) {
     # Tag manifest with the latest tage
-    Invoke-External -Command "docker manifest create `"${registry}/${Name}:latest`" $($images -join " ")" -Dryrun:$dryrun
+    Invoke-External -Command "docker manifest create `"${registry}/${Name}:latest`" $($images -join " ")" -Dryrun:$Dryrun
 
-    Invoke-External -Command "docker manifest push `"${registry}/${Name}:latest`"" -Dryrun:$dryrun
+    Invoke-External -Command "docker manifest push `"${registry}/${Name}:latest`"" -Dryrun:$Dryrun
 }
 
 # Push the readme if the registry is docker.io
@@ -84,5 +84,5 @@ if ($registry -ieq "docker.io") {
     $readme_path = [IO.Path]::Combine("markdown", [IO.Path]::Combine([IO.Path]::Combine($path_parts), "README.md"))
 
     Write-Host ("Pushing README file: {0}" -f $readme_path)
-    Invoke-External -Command "docker pushrm --provider dockerhub ${registry}/${name} --file ${readme_path}" -Dryrun:$dryrun
+    Invoke-External -Command "docker pushrm --provider dockerhub ${registry}/${name} --file ${readme_path}" -Dryrun:$Dryrun
 }
