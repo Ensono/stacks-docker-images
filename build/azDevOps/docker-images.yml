@@ -20,6 +20,7 @@ parameters:
       - stage: FoundationPowerShell
         displayName: "[CONTAINER] Foundation - PowerShell"
         dependsOn:
+          - Documentation
           - Infrastructure
         taskName: build:foundation:powershell
         imageName: ensono/eir-foundation-powershell
@@ -27,6 +28,7 @@ parameters:
       - stage: FoundationBuilder
         displayName: "[CONTAINER] Foundation - Builder"
         dependsOn:
+          - Documentation
           - FoundationPowerShell
         taskName: build:foundation:builder
         imageName: ensono/eir-foundation-builder
@@ -196,7 +198,7 @@ stages:
                   script: |
                     exit
 
-  - stage: documentation
+  - stage: Documentation
     displayName: Documentation
     jobs:
       - job: GenerateDocumentation
@@ -223,11 +225,18 @@ stages:
               artifactName: docs
 
           - task: Bash@3
-            displayName: Create image Overview
+            displayName: Create Image Overview
             inputs:
               targetType: inline
               script: |
                 taskctl generate:docker:overview
+
+          # Upload the overview documentation
+          - task: PublishBuildArtifacts@1
+            displayName: Publish Image Overview Documentation
+            inputs:
+              pathToPublish: $(Build.SourcesDirectory)/markdown
+              artifactName: markdown-docs
 
   - ${{ each stage in parameters.stages }}:
       - stage: ${{ stage.stage }}
@@ -243,6 +252,11 @@ stages:
             displayName: Build Image - amd64
             pool: $(build_pool_amd64)
             steps:
+              - task: DownloadPipelineArtifact@2
+                inputs:
+                  artifactName: markdown-docs
+                  targetPath: $(System.DefaultWorkingDirectory)
+
               - template: templates/configure_agent.yml
                 parameters:
                   TaskctlVersion: $(TaskctlVersion)
@@ -264,6 +278,11 @@ stages:
             displayName: Build Image - arm64
             pool: $(build_pool_arm64)
             steps:
+              - task: DownloadPipelineArtifact@2
+                inputs:
+                  artifactName: markdown-docs
+                  targetPath: $(System.DefaultWorkingDirectory)
+
               - template: templates/configure_agent.yml
                 parameters:
                   TaskctlVersion: $(TaskctlVersion)
