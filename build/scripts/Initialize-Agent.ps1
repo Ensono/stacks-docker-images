@@ -141,11 +141,10 @@ foreach ($plugin in $plugins.GetEnumerator()) {
             Uri = $plugin.Value.uri
             OutFile = $plugin.Value.outfile
         }
+
         Invoke-RestMethod @splat
-        
     }
+
+    # Ensure the `pushrm` command is executable by root...
+    sudo chmod u+x $plugin.Value.outfile
 }
-
-
-
-
