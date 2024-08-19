@@ -4,6 +4,27 @@ This Docker image is the foundation image from which all other EIR images are bu
 
 The image is built from Ubuntu, PowerShell and the EnsonoBuild PowerShell module are installed.
 
+During the build of the image a profile file for PowerShell is copied in. The profile file is copied to `/opt/microsoft/powershell/7/Microsoft.PowerShell_profile.ps1`.
+
+The profile sets the following things in the session:
+
+[cols="2,3,1",options="header",stripe=even]
+|===
+| Variable | Description | Value
+| `InformationPreference` | States how messages that are written out to the console using `Write-Information` are handled.
+
+By default such messages are hidden, this is changed to `Continue` so that they are displayed.
+| Continue
+| `ErrorActionPreference` | States how errors are handled.
+
+In this case any error that occurs will be displayed to the console. | Stop
+| `PSNativeCommandErrorActionPreference` | Allows command line application errors to be treated more like PowerShell errors.
+
+This is available in PowerShell 7.3 an above.
+
+https://matthorgan.xyz/blog/powershell-handling-native-applications/ | $true
+|===
+
 === Specs
 
 **Platforms**: `linux/amd64`, `linux/arm64`

@@ -42,7 +42,7 @@ In addition to the above binaries and Ruby Gems, the image has been populated wi
 ----
 | 
 ----
-# include::glob:*.adoc[]
+include::glob:*.adoc[]
 ----
 
 |====

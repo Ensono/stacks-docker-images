@@ -9,6 +9,7 @@ FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
 # Set the versions for the applications to install
 ARG ARM_TTK_VERSION="20231122"
 ARG AZURE_AZ_MODULE_VERSON=12.0.0
+ARG ENVSUBST_VERSION="v1.4.2"
 ARG GHCLI_VERSION="2.40.1"
 ARG HELM_VERSION=3.12.0
 ARG JQ_VERSION=1.7.1
