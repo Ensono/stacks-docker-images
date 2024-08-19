@@ -179,12 +179,15 @@ $splat = @{
     OutFile = "/usr/local/bin/yq"
 }
 
+Write-Information ("Downloading from: {0}" -f $splat.Uri)
 Invoke-RestMethod @splat
 
 ## Replace tag
 $yqCommand = '.contexts.powershell_docker.executable.args[] |= select(contains("eir-foundation-builder")) = sub(":.*", ":{0}")' -f $BuildNumber
+Write-Information ("Executing yq with '{0}'" -f $yqCommand)
 yq -i $yqCommand build/taskctl/contexts.yaml
 
 ## Replace registry
 $yqCommand = '.contexts.powershell_docker.executable.args[] |= select(contains("ensonostackseuweirdfmu.azurecr.io")) = sub("ensonostackseuweirdfmu.azurecr.io", "{0}")' -f $DockerContainerRegistryName
+Write-Information ("Executing yq with '{0}'" -f $yqCommand)
 yq -i $yqCommand build/taskctl/contexts.yaml
