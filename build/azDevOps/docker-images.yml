@@ -279,11 +279,6 @@ stages:
             displayName: Build Image - amd64
             pool: $(build_pool_amd64)
             steps:
-              - task: DownloadPipelineArtifact@2
-                inputs:
-                  artifactName: markdown-docs
-                  targetPath: $(System.DefaultWorkingDirectory)/markdown
-
               - template: templates/configure_agent.yml
                 parameters:
                   TaskctlVersion: $(TaskctlVersion)
@@ -308,11 +303,6 @@ stages:
             displayName: Build Image - arm64
             pool: $(build_pool_arm64)
             steps:
-              - task: DownloadPipelineArtifact@2
-                inputs:
-                  artifactName: markdown-docs
-                  targetPath: $(System.DefaultWorkingDirectory)/markdown
-
               - template: templates/configure_agent.yml
                 parameters:
                   TaskctlVersion: $(TaskctlVersion)
@@ -339,6 +329,11 @@ stages:
               - BuildImage_amd64
               - BuildImage_arm64
             steps:
+              - task: DownloadPipelineArtifact@2
+                inputs:
+                  artifactName: markdown-docs
+                  targetPath: $(System.DefaultWorkingDirectory)/markdown
+
               - template: templates/configure_agent.yml
                 parameters:
                   TaskctlVersion: $(TaskctlVersion)
