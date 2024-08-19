@@ -27,7 +27,29 @@ param (
         Mandatory = $true
     )]
     # Version of DockerPushRM to install
-    $DockerPushRMVersion
+    $DockerPushRMVersion,
+
+    [string]
+    [Parameter(
+        Mandatory = $true
+    )]
+    # Version of yq to install
+    $YqVersion,
+
+    [string]
+    [Parameter(
+        Mandatory = $true
+    )]
+    # The Build Number of the current run
+    $BuildNumber,
+
+    [string]
+    [Parameter(
+        Mandatory = $true
+    )]
+    # The Registry for pushing images
+    $DockerContainerRegistryName
+
 )
 
 # Determine the architecture that is being used
@@ -129,7 +151,7 @@ $plugins = @{
     }
 }
 
-# - if not exists, download and install
+# Install plug-ins and set them up if needed
 foreach ($plugin in $plugins.GetEnumerator()) {
 
     if (!(Test-Path -Path $plugin.Value.outfile)) {
@@ -146,5 +168,23 @@ foreach ($plugin in $plugins.GetEnumerator()) {
     }
 
     # Ensure the plugin command is executable by root...
+    Write-Information ("Ensuring the file '{0}' is executable by root..." -f $plugin.Value.outfile)
     sudo chmod u+x $plugin.Value.outfile
 }
+
+# Install 'yq' and munge the 'powershell_docker' context in the 'contexts.yaml'
+# file with the build number...
+$splat = @{
+    Uri = "https://github.com/mikefarah/yq/releases/download/v{0}/yq_linux_{1}" -f $YqVersion, $bin_arch
+    OutFile = "/usr/local/bin/yq"
+}
+
+Invoke-RestMethod @splat
+
+## Replace tag
+$yqCommand = '.contexts.powershell_docker.executable.args[] |= select(contains("eir-foundation-builder")) = sub(":.*", ":{0}")' -f $BuildNumber
+yq -i $yqCommand build/taskctl/contexts.yaml
+
+## Replace registry
+$yqCommand = '.contexts.powershell_docker.executable.args[] |= select(contains("ensonostackseuweirdfmu.azurecr.io")) = sub("ensonostackseuweirdfmu.azurecr.io", "{0}")' -f $DockerContainerRegistryName
+yq -i $yqCommand build/taskctl/contexts.yaml

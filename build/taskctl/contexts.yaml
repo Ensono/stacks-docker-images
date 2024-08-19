@@ -1,4 +1,3 @@
-# independent-runner
 contexts:
   powershell_docker:
     executable:
