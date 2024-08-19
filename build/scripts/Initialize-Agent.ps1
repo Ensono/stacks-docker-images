@@ -182,6 +182,8 @@ $splat = @{
 Write-Information ("Downloading from: {0}" -f $splat.Uri)
 Invoke-RestMethod @splat
 
+chmod u+x /usr/local/bin/yq
+
 ## Replace tag
 $yqCommand = '.contexts.powershell_docker.executable.args[] |= select(contains("eir-foundation-builder")) = sub(":.*", ":{0}")' -f $BuildNumber
 Write-Information ("Executing yq with '{0}'" -f $yqCommand)
