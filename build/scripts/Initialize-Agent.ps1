@@ -145,6 +145,6 @@ foreach ($plugin in $plugins.GetEnumerator()) {
         Invoke-RestMethod @splat
     }
 
-    # Ensure the `pushrm` command is executable by root...
+    # Ensure the plugin command is executable by root...
     sudo chmod u+x $plugin.Value.outfile
 }
