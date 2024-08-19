@@ -20,6 +20,6 @@ The image contains two version of .NET Core:
 | Type | Name | Version | URL
 | Binary | .NET | 6.0.300 | https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/sdk-6.0.300-linux-x64-binaries
 | Binary | .NET | 8.0.100 | https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/sdk-8.0.100-linux-x64-binaries
-| Binary | SonarScanner | 5.14 | 
-| Binary | ReportGenerator | 5.1.26 | 
+| Binary | SonarScanner | 5.14 |
+| Binary | ReportGenerator | 5.1.26 |
 |====

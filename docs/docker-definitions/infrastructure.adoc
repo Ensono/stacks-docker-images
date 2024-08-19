@@ -14,7 +14,7 @@ It is based on the Ensono Stacks Foundation Azure CLI so that the `az` command i
 
 [cols="1,2,1,2",options=header]
 |====
-| Type | Name | Version | URL 
+| Type | Name | Version | URL
 | Binary | Kubectl | |
 | Binary | Helm | |
 | Binary | Terraform | |
@@ -23,7 +23,7 @@ It is based on the Ensono Stacks Foundation Azure CLI so that the `az` command i
 | Binary | Kustomize | |
 | Bundle | AWS CLI | 2.15.8 | https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.15.8.zip
 | PS Module | PowerShell YAML | |
-| PS Module | Pester | | 
+| PS Module | Pester | |
 | PS Module | PSCloudShell | |
 | PS Module | PSScriptAnalyzer | |
 | Python | YamlLint | 1.35.1 | https://pypi.org/project/yamllint/

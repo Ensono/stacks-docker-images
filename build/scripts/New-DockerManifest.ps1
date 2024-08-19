@@ -45,7 +45,10 @@ param (
 
     [switch]
     # State if manifest should be tagged as Latest
-    $Latest
+    $Latest,
+
+    [string]
+    $DocsPath
 )
 
 # Define default values for parameters not set
@@ -73,4 +76,13 @@ if ($Latest.IsPresent) {
     Invoke-External -Command "docker manifest create `"${registry}/${Name}:latest`" $($images -join " ")" -Dryrun:$dryrun
 
     Invoke-External -Command "docker manifest push `"${registry}/${Name}:latest`"" -Dryrun:$dryrun
+}
+
+# Push the readme if the registry is docker.io
+if ($registry -ieq "docker.io") {
+    $path_parts = $DocsPath -split "/"
+    $readme_path = [IO.Path]::Combine("markdown", [IO.Path]::Combine([IO.Path]::Combine($path_parts), "README.md"))
+
+    Write-Host ("Pushing README file: {0}" -f $readme_path)
+    Invoke-External -Command "docker pushrm --provider dockerhub ${registry}/${name} --file ${readme_path}" -Dryrun:$dryrun
 }
