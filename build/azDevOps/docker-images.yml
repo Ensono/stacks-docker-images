@@ -200,6 +200,7 @@ stages:
 
   - stage: Documentation
     displayName: Documentation
+    dependsOn:
     jobs:
       - job: GenerateDocumentation
         steps:
@@ -255,7 +256,7 @@ stages:
               - task: DownloadPipelineArtifact@2
                 inputs:
                   artifactName: markdown-docs
-                  targetPath: $(System.DefaultWorkingDirectory)
+                  targetPath: $(System.DefaultWorkingDirectory)/markdown
 
               - template: templates/configure_agent.yml
                 parameters:
@@ -281,7 +282,7 @@ stages:
               - task: DownloadPipelineArtifact@2
                 inputs:
                   artifactName: markdown-docs
-                  targetPath: $(System.DefaultWorkingDirectory)
+                  targetPath: $(System.DefaultWorkingDirectory)/markdown
 
               - template: templates/configure_agent.yml
                 parameters:
