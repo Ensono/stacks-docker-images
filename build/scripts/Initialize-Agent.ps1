@@ -193,3 +193,5 @@ yq -i $yqCommand build/taskctl/contexts.yaml
 $yqCommand = '.contexts.powershell_docker.executable.args[] |= select(contains("ensonostackseuweirdfmu.azurecr.io")) = sub("ensonostackseuweirdfmu.azurecr.io", "{0}")' -f $DockerContainerRegistryName
 Write-Information ("Executing yq with '{0}'" -f $yqCommand)
 yq -i $yqCommand build/taskctl/contexts.yaml
+
+Get-Content -Raw build/taskctl/contexts.yaml
