@@ -87,6 +87,7 @@ if ($registry -ieq "docker.io") {
 
     # get the path to the readme file from the args that have been set
     $status = $arguments -match '-f\s\./([a-zA-Z/\.-]*)/Dockerfile\.ubuntu'
+    $status = $status -replace "src/definitions", "markdown"
     if ($status) {
 
         $path_parts = $Matches[1] -split "/"
