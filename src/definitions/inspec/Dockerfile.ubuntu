@@ -10,8 +10,9 @@ FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
 # Set the version of Inspec to install
 ARG INSPEC_VERSION=5.22.50
 
-# Copy additional tools
-COPY --from=tools /usr/local/terraform /usr/local/terraform
+# Copy the Tenv tool and the install Terraform versions
+COPY --from=tools /usr/local/tenv /usr/local/tenv
+COPY --from=tools /root/.tenv /root/.tenv
 
 COPY --from=tools /usr/local/share/powershell/Modules/powershell-yaml /usr/local/share/powershell/Modules/powershell-yaml
 
