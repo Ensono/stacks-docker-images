@@ -17,6 +17,7 @@ The image is built from the Ensono Java image, as there are components that are 
 | Type | Name | Version | URL 
 | Binary | Pandoc | 3.1.12.2 | https://github.com/jgm/pandoc/releases/download/3.1.12.2/pandoc-3.1.12.2-linux-amd64.tar.gz
 | Binary | Hugo | 0.123.7 | https://github.com/gohugoio/hugo/releases/download/v0.123.7/hugo_extended_0.123.7_linux-amd64.tar.gz
+| Node | Mermaid | Latest | Installed using `npm`
 | Gem | asciidoctor | 2.0.21 | https://rubygems.org/gems/asciidoctor
 | Gem | asciidoctor-pdf | 2.3.13 | https://rubygems.org/gems/asciidoctor-pdf
 | Gem | asciidoctor-confluence | 0.0.2 | https://rubygems.org/gems/asciidoctor-confluence
