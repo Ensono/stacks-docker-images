@@ -42,7 +42,7 @@ chmod +x /usr/local/helm/bin/helm
 # Used to install and different versions of Terraform
 echo "Installing: TEnv"
 mkdir -p /usr/local/tenv/bin
-curl --fail-with-body -L https://github.com/tofuutils/tenv/releases/download/v${TENV_VERSION}/tenv_v${TENV_VERSION}_Linux_${BIN_ARCH}.tar.gz -o /tmp/tenv.tar.gz
+curl --fail-with-body -L https://github.com/tofuutils/tenv/releases/download/v${TENV_VERSION}/tenv_v${TENV_VERSION}_Linux_${NONCONFORM_ARCH}.tar.gz -o /tmp/tenv.tar.gz
 tar zxf /tmp/tenv.tar.gz -C /usr/local/tenv/bin
 export PATH="${PATH}:/usr/local/tenv/bin"
 # ---------------------------------------------------------------------------
