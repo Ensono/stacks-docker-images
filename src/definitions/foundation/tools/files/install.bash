@@ -14,6 +14,13 @@ ln -s /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
 # Get the architecture of the container
 . /usr/local/bin/platform.bash
 
+# Update the arch to fit in with the pattern for binaries that are do not fit the pattern
+if [ "${UNAME_ARCH}" == "aarch64" ]; then
+    NONCONFORM_ARCH="arm64"
+else
+    NONCONFORM_ARCH="${UNAME_ARCH}"
+fi
+
 # Kubectl -------------------------------------------------------------------
 echo "Installing: Kubectl"
 mkdir -p /usr/local/kubectl/bin
@@ -31,33 +38,29 @@ mv linux-${BIN_ARCH}/helm /usr/local/helm/bin
 chmod +x /usr/local/helm/bin/helm
 # ---------------------------------------------------------------------------
 
+# TEnv ----------------------------------------------------------------------
+# Used to install and different versions of Terraform
+echo "Installing: TEnv"
+mkdir -p /usr/local/tenv/bin
+curl --fail-with-body -L https://github.com/tofuutils/tenv/releases/download/v${TENV_VERSION}/tenv_V${TENV_VERSION}_Linux_${UNAME_ARCH}.tar.gz -o /tmp/tenv.tar.gz
+tar zxf /tmp/tenv.tar.gz -C /usr/local/tenv/bin
+export PATH="${PATH}:/usr/local/tenv/bin"
+# ---------------------------------------------------------------------------
+
 # Terraform -----------------------------------------------------------------
-# This needs to install the specified version of Terraform
+# Install the required versions of Terraform using the TEnv tool
 IFS=","
 for TFVERSION in ${TERRAFORM_VERSION}; do
     echo "Installing: Terraform [${TFVERSION})]"
-    mkdir -p /usr/local/terraform/${TFVERSION}/bin
-    curl --fail-with-body -L "https://releases.hashicorp.com/terraform/${TFVERSION}/terraform_${TFVERSION}_linux_${BIN_ARCH}.zip" -o /tmp/terraform.zip
-    unzip /tmp/terraform.zip -d /usr/local/terraform/${TFVERSION}/bin
-    rm /tmp/terraform.zip
-    chmod +x /usr/local/terraform/${TFVERSION}/bin/terraform
+    
+    tenv tf install ${TFVERSION}
 done
 
-# Create a symlink to the first version of the listed binaries as the default
-if [ ! -d "/usr/local/terraform/${DEFAULT_TF_VERSION}/bin" ]; then
-    echo "ERROR: Can't find Terraform version '${DEFAULT_TF_VERSION}'... Double check the Dockerfile arg 'DEFAULT_TF_VERSION'" >&2
-    exit 1
-fi
-
-ln -s /usr/local/terraform/${DEFAULT_TF_VERSION}/bin /usr/local/terraform/bin
+# Set the version of Terraform to use
+echo "\tSetting default Terraform version to ${DEFAULT_TF_VERSION}"
+tenv tf use ${DEFAULT_TF_VERSION}
 # ---------------------------------------------------------------------------
 
-# Update the arch to fit in with the pattern for the terrascan binary
-if [ "${UNAME_ARCH}" == "aarch64" ]; then
-    NONCONFORM_ARCH="arm64"
-else
-    NONCONFORM_ARCH="${UNAME_ARCH}"
-fi
 
 # Terrascan -----------------------------------------------------------------
 echo "Installing: TerraScan"

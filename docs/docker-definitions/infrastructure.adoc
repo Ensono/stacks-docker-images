@@ -15,12 +15,15 @@ It is based on the Ensono Stacks Foundation Azure CLI so that the `az` command i
 [cols="1,2,1,2",options=header]
 |====
 | Type | Name | Version | URL
-| Binary | Kubectl | |
-| Binary | Helm | |
-| Binary | Terraform | |
-| Binary | GitHub CLI | |
-| Binary | Kluctrl | |
-| Binary | Kustomize | |
+| Binary | Kubectl 2+| Copied from https://hub.docker.com/r/ensono/eir-foundation-tools[ensono/eir-foundation-tools]
+| Binary | Helm 2+| Copied from https://hub.docker.com/r/ensono/eir-foundation-tools[ensono/eir-foundation-tools]
+| Binary | TEnv 2+| Copied from https://hub.docker.com/r/ensono/eir-foundation-tools[ensono/eir-foundation-tools]
+| Binary | Terraform 2+| Copied from https://hub.docker.com/r/ensono/eir-foundation-tools[ensono/eir-foundation-tools]
+
+Used to install multiple versions of Terraform
+| Binary | GitHub CLI 2+| Copied from https://hub.docker.com/r/ensono/eir-foundation-tools[ensono/eir-foundation-tools]
+| Binary | Kluctl 2+| Copied from https://hub.docker.com/r/ensono/eir-foundation-tools[ensono/eir-foundation-tools]
+| Binary | Kustomize 2+| Copied from https://hub.docker.com/r/ensono/eir-foundation-tools[ensono/eir-foundation-tools]
 | Bundle | AWS CLI | 2.15.8 | https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.15.8.zip
 | PS Module | PowerShell YAML | |
 | PS Module | Pester | |
@@ -31,3 +34,13 @@ It is based on the Ensono Stacks Foundation Azure CLI so that the `az` command i
 |====
 
 NOTE: For versions of the tools that are copied from the tools image please refer to the https://hub.docker.com/r/ensono/eir-foundation-tools image.
+
+TEnv has been installed in the tools image and then used to install multiple versions of Terraform. The tool and all the versions have been copied from the image.
+
+If additional versions are required on a temporary basis then the following command can be run:
+
+[source,powershell]
+----
+tenv tf install 1.10
+tenv tf use 1.10
+----
