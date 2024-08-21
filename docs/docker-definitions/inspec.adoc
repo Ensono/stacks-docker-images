@@ -14,6 +14,6 @@ This is bundled as a separate image that can be called to run infrastructure tes
 
 [cols="1,2,1,2",options=header]
 |====
-| Type | Name | Version | URL 
+| Type | Name | Version | URL
 | Ruby Gem | Inspec | 5.22.40 | https://github.com/inspec/inspec
 |====

@@ -8,6 +8,8 @@ variables:
     value: 1.1.19
   - name: DockerPushRMVersion
     value: 1.9.0
+  - name: YqVersion
+    value: 4.44.3
 
   # DEFAULT IMAGE RUNNER
   - name: build_pool_amd64

@@ -20,16 +20,20 @@ parameters:
       - stage: FoundationPowerShell
         displayName: "[CONTAINER] Foundation - PowerShell"
         dependsOn:
+          - Documentation
           - Infrastructure
         taskName: build:foundation:powershell
         imageName: ensono/eir-foundation-powershell
+        docsPath: foundation/powershell
 
       - stage: FoundationBuilder
         displayName: "[CONTAINER] Foundation - Builder"
         dependsOn:
+          - Documentation
           - FoundationPowerShell
         taskName: build:foundation:builder
         imageName: ensono/eir-foundation-builder
+        docsPath: foundation/builder
 
       - stage: FoundationAzureCli
         displayName: "[CONTAINER] Foundation - Azure CLI"
@@ -38,6 +42,7 @@ parameters:
           - FoundationPowerShell
         taskName: build:foundation:azure-cli
         imageName: ensono/eir-foundation-azure-cli
+        docsPath: foundation/azure-cli
 
       - stage: FoundationTools
         displayName: "[CONTAINER] Foundation - Tools"
@@ -46,6 +51,7 @@ parameters:
           - FoundationPowerShell
         taskName: build:foundation:tools
         imageName: ensono/eir-foundation-tools
+        docsPath: foundation/tools
 
       - stage: Infra
         displayName: "[CONTAINER] Infrastructure"
@@ -54,6 +60,7 @@ parameters:
           - FoundationAzureCli
         taskName: build:infrastructure
         imageName: ensono/eir-infrastructure
+        docsPath: infrastructure
 
       - stage: Java
         displayName: "[CONTAINER] Java"
@@ -61,6 +68,7 @@ parameters:
           - FoundationTools
         taskName: build:java
         imageName: ensono/eir-java
+        docsPath: java
 
       - stage: DotNet
         displayName: "[CONTAINER] .NET"
@@ -68,6 +76,7 @@ parameters:
           - Java
         taskName: build:dotnet
         imageName: ensono/eir-dotnet
+        docsPath: dotnet
 
       - stage: Go
         displayName: "[CONTAINER] Go"
@@ -76,6 +85,7 @@ parameters:
           - FoundationPowerShell
         taskName: build:golang
         imageName: ensono/eir-golang
+        docsPath: golang
 
       - stage: Inspec
         displayName: "[CONTAINER] Inspec"
@@ -85,6 +95,7 @@ parameters:
           - FoundationTools
         taskName: build:inspec
         imageName: ensono/eir-inspec
+        docsPath: inspec
 
       - stage: Kong
         displayName: "[CONTAINER] Kong"
@@ -92,6 +103,7 @@ parameters:
           - DotNet
         taskName: build:kong
         imageName: ensono/eir-kong
+        docsPath: kong
 
       - stage: NodeJS
         displayName: "[CONTAINER] NodeJS"
@@ -100,6 +112,7 @@ parameters:
           - FoundationPowerShell
         taskName: build:node
         imageName: ensono/eir-nodejs
+        docsPath: node
 
       - stage: AsciiDoctor
         displayName: "[CONTAINER] AsciiDoctor"
@@ -108,6 +121,7 @@ parameters:
           - NodeJS
         taskName: build:asciidoctor
         imageName: ensono/eir-asciidoctor
+        docsPath: asciidoctor
 
       - stage: AzureData
         displayName: "[CONTAINER] Azure Data"
@@ -115,6 +129,7 @@ parameters:
           - FoundationAzureCli
         taskName: build:data
         imageName: ensono/eir-azure-data
+        docsPath: data
 
 pr:
   - main
@@ -146,6 +161,14 @@ stages:
               TaskctlVersion: $(TaskctlVersion)
               EnsonoBuildVersion: $(EnsonoBuildVersion)
               DockerPushRMVersion: $(DockerPushRMVersion)
+              YqVersion: $(YqVersion)
+              # NOTE: These won't be set properly for this job...
+              # $(BuildNumber) is set below from `taskctl setup`
+              # $(DockerContainerRegistryName) is from a variable group not
+              # defined here
+              # The build doesn't currently use these as the TF runs on the host
+              BuildNumber: "notused"
+              DockerContainerRegistryName: "notused"
 
           - task: Bash@3
             displayName: Setup
@@ -196,8 +219,9 @@ stages:
                   script: |
                     exit
 
-  - stage: documentation
+  - stage: Documentation
     displayName: Documentation
+    dependsOn:
     jobs:
       - job: GenerateDocumentation
         steps:
@@ -206,6 +230,11 @@ stages:
               TaskctlVersion: $(TaskctlVersion)
               EnsonoBuildVersion: $(EnsonoBuildVersion)
               DockerPushRMVersion: $(DockerPushRMVersion)
+              YqVersion: $(YqVersion)
+              BuildNumber: $(Build.BuildNumber)
+              # NOTE: This variable isn't imported into this job, we don't use
+              # it for this job anyway...
+              DockerContainerRegistryName: "notused"
 
           # Generate the documentation
           - task: Bash@3
@@ -223,11 +252,18 @@ stages:
               artifactName: docs
 
           - task: Bash@3
-            displayName: Create image Overview
+            displayName: Create Image Overview
             inputs:
               targetType: inline
               script: |
                 taskctl generate:docker:overview
+
+          # Upload the overview documentation
+          - task: PublishBuildArtifacts@1
+            displayName: Publish Image Overview Documentation
+            inputs:
+              pathToPublish: $(Build.SourcesDirectory)/markdown
+              artifactName: markdown-docs
 
   - ${{ each stage in parameters.stages }}:
       - stage: ${{ stage.stage }}
@@ -248,6 +284,9 @@ stages:
                   TaskctlVersion: $(TaskctlVersion)
                   EnsonoBuildVersion: $(EnsonoBuildVersion)
                   DockerPushRMVersion: $(DockerPushRMVersion)
+                  YqVersion: $(YqVersion)
+                  BuildNumber: $(Build.BuildNumber)
+                  DockerContainerRegistryName: $(DOCKER_CONTAINER_REGISTRY_NAME)
 
               - task: Bash@3
                 displayName: Build Image
@@ -269,6 +308,9 @@ stages:
                   TaskctlVersion: $(TaskctlVersion)
                   EnsonoBuildVersion: $(EnsonoBuildVersion)
                   DockerPushRMVersion: $(DockerPushRMVersion)
+                  YqVersion: $(YqVersion)
+                  BuildNumber: $(Build.BuildNumber)
+                  DockerContainerRegistryName: $(DOCKER_CONTAINER_REGISTRY_NAME)
 
               - task: Bash@3
                 displayName: Build Image
@@ -287,11 +329,19 @@ stages:
               - BuildImage_amd64
               - BuildImage_arm64
             steps:
+              - task: DownloadPipelineArtifact@2
+                inputs:
+                  artifactName: markdown-docs
+                  targetPath: $(System.DefaultWorkingDirectory)/markdown
+
               - template: templates/configure_agent.yml
                 parameters:
                   TaskctlVersion: $(TaskctlVersion)
                   EnsonoBuildVersion: $(EnsonoBuildVersion)
                   DockerPushRMVersion: $(DockerPushRMVersion)
+                  YqVersion: $(YqVersion)
+                  BuildNumber: $(Build.BuildNumber)
+                  DockerContainerRegistryName: $(DOCKER_CONTAINER_REGISTRY_NAME)
 
               - task: Bash@3
                 displayName: Create Multi-Arch Manifest
@@ -302,3 +352,4 @@ stages:
                 env:
                   DOCKER_IMAGE_NAME: ${{ stage.imageName }}
                   DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+                  DOCS_PATH: ${{ stage.docsPath }}

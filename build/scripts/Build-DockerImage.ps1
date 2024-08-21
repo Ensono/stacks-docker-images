@@ -81,18 +81,3 @@ Invoke-External -Command "docker build $($buildArgs -join " ")" -Dryrun:$dryrun
 
 Write-Host ("Push docker image: {0}" -f $image_name)
 Invoke-External -Command "docker push ${image_name}" -Dryrun:$dryrun
-
-# Push the readme if the registry is docker.io
-if ($registry -ieq "docker.io") {
-
-    # get the path to the readme file from the args that have been set
-    $status = $arguments -match '-f\s\./([a-zA-Z/\.-]*)/Dockerfile\.ubuntu'
-    if ($status) {
-
-        $path_parts = $Matches[1] -split "/"
-        $readme_path = [IO.Path]::Combine([IO.Path]::Combine($path_parts), "README.md")
-
-        Write-Host ("Pushing README file: {0}" -f $readme_path)
-        Invoke-External -Command "docker pushrm --provider dockerhub ${registry}/${name} --file ${readme_path}" -Dryrun:$dryrun
-    }
-}

@@ -1,3 +1,14 @@
+:version_envsubst: 1.4.2
+:version_ghcli: 2.40.1
+:version_helm: 3.15.4
+:version_jq: 1.7.1
+:version_kluctl: 2.22.1
+:version_kubectl: 1.23.14
+:version_kustomize: 5.2.1
+:version_tenv: 3.1.0
+:version_terraform_15: 1.5.7
+:version_terraform_19: 1.9.3
+
 == EIR Foundation Tools
 
 The image is used as a library from which software tools can be copied into other images as required. The image is built from the `enonso/eir-foundation-powershell` image.
@@ -12,25 +23,30 @@ All applications are installed by copying and then running the `files/install.sh
 
 ==== Software
 
-[cols="1,2,1,2",options=header]
+[cols="1,2,1,2,2",options=header]
 |====
-| Type | Name | Version | URL
-| Binary | Docker | 24.0.7 | https://download.docker.com/linux/static/stable/x86_64/docker-24.0.7.tgz
-| Binary | Docker Buildx | 0.12.0 | https://github.com/docker/buildx/releases/download/v0.12.0/buildx-v0.12.0.linux-amd64
-| Binary | GitHub CLI | 2.40.1 | https://github.com/cli/cli/releases/download/v2.40.1/gh_2.40.1_linux_amd64.tar.gz
-| Binary | Helm | 3.12.03 | https://get.helm.sh/helm-v3.12.03-linux-amd64.tar.gz
-| Binary | JQ | 1.7.1 | https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-amd64
-| Binary | Kluctl | 2.22.1 | https://github.com/kluctl/kluctl/releases/download/2.22.1/kluctl_2.22.1_linux_amd64.tar.gz
-| Binary | Kubectl | 1.23.14 | https://dl.k8s.io/release/v1.23.14/bin/linux/amd64/kubectl
-| Binary | Kustomize | 5.2.1 | https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v5.2.1/kustomize_v5.2.1_linux_amd64.tar.gz
-| Binary | Terraform | 1.5.7
-1.9.3 | https://releases.hashicorp.com/terraform/1.5.7/terraform_1.5.7_linux_x86_64.zip
-https://releases.hashicorp.com/terraform/1.8.4/terraform_1.9.3_linux_x86_64.zip
-| PS Module | Az | 10.0.0 | -
-| PS Module | Arm-ttk | 20231122 | -
-| PS Module | Pester | 5.4.1 | -
-| PS Module | PowerShell-Yaml |
-| PS Module | PSScriptAnalyzer | 1.22.0 | -
+| Type | Name | Version | URL (X64) | URL (ARM64)
+| Binary | Docker | - 2+| Copied from https://hub.docker.com/r/ensono/eir-foundation-builder[ensono/eir-foundation-builder image]
+| Binary | Docker Buildx | - 2+| Copied from https://hub.docker.com/r/ensono/eir-foundation-builder[ensono/eir-foundation-builder image]
+| Binary | Envsubst | {version_envsubst} | https://github.com/a8m/envsubst/releases/download/v{version_envsubst}/envsubst-Linux-x86_64 | https://github.com/a8m/envsubst/releases/download/v{version_envsubst}/envsubst-Linux-arm64
+| Binary | GitHub CLI | {version_ghcli} | https://github.com/cli/cli/releases/download/v{version_ghcli}/gh_{version_ghcli}_linux_amd64.tar.gz | https://github.com/cli/cli/releases/download/v{version_ghcli}/gh_{version_ghcli}_linux_arm64.tar.gz
+| Binary | Helm | {version_helm} | https://get.helm.sh/helm-v{version_helm}-linux-amd64.tar.gz | https://get.helm.sh/helm-v{version_helm}-linux-arm64.tar.gz
+| Binary | JQ | {version_jq} | https://github.com/jqlang/jq/releases/download/jq-{version_jq}/jq-linux-amd64 | https://github.com/jqlang/jq/releases/download/jq-{version_jq}/jq-linux-arm64
+| Binary | Kluctl | {version_kluctl} | https://github.com/kluctl/kluctl/releases/download/{version_kluctl}/kluctl_{version_kluctl}_linux_amd64.tar.gz | https://github.com/kluctl/kluctl/releases/download/{version_kluctl}/kluctl_{version_kluctl}_linux_amd64.tar.gz
+| Binary | Kubectl | {version_kubectl} | https://dl.k8s.io/release/v{version_kubectl}/bin/linux/amd64/kubectl | https://dl.k8s.io/release/v{version_kubectl}/bin/linux/arm64/kubectl
+| Binary | Kustomize | {version_kustomize} | https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v{version_kustomize}/kustomize_v{version_kustomize}_linux_amd64.tar.gz | https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v{version_kustomize}/kustomize_v{version_kustomize}_linux_arm64.tar.gz
+| Binary | TEnv | {version_tenv} | https://github.com/tofuutils/tenv/releases/download/v{version_tenv}/tenv_v{version_tenv}_Linux_x86_64.tar.gz | https://github.com/tofuutils/tenv/releases/download/v{version_tenv}/tenv_v{version_tenv}_Linux_arm64.tar.gz
+| Binary | Terraform | {version_terraform_15}
+{version_terraform_19} |
+https://releases.hashicorp.com/terraform/{version_terraform_15}/terraform_{version_terraform_15}_linux_x86_64.zip 
+https://releases.hashicorp.com/terraform/{version_terraform_19}/terraform_{version_terraform_19}_linux_x86_64.zip |
+https://releases.hashicorp.com/terraform/{version_terraform_15}/terraform_{version_terraform_15}_linux_arm64.zip 
+https://releases.hashicorp.com/terraform/{version_terraform_19}/terraform_{version_terraform_19}_linux_arm64.zip 
+| PS Module | Az | 10.0.0 2+| -
+| PS Module | Arm-ttk | 20231122 2+| -
+| PS Module | Pester | 5.4.1 2+| -
+| PS Module | PowerShell-Yaml | 2+| - 
+| PS Module | PSScriptAnalyzer 2+| 1.22.0 2+| -
 |====
 
 NOTE: The table above only shows the download links for X64 machines, not ARM64 packages.
