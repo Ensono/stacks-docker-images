@@ -16,4 +16,4 @@ RUN chmod +x /usr/local/bin/unittests.bash && \
     bash /usr/local/bin/install.bash
 
 # Update the path to include the go binary
-ENV PATH="$PATH:/usr/local/go/bin"
+ENV PATH="$PATH:/usr/local/go/bin:/root/go/bin"
