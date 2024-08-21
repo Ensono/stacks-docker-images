@@ -2,16 +2,18 @@ ARG REGISTRY=docker.io
 ARG IMAGE_TAG=0.0.1-workstation
 ARG ORG=ensono
 
-FROM ${REGISTRY}/${ORG}/eir-foundation-tools AS tools
+FROM ${REGISTRY}/${ORG}/eir-foundation-tools:${IMAGE_TAG} AS tools
 
-FROM ${REGISTRY}/${ORG}/eir-foundation-azure-cli
+FROM ${REGISTRY}/${ORG}/eir-foundation-azure-cli:${IMAGE_TAG}
+
+# Copy JQ from the tools library
+COPY --from=tools /usr/local/jq /usr/local/jq
 
 # Run the install script to get the additional commands
 COPY files/install.bash /tmp/install.bash
 COPY files/requirements.txt /tmp/requirements.txt
 
-RUN chmod +x /tmp/install.bash && /tmp/install.bash 
+RUN chmod +x /tmp/install.bash && /tmp/install.bash
 
-# Copy JQ from the tools library
-COPY --from=tools /usr/local/jq /usr/local/jq
-
+# Set the PATH so that the tools can be accessed
+ENV PATH="${PATH}:/usr/local/jq/bin"

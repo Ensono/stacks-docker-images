@@ -8,7 +8,7 @@ param (
 
     [string]
     # Output root
-    $output = "/app/src/definitions",
+    $output = "/app/markdown",
 
     [string]
     # Temporary directory
@@ -24,9 +24,11 @@ $base = $base | Resolve-Path
 
 # Iterate around the overviews files that have been found
 foreach ($overview in $overviews) {
-
-    # set the definition name
     $definition_name = [IO.Path]::GetFileNameWithoutExtension($overview)
+
+    $new_directory = [IO.Path]::GetDirectoryName($overview.FullName) -replace $base, $output
+
+    New-Item -ItemType Directory -Path ("{0}/{1}" -f $new_directory, $definition_name)
 
     # Determine the paths that are needed for the conversions
     $db_path = "{0}.xml" -f [IO.Path]::Combine($temp, $definition_name)

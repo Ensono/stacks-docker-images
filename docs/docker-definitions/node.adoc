@@ -26,5 +26,5 @@ NOTE: We do not use the PS-NVM to install NodeJS, that task is performed by the 
 | Javascript | NVM | 0.39.7 2+| https://github.com/nvm-sh/nvm
 | PowerShell | PS-NVM | 2.5.4 2+| https://github.com/aaronpowell/ps-nvm
 | Binary | NodeJS | 18.20.2 | https://nodejs.org/dist/v18.20.2/node-v18.20.2-linux-x64.tar.xz | https://nodejs.org/dist/v18.20.2/node-v18.20.2-linux-arm64.tar.xz
-| Binary | NodeJS | 20.12.2 | https://nodejs.org/dist/v20.12.2/node-v20.12.2-linux-x64.tar.xz | https://nodejs.org/dist/v20.12.2/node-v20.12.2-linux-arm64.tar.xz
+| Binary | NodeJS | 20.16.0 | https://nodejs.org/dist/v20.16.0/node-v20.16.0-linux-x64.tar.xz | https://nodejs.org/dist/v20.16.0/node-v20.16.0-linux-arm64.tar.xz
 |====
