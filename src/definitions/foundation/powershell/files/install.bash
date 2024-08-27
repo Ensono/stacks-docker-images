@@ -9,6 +9,9 @@ set -euxo pipefail
 apt-get update
 apt-get install -y libicu70 lsb-release curl git
 
+# Containers often need this, such as signing Java Packages for publishing
+apt-get install -y gpg
+
 # Get the ARCH of the enviornment
 . /usr/local/bin/platform.bash
 
