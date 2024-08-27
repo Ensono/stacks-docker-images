@@ -14,6 +14,7 @@ FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
 ARG JAVA_MAJOR
 
 ARG MAVEN_VERSION=3.8.8
+ARG SONAR_SCANNER_VERSION=6.1.0.4477
 
 # Copy Java from the java image into this image
 COPY --from=java /usr/lib/jvm/zulu${JAVA_MAJOR} /usr/local/java/
