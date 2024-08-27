@@ -15,21 +15,27 @@ Finally it updates the profile script to set the default version of Node to be u
 param (
     [string]
     # List of node versions that are installed
-    $Versions = $env:NODE_VERSIONS
+    $Versions = $env:NODE_VERSIONS,
+
+    [string]
+    $NvmRoot = $env:NVM_ROOT,
+
+    [string]
+    $PwshNvmVersion = $env:PWSH_NVM_VERSION
 )
 
 # Split the Versions and get the default versions
 $default_version = $Versions.Split(",")[0]
 
 # Install the PSNvm module
-Install-Module -Name nvm -Force -AllowClobber
+Install-Module -Name nvm -Force -AllowClobber -RequiredVersion $PwshNvmVersion -Scope AllUsers
 
 # Set the location of the node versions that are installed
 # This is done using a file because the Set-NodeInstallPath from the module automatially
 # appends `.nvm` to the specified path.
-$settings = '{"InstallPath": "/root/.nvm/versions/node"}'
+$settings = "{`"InstallPath`": `"$NvmRoot/versions/node`"}"
 
-Set-Content -Path /root/.local/share/powershell/Modules/nvm/2.5.4/settings.json -Value $settings
+Set-Content -Path /usr/local/share/powershell/Modules/nvm/${PwshNvmVersion}/settings.json -Value $settings
 
 # Set the default version of node to be used
 # This is added to the end of the profile
