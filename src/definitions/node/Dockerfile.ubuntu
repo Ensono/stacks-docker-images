@@ -5,8 +5,11 @@ ARG ORG=ensono
 FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
 
 # Specify the versions of software to install
-ARG NVM_VERSION=0.39.7
-ARG NODE_VERSIONS="v20.16.0,v18.20.2"
+ARG NVM_VERSION=0.40.1
+ARG PWSH_NVM_VERSION=2.5.4
+ARG NODE_VERSIONS="v20.17.0,v18.20.4"
+
+ENV NVM_ROOT="/usr/local/nvm"
 
 # Copy the necessary files to the image
 COPY files/install.bash /tmp/install.bash
