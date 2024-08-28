@@ -21,11 +21,11 @@ param (
     $NvmRoot = $env:NVM_ROOT,
 
     [string]
-    $PwshNvmVersion = $env:PWSH_NVM_VERSION
-)
+    $PwshNvmVersion = $env:PWSH_NVM_VERSION,
 
-# Split the Versions and get the default versions
-$default_version = $Versions.Split(",")[0]
+    [string]
+    $NvmDefaultVersion = $env:DEFAULT_NODE_VERSION
+)
 
 # Install the PSNvm module
 Install-Module -Name nvm -Force -AllowClobber -RequiredVersion $PwshNvmVersion -Scope AllUsers
@@ -44,7 +44,7 @@ $profile_path = "/opt/microsoft/powershell/7/Microsoft.PowerShell_profile.ps1"
 $nvm_settings = @"
 
 # Configure default node version
-Set-NodeVersion -Version $default_version
+Set-NodeVersion -Version $NvmDefaultVersion
 "@
 
 # Append the nvm_settings to the profile file, if not already present
