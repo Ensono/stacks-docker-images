@@ -126,6 +126,7 @@ parameters:
       - stage: AzureData
         displayName: "[CONTAINER] Azure Data"
         dependsOn:
+          - FoundationTools
           - FoundationAzureCli
         taskName: build:data
         imageName: ensono/eir-azure-data

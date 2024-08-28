@@ -52,7 +52,7 @@ export PATH="${PATH}:/usr/local/tenv/bin"
 IFS=","
 for TFVERSION in ${TERRAFORM_VERSION}; do
     echo "Installing: Terraform [${TFVERSION})]"
-    
+
     tenv tf install ${TFVERSION}
 done
 
