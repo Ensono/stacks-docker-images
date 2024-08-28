@@ -2,13 +2,16 @@
 
 set -euxo pipefail
 
+mkdir "${NVM_ROOT}"
+export NVM_DIR="${NVM_ROOT}"
+
 # Download and install the specified version of NVM
-curl --fail-with-body -L -o /tmp/nvm_install https://raw.githubusercontent.com/nvm-sh/nvm/v${NVM_VERSION}/install.sh
+curl --fail-with-body -L https://raw.githubusercontent.com/nvm-sh/nvm/v${NVM_VERSION}/install.sh -o /tmp/nvm_install
 chmod +x /tmp/nvm_install
 /tmp/nvm_install
+rm /tmp/nvm_install
 
 # Activate NVM
-export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
@@ -20,5 +23,7 @@ do
     nvm install $node_version
 done
 
-# Set the latest version of node as the default
-nvm alias default node
+chmod -R a+w "${NVM_ROOT}"
+
+# Set the default node version
+nvm alias default "${DEFAULT_NODE_VERSION}"

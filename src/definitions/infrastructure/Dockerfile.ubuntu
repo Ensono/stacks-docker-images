@@ -24,7 +24,7 @@ COPY --from=tools /usr/local/envsubst /usr/local/envsubst
 
 # Copy the Tenv tool and the install Terraform versions
 COPY --from=tools /usr/local/tenv /usr/local/tenv
-COPY --from=tools /root/.tenv /root/.tenv
+COPY --from=tools /root/.tenv /usr/local/tenv/.tenv
 
 # Copy all modules from the tools image
 COPY --from=tools /usr/local/share/powershell/Modules /usr/local/share/powershell/Modules
@@ -40,3 +40,4 @@ RUN chmod +x /usr/local/bin/install.bash && /usr/local/bin/install.bash
 
 # Set the PATH so that the tools can be accessed
 ENV PATH="${PATH}:/usr/local/kubectl/bin:/usr/local/helm/bin:/usr/local/terraform/bin:/usr/local/ghcli/bin:/usr/local/kluctl/bin:/usr/local/kustomize/bin:/usr/local/jq/bin:/usr/local/terrascan/bin:/usr/local/docker/bin:/usr/local/envsubst/bin:/usr/local/tenv/bin"
+ENV TENV_ROOT="/usr/local/tenv/.tenv"
