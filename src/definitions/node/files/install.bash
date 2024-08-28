@@ -25,5 +25,5 @@ done
 
 chmod -R a+w "${NVM_ROOT}"
 
-# Set the latest version of node as the default
-nvm alias default node
+# Set the default node version
+nvm alias default "${DEFAULT_NODE_VERSION}"
