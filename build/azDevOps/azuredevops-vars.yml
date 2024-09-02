@@ -47,3 +47,15 @@ variables:
   # Docker
   - name: DOCKER_IMAGE_TAG
     value: $(version_semver)
+
+  # GitHub Release
+  - name: VERSION_NUMBER
+    value: $(Build.BuildNumber)
+  - name: COMMIT_ID
+    value: $(Build.SourceVersion)
+  - name: OWNER
+    value: Ensono
+  - name: REPOSITORY
+    value: independent-runner
+  - name: PUBLISH_RELEASE
+    value: true
