@@ -190,7 +190,7 @@ Write-Information ("Executing yq with '{0}'" -f $yqCommand)
 yq -i $yqCommand build/taskctl/contexts.yaml
 
 ## Replace registry
-$yqCommand = '.contexts.powershell_docker.executable.args[] |= select(contains("ensonostackseuweirdfmu.azurecr.io")) = sub("ensonostackseuweirdfmu.azurecr.io", "{0}")' -f $DockerContainerRegistryName
+$yqCommand = '.contexts.powershell_docker.executable.args[] |= select(contains("eir-foundation-builder")) = sub("ensonostackseuweirdfmu.azurecr.io", "{0}")' -f $DockerContainerRegistryName
 Write-Information ("Executing yq with '{0}'" -f $yqCommand)
 yq -i $yqCommand build/taskctl/contexts.yaml
 
