@@ -15,7 +15,7 @@ contexts:
         - PSModulePath=/modules
         - -w
         - /app
-        - eir-foundation-builder:1.1.224
+        - ensono/eir-foundation-builder:1.1.224
         - pwsh
         - -NoProfile
         - -Command
