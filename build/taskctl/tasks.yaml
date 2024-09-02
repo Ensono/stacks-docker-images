@@ -1,5 +1,10 @@
 # Compilation tasks
 tasks:
+  image-pull-foundation:
+    context: powershell_docker
+    description: "Pulls the docker image ready for use, by executing a blank command in the context"
+    command: ""
+
   build:number:
     context: powershell
     description: Update the build number
@@ -106,3 +111,18 @@ tasks:
     description: debugs env vars
     command:
       - Get-ChildItem env:/
+
+  publish:github:
+    context: powershell
+    description: Publish Release to GitHub
+    command:
+      - |
+        Publish-GitHubRelease `
+          -Version "${env:VERSION_NUMBER}" `
+          -CommitId "${env:COMMIT_ID}" `
+          -UploadArtifacts $false `
+          -Owner "${env:OWNER}"`
+          -ApiKey "${env:API_KEY}" `
+          -Repository "${env:REPOSITORY}" `
+          -PublishRelease "${env:PUBLISH_RELEASE}" `
+          -GenerateReleaseNotes $true
