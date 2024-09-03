@@ -320,12 +320,13 @@ stages:
                   BuildNumber: $(Build.BuildNumber)
                   DockerContainerRegistryName: $(DOCKER_CONTAINER_REGISTRY_NAME)
 
-              - task: Bash@3
-                inputs:
-                  targetType: inline
-                  script: |
-                    taskctl image-pull-foundation
-                displayName: Pull Pwsh Foundation Image
+              - ${{ if ne(stage.stage, 'FoundationPowerShell') }}:
+                  - task: Bash@3
+                    inputs:
+                      targetType: inline
+                      script: |
+                        taskctl image-pull-foundation
+                    displayName: Pull Pwsh Foundation Image
 
               - task: Bash@3
                 displayName: Build Image
