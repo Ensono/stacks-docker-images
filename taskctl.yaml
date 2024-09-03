@@ -16,7 +16,7 @@ pipelines:
         DOCKER_BUILD_ARGS: -f ./src/definitions/foundation/powershell/Dockerfile.ubuntu ./src/definitions/foundation/powershell
 
   build:foundation:builder:
-    - task: build:image:container
+    - task: build:image:local
       variables:
         IMAGE_NAME: ensono/eir-foundation-builder
         DOCKER_BUILD_ARGS: -f ./src/definitions/foundation/builder/Dockerfile.ubuntu ./src/definitions/foundation/builder --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}

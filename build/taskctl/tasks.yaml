@@ -1,6 +1,6 @@
 # Compilation tasks
 tasks:
-  image-pull-foundation:
+  image-pull-foundation-builder:
     context: powershell_docker
     description: "Pulls the docker image ready for use, by executing a blank command in the context"
     command: ""
