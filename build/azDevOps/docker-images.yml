@@ -371,39 +371,38 @@ stages:
                   DOCKER_IMAGE_TAG: $(Build.BuildNumber)
                   DOCS_PATH: ${{ stage.docsPath }}
 
-  - stage: Release
-    condition: or(eq(parameters['force_deploy'], 'true'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-    dependsOn:
-      - ${{ each stage in parameters.stages }}:
-          - ${{ stage.stage }}
-    variables:
-      - group: release-github-credentials
-      - ${{ if or(eq(parameters['force_deploy'], 'true'), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
-          - group: stacks-docker-creds
-      - ${{ else }}:
-          - group: stacks-acr-creds
-    jobs:
-      - job: Publish
-        steps:
-          - template: templates/configure_agent.yml
-            parameters:
-              TaskctlVersion: $(TaskctlVersion)
-              EnsonoBuildVersion: $(EnsonoBuildVersion)
-              DockerPushRMVersion: $(DockerPushRMVersion)
-              YqVersion: $(YqVersion)
-              BuildNumber: $(Build.BuildNumber)
-              DockerContainerRegistryName: $(DOCKER_CONTAINER_REGISTRY_NAME)
+  - ${{ if or(eq(parameters['force_deploy'], 'true'), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
+      - stage: Release
+          - ${{ each stage in parameters.stages }}:
+              - ${{ stage.stage }}
+        variables:
+          - group: release-github-credentials
+          - ${{ if or(eq(parameters['force_deploy'], 'true'), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
+              - group: stacks-docker-creds
+          - ${{ else }}:
+              - group: stacks-acr-creds
+        jobs:
+          - job: Publish
+            steps:
+              - template: templates/configure_agent.yml
+                parameters:
+                  TaskctlVersion: $(TaskctlVersion)
+                  EnsonoBuildVersion: $(EnsonoBuildVersion)
+                  DockerPushRMVersion: $(DockerPushRMVersion)
+                  YqVersion: $(YqVersion)
+                  BuildNumber: $(Build.BuildNumber)
+                  DockerContainerRegistryName: $(DOCKER_CONTAINER_REGISTRY_NAME)
 
-          - task: Bash@3
-            inputs:
-              targetType: inline
-              script: |
-                taskctl image-pull-foundation-builder
-            displayName: Pull Pwsh Foundation Image
+              - task: Bash@3
+                inputs:
+                  targetType: inline
+                  script: |
+                    taskctl image-pull-foundation-builder
+                displayName: Pull Pwsh Foundation Image
 
-          - task: Bash@3
-            inputs:
-              targetType: inline
-              script: |
-                taskctl publish:github
-            displayName: Publish Release
+              - task: Bash@3
+                inputs:
+                  targetType: inline
+                  script: |
+                    taskctl publish:github
+                displayName: Publish Release
