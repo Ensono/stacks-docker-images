@@ -289,12 +289,13 @@ stages:
                   BuildNumber: $(Build.BuildNumber)
                   DockerContainerRegistryName: $(DOCKER_CONTAINER_REGISTRY_NAME)
 
-              - task: Bash@3
-                inputs:
-                  targetType: inline
-                  script: |
-                    taskctl image-pull-foundation-builder
-                displayName: Pull Pwsh Foundation Image
+              - ${{ if not(in(stage.stage, 'FoundationPowerShell', 'FoundationBuilder')) }}:
+                  - task: Bash@3
+                    inputs:
+                      targetType: inline
+                      script: |
+                        taskctl image-pull-foundation-builder
+                    displayName: Pull Pwsh Foundation Image
 
               - task: Bash@3
                 displayName: Build Image
@@ -320,7 +321,7 @@ stages:
                   BuildNumber: $(Build.BuildNumber)
                   DockerContainerRegistryName: $(DOCKER_CONTAINER_REGISTRY_NAME)
 
-              - ${{ if not(containsValue(['FoundationPowerShell', 'FoundationBuilder'], stage.stage)) }}:
+              - ${{ if not(in(stage.stage, 'FoundationPowerShell', 'FoundationBuilder')) }}:
                   - task: Bash@3
                     inputs:
                       targetType: inline
