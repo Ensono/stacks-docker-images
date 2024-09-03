@@ -3,7 +3,10 @@ ARG UBUNTU_VERSION=22.04
 FROM ubuntu:${UBUNTU_VERSION}
 
 ARG POWERSHELL_VERSION=7.4.4
-ARG ENSONOBUILD_VERSION=1.1.22
+# NOTE: This variable is also used in
+# 'build/azDevOps/azuredevops-vars.yml'. Please update it there also on version
+# bumps.
+ARG ENSONOBUILD_VERSION=1.1.30
 ARG TASKCTL_VERSION=1.5.3
 
 ARG TIMEZONE="Europe/London"

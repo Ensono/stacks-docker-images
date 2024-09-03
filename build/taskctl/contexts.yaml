@@ -11,13 +11,10 @@ contexts:
         - ${PWD}:/app
         - -v
         - /var/run/docker.sock:/var/run/docker.sock
-        - -e
-        - PSModulePath=/modules
         - -w
         - /app
-        - ensonostackseuweirdfmu.azurecr.io/ensono/eir-foundation-builder:1.1.165
+        - ensono/eir-foundation-builder:1.1.224
         - pwsh
-        - -NoProfile
         - -Command
     quote: "'"
     envfile:
@@ -42,15 +39,12 @@ contexts:
         - --rm
         - -v
         - ${PWD}:/app
-        - -e
-        - PSModulePath=/modules
         - -w
         - /app
         - --env-file
         - envfile
-        - ensonostackseuweirdfmu.azurecr.io/ensono/eir-asciidoctor:1.1.165
+        - ensono/eir-asciidoctor:1.1.224
         - pwsh
-        - -NoProfile
         - -Command
     envfile:
       exclude:
