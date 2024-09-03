@@ -104,7 +104,7 @@ tasks:
       - Get-ChildItem env:/
 
   publish:github:
-    context: powershell
+    context: powershell_docker
     description: Publish Release to GitHub
     command:
       - |

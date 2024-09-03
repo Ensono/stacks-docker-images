@@ -59,6 +59,6 @@ variables:
   - name: OWNER
     value: Ensono
   - name: REPOSITORY
-    value: independent-runner
+    value: stacks-docker-images
   - name: PUBLISH_RELEASE
     value: true
