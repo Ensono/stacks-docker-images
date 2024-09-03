@@ -372,7 +372,7 @@ stages:
                   DOCS_PATH: ${{ stage.docsPath }}
 
   - stage: Release
-    # condition: or(eq(parameters['force_deploy'], 'true'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    condition: or(eq(parameters['force_deploy'], 'true'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
     dependsOn:
       - ${{ each stage in parameters.stages }}:
           - ${{ stage.stage }}
