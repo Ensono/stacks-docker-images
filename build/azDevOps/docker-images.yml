@@ -373,6 +373,7 @@ stages:
 
   - ${{ if or(eq(parameters['force_deploy'], 'true'), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
       - stage: Release
+        dependsOn:
           - ${{ each stage in parameters.stages }}:
               - ${{ stage.stage }}
         variables:
