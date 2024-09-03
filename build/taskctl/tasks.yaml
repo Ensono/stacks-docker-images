@@ -112,7 +112,7 @@ tasks:
           -Version "${env:VERSION_NUMBER}" `
           -CommitId "${env:COMMIT_ID}" `
           -UploadArtifacts $false `
-          -ArtifactsDir artefacts/
+          -ArtifactsDir artefacts/ `
           -Owner "${env:OWNER}"`
           -ApiKey "${env:API_KEY}" `
           -Repository "${env:REPOSITORY}" `
