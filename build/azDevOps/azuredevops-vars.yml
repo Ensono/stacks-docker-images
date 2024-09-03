@@ -4,8 +4,11 @@ variables:
   # Dependency versions
   - name: TaskctlVersion
     value: 1.5.3
+  ## NOTE: This variable is also used in
+  ## 'src/definitions/foundation/powershell/Dockerfile.ubuntu'. Please update
+  ## it there also on version bumps.
   - name: EnsonoBuildVersion
-    value: 1.1.19
+    value: 1.1.30
   - name: DockerPushRMVersion
     value: 1.9.0
   - name: YqVersion
