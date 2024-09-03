@@ -184,13 +184,8 @@ Invoke-RestMethod @splat
 
 chmod u+x /usr/local/bin/yq
 
-## Replace tag
-$yqCommand = '.contexts.powershell_docker.executable.args[] |= select(contains("eir-foundation-builder")) = sub(":.*", ":{0}")' -f $BuildNumber
-Write-Information ("Executing yq with '{0}'" -f $yqCommand)
-yq -i $yqCommand build/taskctl/contexts.yaml
-
-## Replace registry
-$yqCommand = '.contexts.powershell_docker.executable.args[] |= select(contains("ensonostackseuweirdfmu.azurecr.io")) = sub("ensonostackseuweirdfmu.azurecr.io", "{0}")' -f $DockerContainerRegistryName
+## Replace registry and tag
+$yqCommand = '.contexts.powershell_docker.executable.args[] |= select(contains("ensono/eir-foundation-builder")) = "{0}/ensono/eir-foundation-builder:{1}"' -f $DockerContainerRegistryName, $BuildNumber
 Write-Information ("Executing yq with '{0}'" -f $yqCommand)
 yq -i $yqCommand build/taskctl/contexts.yaml
 

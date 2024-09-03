@@ -1,5 +1,10 @@
 # Compilation tasks
 tasks:
+  image-pull-foundation-builder:
+    context: powershell_docker
+    description: "Pulls the docker image ready for use, by executing a blank command in the context"
+    command: ""
+
   build:number:
     context: powershell
     description: Update the build number
@@ -13,8 +18,6 @@ tasks:
     description: Build the foundation image on the machine without using a container
     command:
       - |
-        $ErrorActionPreference = "Stop"
-        $PSNativeCommandErrorActionPreference = $true
         . ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name ${env:DOCKER_IMAGE_NAME} -Tag ${env:DOCKER_IMAGE_TAG} -Arguments "{{ .DOCKER_BUILD_ARGS }}"
 
   build:image:container:
@@ -22,8 +25,6 @@ tasks:
     description: Build the foundation image on the machine using the tools container
     command:
       - |
-        $ErrorActionPreference = "Stop"
-        $PSNativeCommandErrorActionPreference = $true
         $sep = (Test-Path -Path "C:\") ? ";" : ":"
         $env:PSModulePath += "${sep}/home/vsts/modules"
         Import-Module EnsonoBuild
@@ -33,8 +34,6 @@ tasks:
     context: powershell
     description: Create the Docker manifest for the images
     command: |
-      $ErrorActionPreference = "Stop"
-      $PSNativeCommandErrorActionPreference = $true
       . ./build/scripts/New-DockerManifest.ps1 -Latest -DocsPath $env:DOCS_PATH
 
   _docs:
@@ -61,7 +60,6 @@ tasks:
     description: Plan Terraform
     command:
       - Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-input=false","-out=tfplan" -Debug
-      - ls -l $env:TF_FILE_LOCATION
 
   infra:apply:
     context: powershell
@@ -92,8 +90,6 @@ tasks:
     context: powershell_docker
     description: Create container image for application
     command: |
-      $ErrorActionPreference = "Stop"
-      $PSNativeCommandErrorActionPreference = $true
       Build-DockerImage -Name ${env:DOCKER_IMAGE_NAME} -Tag ${env:DOCKER_IMAGE_TAG} -buildargs "{{ .DOCKER_BUILD_ARGS }}" -latest
 
   generate:docker:overview:
@@ -106,3 +102,19 @@ tasks:
     description: debugs env vars
     command:
       - Get-ChildItem env:/
+
+  publish:github:
+    context: powershell_docker
+    description: Publish Release to GitHub
+    command:
+      - |
+        Publish-GitHubRelease `
+          -Version "${env:VERSION_NUMBER}" `
+          -CommitId "${env:COMMIT_ID}" `
+          -UploadArtifacts $false `
+          -ArtifactsDir artefacts/ `
+          -Owner "${env:OWNER}"`
+          -ApiKey "${env:API_KEY}" `
+          -Repository "${env:REPOSITORY}" `
+          -PublishRelease "${env:PUBLISH_RELEASE}" `
+          -GenerateReleaseNotes $true
