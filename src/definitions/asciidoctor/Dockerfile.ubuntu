@@ -22,7 +22,7 @@ ARG ASCIIDOCTOR_REDUCER_VERSION=1.0.6
 ARG ASCIIDOCTOR_REVEALJS_VERSION=5.1.0
 ARG ASCIIDOCTOR_VERSION=2.0.21
 ARG ERD_VERSION=2.0.0
-ARG HUGO_VERSION=0.123.7
+ARG HUGO_VERSION=0.134.1
 ARG PANDOC_VERSION=3.1.12.2
 
 # NOTE: This must be a version in the Node Dockerfile `src/definitions/node/Dockerfile.ubuntu`
@@ -33,7 +33,7 @@ ARG DEFAULT_NODE_VERSION=v20.17.0
 COPY --from=node /usr/local/nvm/versions/node/${DEFAULT_NODE_VERSION} /usr/local/node
 
 # Update the PATH so some tools are accessible
-ENV PATH="${PATH}:/usr/local/pandoc/bin:/usr/local/node/bin"
+ENV PATH="${PATH}:/usr/local/pandoc/bin:/usr/local/node/bin:/usr/local/hugo/bin"
 
 # Copy files for mmdc
 COPY files/mermaid /usr/local/bin/mermaid

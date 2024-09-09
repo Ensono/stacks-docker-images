@@ -116,5 +116,13 @@ popd
 # Ensure the wrapper script is executable
 chmod +x /usr/local/bin/mermaid
 
+# Install Hugo
+mkdir -p /usr/local/hugo/bin
+curl --fail-with-body -L "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-${BIN_ARCH}.tar.gz" -o /tmp/hugo.tar.gz
+pushd /tmp
+tar zxf /tmp/hugo.tar.gz
+mv hugo /usr/local/hugo/bin
+popd
+
 # Remove files
 rm -rf /tmp/*
