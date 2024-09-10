@@ -119,6 +119,7 @@ parameters:
         dependsOn:
           - Java
           - NodeJS
+          - Go
         taskName: build:asciidoctor
         imageName: ensono/eir-asciidoctor
         docsPath: asciidoctor

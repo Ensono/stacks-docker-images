@@ -6,6 +6,10 @@ ARG ORG=ensono
 # available to run mermaid
 FROM ${REGISTRY}/${ORG}/eir-nodejs:${IMAGE_TAG} AS node
 
+# Include the Go image so that the Go binary can be added
+# for use with Hugo
+FROM ${REGISTRY}/${ORG}/eir-golang:${IMAGE_TAG} AS golang
+
 FROM ${REGISTRY}/${ORG}/eir-java:${IMAGE_TAG}
 
 ARG ASCIIDOCTOR_BIBTEX_VERSION=0.9.0
@@ -32,8 +36,11 @@ ARG DEFAULT_NODE_VERSION=v20.17.0
 # NOTE: The path to the versions is set by `NVM_ROOT` in the Node Dockerfile `src/definitions/node/Dockerfile.ubuntu`
 COPY --from=node /usr/local/nvm/versions/node/${DEFAULT_NODE_VERSION} /usr/local/node
 
+# Copy Go from the Go image
+COPY --from=golang /usr/local/go /usr/local/go
+
 # Update the PATH so some tools are accessible
-ENV PATH="${PATH}:/usr/local/pandoc/bin:/usr/local/node/bin:/usr/local/hugo/bin"
+ENV PATH="${PATH}:/usr/local/pandoc/bin:/usr/local/node/bin:/usr/local/hugo/bin:/usr/local/go/bin"
 
 # Copy files for mmdc
 COPY files/mermaid /usr/local/bin/mermaid
