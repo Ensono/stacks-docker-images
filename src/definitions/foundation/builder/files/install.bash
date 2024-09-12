@@ -29,3 +29,7 @@ chmod +x /usr/libexec/docker/cli-plugins/docker-buildx
 # Remove everything from the temp directory
 rm -rf /tmp/*
 # ***************************************************************************
+
+# Ensure that Docker group exits and that the stacks user is part of it
+groupadd docker
+usermod -aG docker stacks

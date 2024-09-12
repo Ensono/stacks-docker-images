@@ -7,7 +7,7 @@ set -euxo pipefail
 # The dependencies are from running PowerShell when they have not been installed:
 #   - Couldn't find a valid ICU package - Please install libicu (https://aka.ms/dotnet-missing-libicu)
 apt-get update
-apt-get install -y libicu70 lsb-release curl git
+apt-get install -y libicu70 lsb-release curl git sudo
 
 # Containers often need this, such as signing Java Packages for publishing
 apt-get install -y gpg
@@ -52,3 +52,8 @@ curl --fail-with-body -L "https://github.com/Ensono/independent-runner/releases/
 # Yaml **********************************************************************
 pwsh -NoProfile -Command "Install-Module -Name Powershell-Yaml -Scope AllUsers -Repository PSGallery -Force -RequiredVersion ${POWERSHELL_YAML_VERSION}"
 # ***************************************************************************
+
+# Create the Stacks user and ensure can Sudo to root
+useradd -m -s /bin/bash stacks
+echo "stacks ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/stacks
+ 
