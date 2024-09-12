@@ -132,10 +132,6 @@ pwsh -NoProfile -Command "Install-Module -Name Az -Scope AllUsers -Repository PS
 pwsh -NoProfile -Command "Install-Module -Name Pester -Scope AllUsers -Repository PSGallery -Force -RequiredVersion ${PESTER_VERSION}"
 # ***************************************************************************
 
-# Yaml **********************************************************************
-pwsh -NoProfile -Command "Install-Module -Name Powershell-Yaml -Scope AllUsers -Repository PSGallery -Force -RequiredVersion ${POWERSHELL_YAML_VERSION}"
-# ***************************************************************************
-
 # PSScriptAnalyzer **********************************************************
 pwsh -NoProfile -Command "Install-Module -Name PSScriptAnalyzer -Scope AllUsers -Repository PSGallery -Force -RequiredVersion ${PSSCRIPTANALYZER_VERSION}"
 # ***************************************************************************

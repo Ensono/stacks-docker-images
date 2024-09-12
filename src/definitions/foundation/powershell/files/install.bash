@@ -48,3 +48,7 @@ mkdir -p /modules/EnsonoBuild
 curl --fail-with-body -L "https://github.com/Ensono/independent-runner/releases/download/v${ENSONOBUILD_VERSION}/EnsonoBuild.psd1" -o /modules/EnsonoBuild/EnsonoBuild.psd1
 curl --fail-with-body -L "https://github.com/Ensono/independent-runner/releases/download/v${ENSONOBUILD_VERSION}/EnsonoBuild.psm1" -o /modules/EnsonoBuild/EnsonoBuild.psm1
 # ***************************************************************************
+
+# Yaml **********************************************************************
+pwsh -NoProfile -Command "Install-Module -Name Powershell-Yaml -Scope AllUsers -Repository PSGallery -Force -RequiredVersion ${POWERSHELL_YAML_VERSION}"
+# ***************************************************************************

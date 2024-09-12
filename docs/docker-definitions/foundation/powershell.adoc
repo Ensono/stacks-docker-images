@@ -36,7 +36,8 @@ https://matthorgan.xyz/blog/powershell-handling-native-applications/ | $true
 [cols="1,2,1,2",options=header]
 |====
 | Type | Name | Version | URL
-| Binary | PowerShell | 7.4.1 | https://github.com/PowerShell/PowerShell
-| Module | EnsonoBuild | 1.0.43 | https://github.com/Ensono/independent-runner
+| Binary | PowerShell | 7.4.5 | https://github.com/PowerShell/PowerShell
+| Module | EnsonoBuild | 1.1.30 | https://github.com/Ensono/independent-runner
+| Module | PowerShell-Yaml | 0.4.7 | https://github.com/cloudbase/powershell-yaml
 | Binary | Taskctl | 1.5.3 | https://github.com/Ensono/taskctl
 |====

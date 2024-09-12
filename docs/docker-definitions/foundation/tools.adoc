@@ -45,7 +45,6 @@ https://releases.hashicorp.com/terraform/{version_terraform_19}/terraform_{versi
 | PS Module | Az | 10.0.0 2+| -
 | PS Module | Arm-ttk | 20231122 2+| -
 | PS Module | Pester | 5.4.1 2+| -
-| PS Module | PowerShell-Yaml | 2+| - 
 | PS Module | PSScriptAnalyzer 2+| 1.22.0 2+| -
 |====
 
