@@ -21,6 +21,8 @@ COPY --from=tools /usr/local/kustomize /usr/local/kustomize
 COPY --from=tools /usr/local/jq /usr/local/jq
 COPY --from=tools /usr/local/terrascan /usr/local/terrascan
 COPY --from=tools /usr/local/envsubst /usr/local/envsubst
+# Add 
+COPY --from=tools /usr/local/bin/executor /usr/local/bin/executor
 
 # Copy the Tenv tool and the install Terraform versions
 COPY --from=tools /usr/local/tenv /usr/local/tenv
