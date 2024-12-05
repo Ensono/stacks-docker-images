@@ -61,6 +61,20 @@ echo "\tSetting default Terraform version to ${DEFAULT_TF_VERSION}"
 tenv tf use ${DEFAULT_TF_VERSION}
 # ---------------------------------------------------------------------------
 
+# TFlint --------------------------------------------------------------------
+echo "Installing: TFLint"
+mkdir -p /usr/local/tflint/bin
+curl --fail-with-body -L https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_${BIN_ARCH}.zip -o /tmp/tflint.zip
+unzip /tmp/tflint.zip tflint -d /usr/local/tflint/bin
+# ---------------------------------------------------------------------------
+
+# Terraform-Docs ------------------------------------------------------------
+echo "Installing: terraform-docs"
+mkdir -p /usr/local/terraform-docs/bin
+curl --fail-with-body -L https://github.com/terraform-docs/terraform-docs/releases/download/v${TERRAFORM_DOCS_VERSION}/terraform-docs-v${TERRAFORM_DOCS_VERSION}-linux-${BIN_ARCH}.tar.gz -o /tmp/terraform-docs.tar.gz
+tar zxf /tmp/terraform-docs.tar.gz -C /tmp
+mv /tmp/terraform-docs /usr/local/terraform-docs/bin
+# ---------------------------------------------------------------------------
 
 # Terrascan -----------------------------------------------------------------
 echo "Installing: TerraScan"

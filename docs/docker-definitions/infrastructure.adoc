@@ -21,6 +21,8 @@ It is based on the Ensono Stacks Foundation Azure CLI so that the `az` command i
 | Binary | Terraform 2+| Copied from https://hub.docker.com/r/ensono/eir-foundation-tools[ensono/eir-foundation-tools]
 
 Used to install multiple versions of Terraform
+| Binary | Terraform Docs 2+| Copied from https://hub.docker.com/r/ensono/eir-foundation-tools[ensono/eir-foundation-tools]
+| Binary | TFLint 2+| Copied from https://hub.docker.com/r/ensono/eir-foundation-tools[ensono/eir-foundation-tools]
 | Binary | GitHub CLI 2+| Copied from https://hub.docker.com/r/ensono/eir-foundation-tools[ensono/eir-foundation-tools]
 | Binary | Kluctl 2+| Copied from https://hub.docker.com/r/ensono/eir-foundation-tools[ensono/eir-foundation-tools]
 | Binary | Kustomize 2+| Copied from https://hub.docker.com/r/ensono/eir-foundation-tools[ensono/eir-foundation-tools]
