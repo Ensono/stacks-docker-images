@@ -32,7 +32,7 @@ Used to install multiple versions of Terraform
 | PS Module | PSCloudShell | |
 | PS Module | PSScriptAnalyzer | |
 | Python | YamlLint | 1.35.1 | https://pypi.org/project/yamllint/
-| Python | Checkov | 3.2.237 | https://pypi.org/project/checkov/
+| Python | Checkov | 3.2.332 | https://pypi.org/project/checkov/
 |====
 
 NOTE: For versions of the tools that are copied from the tools image please refer to the https://hub.docker.com/r/ensono/eir-foundation-tools image.

@@ -1,2 +1,2 @@
 yamllint==1.35.1
-checkov==3.2.327
+checkov==3.2.332
