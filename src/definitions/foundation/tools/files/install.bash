@@ -90,7 +90,7 @@ echo "Installing: Infracost"
 mkdir -p /usr/local/infracost/bin
 curl --fail-with-body -L "https://github.com/infracost/infracost/releases/download/v${INFRACOST_VERSION}/infracost-linux-${BIN_ARCH}.tar.gz" -o /tmp/infracost.tar.gz
 tar zxf /tmp/infracost.tar.gz -C /tmp
-mv /tmp/infracost-linux-amd64 /usr/local/infracost/bin/infracost
+mv /tmp/infracost-linux-${BIN_ARCH} /usr/local/infracost/bin/infracost
 chmod +x /usr/local/infracost/bin/infracost
 # ---------------------------------------------------------------------------
 
