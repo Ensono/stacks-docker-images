@@ -89,6 +89,18 @@ pipelines:
         IMAGE_NAME: ensono/eir-nodejs
         DOCKER_BUILD_ARGS: -f ./src/definitions/node/Dockerfile.ubuntu ./src/definitions/node --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
 
+  build:bottlerocket_bootstrap:
+    - task: build:image:container
+      variables:
+        IMAGE_NAME: ensono/bottlerocket-cis-bootstrap
+        DOCKER_BUILD_ARGS: -f ./src/definitions/bottlerocket-cis-bootstrap/Dockerfile.ubuntu ./src/definitions/bottlerocket-cis-bootstrap --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
+
+  build:bottlerocket_validation:
+    - task: build:image:container
+      variables:
+        IMAGE_NAME: ensono/bottlerocket-cis-validation
+        DOCKER_BUILD_ARGS: -f ./src/definitions/bottlerocket-cis-validation/Dockerfile.ubuntu ./src/definitions/bottlerocket-cis-validation --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
+
   docs:
     - pipeline: setup
     - task: _docs

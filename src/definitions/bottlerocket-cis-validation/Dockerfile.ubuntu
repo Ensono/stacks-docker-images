@@ -1,0 +1,15 @@
+ARG REGISTRY=docker.io
+ARG IMAGE_TAG=0.0.1-workstation
+ARG ORG=ensono
+
+FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
+
+RUN apt-get update && \
+    apt-get -y upgrade && \
+    apt-get -y install iptables=1.8.7-1ubuntu5.2 procps=2:3.3.17-6ubuntu2.1 kmod=29-1ubuntu1
+    
+RUN update-alternatives --set iptables /usr/sbin/iptables-legacy
+RUN update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
+COPY ./files/validating-script.sh /
+RUN chmod +x /validating-script.sh
+ENTRYPOINT ["bash", "/validating-script.sh"]
