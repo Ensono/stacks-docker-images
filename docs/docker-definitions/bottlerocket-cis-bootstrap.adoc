@@ -1,0 +1,18 @@
+== EIR Kong
+
+This image is used to bootstrap an AWS EKS cluster so the Bottlerocket OS complies with CIS level 2. It is used when creating the EKS worker nodes and is needed when provisioning 
+an EKS cluster using the stacks-infrastructure-eks module. 
+
+=== Specs
+
+**Platforms**: `linux/amd64`, `linux/arm64`
+
+**Base Image**: ubuntu:22.04
+
+==== Software
+
+[cols="1,2,1,2",options=header]
+|====
+| Type | Name | Version | URL
+| Binary | iptables | 1.8.7-1ubuntu5.2 | https://launchpad.net/ubuntu/+source/iptables/1.8.7-1ubuntu5.2
+|====
