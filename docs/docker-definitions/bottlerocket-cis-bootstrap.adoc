@@ -3,6 +3,8 @@
 This image is used to bootstrap an AWS EKS cluster so the Bottlerocket OS complies with CIS level 2. It is used when creating the EKS worker nodes and is needed when provisioning 
 an EKS cluster using the stacks-infrastructure-eks module. 
 
+More details can be found here: https://aws.amazon.com/blogs/containers/validating-amazon-eks-optimized-bottlerocket-ami-against-the-cis-benchmark/
+
 === Specs
 
 **Platforms**: `linux/amd64`, `linux/arm64`
