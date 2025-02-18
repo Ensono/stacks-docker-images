@@ -2,6 +2,8 @@
 
 This image is used to validate an AWS EKS cluster to ensure the Bottlerocket OS complies with CIS level 2. 
 
+More details can be found here: https://aws.amazon.com/blogs/containers/validating-amazon-eks-optimized-bottlerocket-ami-against-the-cis-benchmark/
+
 === Specs
 
 **Platforms**: `linux/amd64`, `linux/arm64`
