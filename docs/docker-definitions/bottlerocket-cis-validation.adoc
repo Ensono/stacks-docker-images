@@ -1,4 +1,4 @@
-== EIR Kong
+== Bottlerocket CIS validation
 
 This image is used to validate an AWS EKS cluster to ensure the Bottlerocket OS complies with CIS level 2. 
 
