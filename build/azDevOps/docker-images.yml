@@ -26,22 +26,6 @@ parameters:
         imageName: ensono/eir-foundation-powershell
         docsPath: foundation/powershell
 
-      - stage: BottlerocketCISBootstrap
-        displayName: "[CONTAINER] Bottlerocket CIS Bootstrap"
-        dependsOn:
-          - FoundationPowerShell
-        taskName: build:build:bottlerocket_bootstrap
-        imageName: ensono/bottlerocket-cis-bootstrap
-        docsPath: bottlerocket-cis-bootstrap
-
-      - stage: BottlerocketCISValidation
-        displayName: "[CONTAINER] Bottlerocket CIS Validation"
-        dependsOn:
-          - FoundationPowerShell
-        taskName: build:build:bottlerocket_validation
-        imageName: ensono/bottlerocket-cis-validation
-        docsPath: bottlerocket-cis-validation
-
       - stage: FoundationBuilder
         displayName: "[CONTAINER] Foundation - Builder"
         dependsOn:
@@ -147,6 +131,24 @@ parameters:
         taskName: build:data
         imageName: ensono/eir-azure-data
         docsPath: data
+
+      - stage: BottlerocketCISBootstrap
+        displayName: "[CONTAINER] Bottlerocket CIS Bootstrap"
+        dependsOn:
+          - FoundationBuilder
+          - FoundationPowerShell
+        taskName: build:build:bottlerocket_bootstrap
+        imageName: ensono/bottlerocket-cis-bootstrap
+        docsPath: bottlerocket-cis-bootstrap
+
+      - stage: BottlerocketCISValidation
+        displayName: "[CONTAINER] Bottlerocket CIS Validation"
+        dependsOn:
+          - FoundationBuilder
+          - FoundationPowerShell
+        taskName: build:build:bottlerocket_validation
+        imageName: ensono/bottlerocket-cis-validation
+        docsPath: bottlerocket-cis-validation
 
 pr:
   - main
