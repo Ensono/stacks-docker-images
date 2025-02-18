@@ -7,7 +7,7 @@ an EKS cluster using the stacks-infrastructure-eks module.
 
 **Platforms**: `linux/amd64`, `linux/arm64`
 
-**Base Image**: ubuntu:22.04
+**Base Image**: ensono/eir-foundation-powershell
 
 ==== Software
 

@@ -6,7 +6,7 @@ This image is used to validate an AWS EKS cluster to ensure the Bottlerocket OS 
 
 **Platforms**: `linux/amd64`, `linux/arm64`
 
-**Base Image**: ubuntu:22.04
+**Base Image**: ensono/eir-foundation-powershell
 
 ==== Software
 
