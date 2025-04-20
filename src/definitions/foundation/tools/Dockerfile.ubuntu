@@ -4,7 +4,10 @@ ARG ORG=ensono
 
 FROM ${REGISTRY}/${ORG}/eir-foundation-builder:${IMAGE_TAG} AS builder
 
+FROM gcr.io/kaniko-project/executor:v1.23.2 as kaniko
+
 FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
+
 
 # Set the versions for the applications to install
 ARG ARM_TTK_VERSION="20231122"
@@ -31,10 +34,13 @@ ARG TIMEZONE="Europe/London"
 # Copy the Docker binary files from the builder image
 COPY --from=builder /usr/local/docker /usr/local/docker
 COPY --from=builder /usr/libexec/docker/cli-plugins/docker-buildx /usr/libexec/docker/cli-plugins/docker-buildx
+# Copy the kaniko executor binary from the kaniko image
+COPY --from=kaniko /kaniko/executor /usr/local/bin/executor
 
 # Copy the install script over and then run it
 COPY files/install.bash /usr/local/bin/install.bash
 RUN chmod +x /usr/local/bin/install.bash && /usr/local/bin/install.bash
+
 
 # Setup the Path variable so that the tools can be found
 ENV PATH="$PATH:/usr/local/docker/bin:/usr/local/terraform/bin"
