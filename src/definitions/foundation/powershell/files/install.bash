@@ -7,7 +7,7 @@ set -euxo pipefail
 # The dependencies are from running PowerShell when they have not been installed:
 #   - Couldn't find a valid ICU package - Please install libicu (https://aka.ms/dotnet-missing-libicu)
 apt-get update
-apt-get install -y libicu70 lsb-release curl git
+apt-get install -y libicu74 lsb-release curl git
 
 # Containers often need this, such as signing Java Packages for publishing
 apt-get install -y gpg
