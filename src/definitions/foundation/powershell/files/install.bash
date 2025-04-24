@@ -29,17 +29,8 @@ ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
 rm /tmp/powershell.tar.gz
 
 # Taskctl Runner ------------------------------------------------------------
-
-# Update the arch to fit in with the pattern for the Taskctl binary
-if [ "${BIN_ARCH}" == "arm64" ];
-then
-    BIN_ARCH="armv7"
-fi
-
 mkdir -p /usr/local/taskctl/bin
-curl --fail-with-body -L "https://github.com/Ensono/taskctl/releases/download/v${TASKCTL_VERSION}/taskctl_${TASKCTL_VERSION}_linux_${BIN_ARCH}.tar.gz" -o /tmp/taskctl.tar.gz
-tar zxf /tmp/taskctl.tar.gz -C /usr/local/taskctl/bin taskctl
-rm -f /tmp/taskctl.tar.gz
+curl --fail-with-body -L "https://github.com/Ensono/taskctl/releases/download/${TASKCTL_VERSION}/taskctl-linux-${BIN_ARCH}" -o /usr/local/taskctl/bin
 chmod +x /usr/local/taskctl/bin/taskctl
 # ---------------------------------------------------------------------------
 
