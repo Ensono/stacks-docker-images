@@ -95,12 +95,13 @@ else {
 if ($install_taskctl) {
 
     # Set the URL to download taskctl
-    $url = "https://github.com/Ensono/taskctl/releases/download/{0}/taskctl_{0}_linux_{1}.tar.gz" -f $TaskctlVersion, $taskctl_arch
-    
-    Invoke-RestMethod -Uri $url -OutFile "/tmp/taskctl.tar.gz"
+    $url = "https://github.com/Ensono/taskctl/releases/download/{0}/taskctl_{0}_linux_{1}" -f $TaskctlVersion, $taskctl_arch
+
+    Invoke-RestMethod -Uri $url -OutFile "/usr/local/bin/taskctl"
 
     # Extract the tarball
-    tar zxf /tmp/taskctl.tar.gz -C /usr/local/bin taskctl
+    # tar zxf /tmp/taskctl.tar.gz -C /usr/local/bin taskctl
+    chmod +x /usr/local/bin/taskctl
 }
 
 # Install EnsonoBuild
