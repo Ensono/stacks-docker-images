@@ -62,7 +62,7 @@ if ($uname_arch -eq "x86_64") {
 elseif (@("aarch64", "arm64") -contains $uname_arch) {
     $bin_arch = "arm64"
     $abbr_arch = $bin_arch
-    $taskctl_arch = "armv7"
+    $taskctl_arch = "arm64"
 }
 
 # Install Taskctl
