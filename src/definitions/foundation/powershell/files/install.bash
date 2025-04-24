@@ -30,7 +30,7 @@ rm /tmp/powershell.tar.gz
 
 # Taskctl Runner ------------------------------------------------------------
 mkdir -p /usr/local/taskctl/bin
-curl --fail-with-body -L "https://github.com/Ensono/taskctl/releases/download/${TASKCTL_VERSION}/taskctl-linux-${BIN_ARCH}" -o /usr/local/taskctl/bin
+curl --fail-with-body -L "https://github.com/Ensono/taskctl/releases/download/${TASKCTL_VERSION}/taskctl-linux-${BIN_ARCH}" -o /usr/local/taskctl/bin/taskctl
 chmod +x /usr/local/taskctl/bin/taskctl
 # ---------------------------------------------------------------------------
 
