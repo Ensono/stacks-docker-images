@@ -95,7 +95,7 @@ else {
 if ($install_taskctl) {
 
     # Set the URL to download taskctl
-    $url = "https://github.com/Ensono/taskctl/releases/download/{0}/taskctl_{0}_linux_{1}" -f $TaskctlVersion, $taskctl_arch
+    $url = "https://github.com/Ensono/taskctl/releases/download/{0}/taskctl-linux-{1}" -f $TaskctlVersion, $taskctl_arch
 
     Invoke-RestMethod -Uri $url -OutFile "/usr/local/bin/taskctl"
 
