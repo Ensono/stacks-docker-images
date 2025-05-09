@@ -61,6 +61,20 @@ echo "\tSetting default Terraform version to ${DEFAULT_TF_VERSION}"
 tenv tf use ${DEFAULT_TF_VERSION}
 # ---------------------------------------------------------------------------
 
+# TFlint --------------------------------------------------------------------
+echo "Installing: TFLint"
+mkdir -p /usr/local/tflint/bin
+curl --fail-with-body -L https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_${BIN_ARCH}.zip -o /tmp/tflint.zip
+unzip /tmp/tflint.zip tflint -d /usr/local/tflint/bin
+# ---------------------------------------------------------------------------
+
+# Terraform-Docs ------------------------------------------------------------
+echo "Installing: terraform-docs"
+mkdir -p /usr/local/terraform-docs/bin
+curl --fail-with-body -L https://github.com/terraform-docs/terraform-docs/releases/download/v${TERRAFORM_DOCS_VERSION}/terraform-docs-v${TERRAFORM_DOCS_VERSION}-linux-${BIN_ARCH}.tar.gz -o /tmp/terraform-docs.tar.gz
+tar zxf /tmp/terraform-docs.tar.gz -C /tmp
+mv /tmp/terraform-docs /usr/local/terraform-docs/bin
+# ---------------------------------------------------------------------------
 
 # Terrascan -----------------------------------------------------------------
 echo "Installing: TerraScan"
@@ -69,6 +83,15 @@ curl --fail-with-body -L "https://github.com/tenable/terrascan/releases/download
 tar zxf /tmp/terrascan.tar.gz -C /tmp
 mv /tmp/terrascan /usr/local/terrascan/bin
 chmod +x /usr/local/terrascan/bin/terrascan
+# ---------------------------------------------------------------------------
+
+# Infracost -----------------------------------------------------------------
+echo "Installing: Infracost"
+mkdir -p /usr/local/infracost/bin
+curl --fail-with-body -L "https://github.com/infracost/infracost/releases/download/v${INFRACOST_VERSION}/infracost-linux-${BIN_ARCH}.tar.gz" -o /tmp/infracost.tar.gz
+tar zxf /tmp/infracost.tar.gz -C /tmp
+mv /tmp/infracost-linux-${BIN_ARCH} /usr/local/infracost/bin/infracost
+chmod +x /usr/local/infracost/bin/infracost
 # ---------------------------------------------------------------------------
 
 # GH CLI --------------------------------------------------------------------

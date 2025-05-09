@@ -55,13 +55,14 @@ param (
 # Determine the architecture that is being used
 $uname_arch = Invoke-Expression -Command "uname -m"
 if ($uname_arch -eq "x86_64") {
-        $bin_arch = "amd64"
-        $abbr_arch = "x64"
-        $taskctl_arch = "amd64"
-} elseif (@("aarch64", "arm64") -contains $uname_arch) {
-        $bin_arch = "arm64"
-        $abbr_arch = $bin_arch
-        $taskctl_arch = "armv7"
+    $bin_arch = "amd64"
+    $abbr_arch = "x64"
+    $taskctl_arch = "amd64"
+}
+elseif (@("aarch64", "arm64") -contains $uname_arch) {
+    $bin_arch = "arm64"
+    $abbr_arch = $bin_arch
+    $taskctl_arch = "arm64"
 }
 
 # Install Taskctl
@@ -83,7 +84,8 @@ if (Test-Path -Path $taskctl_bin) {
         $install_taskctl = $true
     }
 
-} else {
+}
+else {
 
     Write-Information "Taskctl is not installed, installing version $TaskctlVersion"
 
@@ -93,12 +95,13 @@ if (Test-Path -Path $taskctl_bin) {
 if ($install_taskctl) {
 
     # Set the URL to download taskctl
-    $url = "https://github.com/Ensono/taskctl/releases/download/v{0}/taskctl_{0}_linux_{1}.tar.gz" -f $TaskctlVersion, $taskctl_arch
+    $url = "https://github.com/Ensono/taskctl/releases/download/{0}/taskctl-linux-{1}" -f $TaskctlVersion, $taskctl_arch
 
-    Invoke-RestMethod -Uri $url -OutFile "/tmp/taskctl.tar.gz"
+    Invoke-RestMethod -Uri $url -OutFile "/usr/local/bin/taskctl"
 
     # Extract the tarball
-    tar zxf /tmp/taskctl.tar.gz -C /usr/local/bin taskctl
+    # tar zxf /tmp/taskctl.tar.gz -C /usr/local/bin taskctl
+    chmod +x /usr/local/bin/taskctl
 }
 
 # Install EnsonoBuild
@@ -146,7 +149,7 @@ if (!(Test-Path -Path $plugins_path)) {
 
 $plugins = @{
     "docker-pushrm" = @{
-        "uri" = "https://github.com/christian-korneck/docker-pushrm/releases/download/v{0}/docker-pushrm_linux_{1}" -f $DockerPushRMVersion, $bin_arch
+        "uri"     = "https://github.com/christian-korneck/docker-pushrm/releases/download/v{0}/docker-pushrm_linux_{1}" -f $DockerPushRMVersion, $bin_arch
         "outfile" = Join-Path -Path $plugins_path -ChildPath "docker-pushrm"
     }
 }
@@ -160,7 +163,7 @@ foreach ($plugin in $plugins.GetEnumerator()) {
         Write-Information ("`tDownloading from: {0}" -f $plugin.Value.uri)
 
         $splat = @{
-            Uri = $plugin.Value.uri
+            Uri     = $plugin.Value.uri
             OutFile = $plugin.Value.outfile
         }
 
@@ -175,7 +178,7 @@ foreach ($plugin in $plugins.GetEnumerator()) {
 # Install 'yq' and munge the 'powershell_docker' context in the 'contexts.yaml'
 # file with the build number...
 $splat = @{
-    Uri = "https://github.com/mikefarah/yq/releases/download/v{0}/yq_linux_{1}" -f $YqVersion, $bin_arch
+    Uri     = "https://github.com/mikefarah/yq/releases/download/v{0}/yq_linux_{1}" -f $YqVersion, $bin_arch
     OutFile = "/usr/local/bin/yq"
 }
 

@@ -21,6 +21,7 @@ contexts:
       exclude:
         - home
         - path
+        - POSH_AZURE_SUBSCRIPTION
       generate: true
 
   powershell:
@@ -50,4 +51,5 @@ contexts:
       exclude:
         - home
         - path
+        - POSH_AZURE_SUBSCRIPTION
       generate: true
