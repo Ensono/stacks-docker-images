@@ -11,3 +11,4 @@ markdown/
 .env
 
 src/definitions/**/README.md
+.taskctl

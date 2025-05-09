@@ -8,6 +8,8 @@
 :version_tenv: 3.1.0
 :version_terraform_15: 1.5.7
 :version_terraform_19: 1.9.3
+:version_tflint: 0.54.0
+:version_terraform_docs: 0.19.0
 
 == EIR Foundation Tools
 
@@ -42,13 +44,15 @@ https://releases.hashicorp.com/terraform/{version_terraform_15}/terraform_{versi
 https://releases.hashicorp.com/terraform/{version_terraform_19}/terraform_{version_terraform_19}_linux_x86_64.zip |
 https://releases.hashicorp.com/terraform/{version_terraform_15}/terraform_{version_terraform_15}_linux_arm64.zip 
 https://releases.hashicorp.com/terraform/{version_terraform_19}/terraform_{version_terraform_19}_linux_arm64.zip 
+| Binary | Terraform Docs | {version_terraform_docs} | https://github.com/terraform-docs/terraform-docs/releases/download/v{version_terraform_docs}/terraform-docs-v{version_terraform_docs}-linux-amd64.tar.gz | 
+https://github.com/terraform-docs/terraform-docs/releases/download/v{version_terraform_docs}/terraform-docs-v{version_terraform_docs}-linux-arm64.tar.gz
+| Binary | TFLint | {version_tflint} | https://github.com/terraform-linters/tflint/releases/download/${terraform_tflint}/tflint_linux_aamd64.zip |
+https://github.com/terraform-linters/tflint/releases/download/v{terraform_tflint}/tflint_linux_arm64.zip
 | PS Module | Az | 10.0.0 2+| -
 | PS Module | Arm-ttk | 20231122 2+| -
 | PS Module | Pester | 5.4.1 2+| -
 | PS Module | PowerShell-Yaml | 2+| - 
 | PS Module | PSScriptAnalyzer 2+| 1.22.0 2+| -
 |====
-
-NOTE: The table above only shows the download links for X64 machines, not ARM64 packages.
 
 Two versions of Terraform are installed. This is to support migration of Terraform from one version to another. Version `1.5.7` is configured as the default version, using a symlink to the `/usr/local/terraform/1.5.7/bin` directory.
