@@ -20,6 +20,7 @@ COPY --from=tools /usr/local/infracost /usr/local/infracost
 COPY --from=tools /usr/local/jq /usr/local/jq
 COPY --from=tools /usr/local/kluctl /usr/local/kluctl
 COPY --from=tools /usr/local/kubectl /usr/local/kubectl
+COPY --from=tools /usr/local/kubelogin /usr/local/kubelogin
 COPY --from=tools /usr/local/kustomize /usr/local/kustomize
 COPY --from=tools /usr/local/terraform-docs /usr/local/terraform-docs
 COPY --from=tools /usr/local/terrascan /usr/local/terrascan
@@ -42,5 +43,5 @@ COPY files/install.bash /usr/local/bin/install.bash
 RUN chmod +x /usr/local/bin/install.bash && /usr/local/bin/install.bash
 
 # Set the PATH so that the tools can be accessed
-ENV PATH="${PATH}:/usr/local/kubectl/bin:/usr/local/helm/bin:/usr/local/terraform/bin:/usr/local/ghcli/bin:/usr/local/kluctl/bin:/usr/local/kustomize/bin:/usr/local/jq/bin:/usr/local/terrascan/bin:/usr/local/docker/bin:/usr/local/envsubst/bin:/usr/local/tenv/bin:/usr/local/tflint/bin:/usr/local/terraform-docs/bin:/usr/local/infracost/bin"
+ENV PATH="${PATH}:/usr/local/kubectl/bin:/usr/local/kubelogin/bin:/usr/local/helm/bin:/usr/local/terraform/bin:/usr/local/ghcli/bin:/usr/local/kluctl/bin:/usr/local/kustomize/bin:/usr/local/jq/bin:/usr/local/terrascan/bin:/usr/local/docker/bin:/usr/local/envsubst/bin:/usr/local/tenv/bin:/usr/local/tflint/bin:/usr/local/terraform-docs/bin:/usr/local/infracost/bin"
 ENV TENV_ROOT="/usr/local/tenv/.tenv"
