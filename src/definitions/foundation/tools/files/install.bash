@@ -32,7 +32,7 @@ chmod +x /usr/local/kubectl/bin/kubectl
 echo "Installing: Kubelogin"
 mkdir -p /usr/local/kubelogin/bin
 curl --fail-with-body -L https://github.com/Azure/kubelogin/releases/download/v${KUBELOGIN_VERSION}/kubelogin-linux-${BIN_ARCH}.zip -o /tmp/kubelogin.zip
-unzip /tmp/kubelogin.zip tflint -d /usr/local/kubelogin/bin
+unzip /tmp/kubelogin.zip kubelogin -d /usr/local/kubelogin/bin
 # ---------------------------------------------------------------------------
 
 # Helm ----------------------------------------------------------------------
