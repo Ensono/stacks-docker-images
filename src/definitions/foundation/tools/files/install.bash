@@ -28,6 +28,13 @@ curl --fail-with-body -L https://dl.k8s.io/release/${KUBE_VERSION}/bin/linux/${B
 chmod +x /usr/local/kubectl/bin/kubectl
 # ---------------------------------------------------------------------------
 
+# Kubelogin --------------------------------------------------------------------
+echo "Installing: Kubelogin"
+mkdir -p /usr/local/kubelogin/bin
+curl --fail-with-body -L https://github.com/Azure/kubelogin/releases/download/v${KUBELOGIN_VERSION}/kubelogin-linux-${BIN_ARCH}.zip -o /tmp/kubelogin.zip
+unzip -j /tmp/kubelogin.zip bin/linux_${BIN_ARCH}/kubelogin -d /usr/local/kubelogin/bin
+# ---------------------------------------------------------------------------
+
 # Helm ----------------------------------------------------------------------
 echo "Installing: Helm"
 mkdir -p /usr/local/helm
