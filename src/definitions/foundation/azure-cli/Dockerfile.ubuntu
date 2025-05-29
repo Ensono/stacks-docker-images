@@ -4,7 +4,7 @@ ARG ORG=ensono
 
 FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
 
-ARG AZURE_CLI_VERSION=2.48.1
+ARG AZURE_CLI_VERSION="2.48.1"
 
 # Install the Azure CLI application
 COPY files/install.bash /usr/local/bin/install.bash
