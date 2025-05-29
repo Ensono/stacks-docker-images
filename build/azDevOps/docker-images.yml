@@ -66,7 +66,7 @@ parameters:
         displayName: "[CONTAINER] Infrastructure AWS"
         dependsOn:
           - FoundationTools
-          - FoundationAzureCli
+          - FoundationAwsCli
         taskName: build:infrastructure-aws
         imageName: ensono/eir-infrastructure-aws
         docsPath: infrastructure-aws

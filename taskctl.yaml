@@ -25,7 +25,7 @@ pipelines:
     - task: build:image:container
       variables:
         IMAGE_NAME: ensono/eir-foundation-aws-cli
-        DOCKER_BUILD_ARGS: -f ./src/definitions/foundation/aws-cli/Dockerfile.ubuntu ./src/definitions/foundation/azure-cli --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
+        DOCKER_BUILD_ARGS: -f ./src/definitions/foundation/aws-cli/Dockerfile.ubuntu ./src/definitions/foundation/aws-cli --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
 
   build:foundation:azure-cli:
     - task: build:image:container
