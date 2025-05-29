@@ -8,6 +8,5 @@ FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
 ARG AWS_CLI_VERSION=2.27.24
 
 # Install the AWS CLI application
-COPY files/requirements.txt /tmp/requirements.txt
 COPY files/install.bash /usr/local/bin/install.bash
 RUN chmod +x /usr/local/bin/install.bash && /usr/local/bin/install.bash
