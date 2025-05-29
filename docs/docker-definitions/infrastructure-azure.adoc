@@ -1,4 +1,4 @@
-== EIR Infrastrtucture
+== EIR Infrastrtucture Azure
 
 This image is desgined to be used for everything that is Platform Engineering (DevOps) based. It contains tools for deploying infrastructure and applications.
 
@@ -26,7 +26,6 @@ Used to install multiple versions of Terraform
 | Binary | GitHub CLI 2+| Copied from https://hub.docker.com/r/ensono/eir-foundation-tools[ensono/eir-foundation-tools]
 | Binary | Kluctl 2+| Copied from https://hub.docker.com/r/ensono/eir-foundation-tools[ensono/eir-foundation-tools]
 | Binary | Kustomize 2+| Copied from https://hub.docker.com/r/ensono/eir-foundation-tools[ensono/eir-foundation-tools]
-| Bundle | AWS CLI | 2.15.8 | https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.15.8.zip
 | PS Module | PowerShell YAML | |
 | PS Module | Pester | |
 | PS Module | PSCloudShell | |

@@ -35,6 +35,15 @@ parameters:
         imageName: ensono/eir-foundation-builder
         docsPath: foundation/builder
 
+      - stage: FoundationAWSCli
+        displayName: "[CONTAINER] Foundation - AWS CLI"
+        dependsOn:
+          - FoundationBuilder
+          - FoundationPowerShell
+        taskName: build:foundation:aws-cli
+        imageName: ensono/eir-foundation-aws-cli
+        docsPath: foundation/aws-cli
+
       - stage: FoundationAzureCli
         displayName: "[CONTAINER] Foundation - Azure CLI"
         dependsOn:
@@ -53,14 +62,23 @@ parameters:
         imageName: ensono/eir-foundation-tools
         docsPath: foundation/tools
 
-      - stage: Infra
-        displayName: "[CONTAINER] Infrastructure"
+      - stage: InfraAWS
+        displayName: "[CONTAINER] Infrastructure AWS"
         dependsOn:
           - FoundationTools
           - FoundationAzureCli
-        taskName: build:infrastructure
-        imageName: ensono/eir-infrastructure
-        docsPath: infrastructure
+        taskName: build:infrastructure-aws
+        imageName: ensono/eir-infrastructure-aws
+        docsPath: infrastructure-aws
+
+      - stage: InfraAzure
+        displayName: "[CONTAINER] Infrastructure Azure"
+        dependsOn:
+          - FoundationTools
+          - FoundationAzureCli
+        taskName: build:infrastructure-azure
+        imageName: ensono/eir-infrastructure-azure
+        docsPath: infrastructure-azure
 
       - stage: Java
         displayName: "[CONTAINER] Java"

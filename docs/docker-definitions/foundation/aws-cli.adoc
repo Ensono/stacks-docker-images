@@ -1,0 +1,21 @@
+== EIR Foundation Azure CLI
+
+The Azure CLI is a large application that is used to manipulate resources in Azure. It is in its own image so that it can be used as a base image for other container images, such as `data`.
+
+The CLI can be added to, for example the `datafactory` extension.
+
+The image is built from the Ensono PowerShell image.
+
+=== Specs
+
+**Platforms**: `linux/amd64`, `linux/arm64`
+
+**Base Image**: ensono/eir-foundation-image
+
+==== Software
+
+[cols="1,2,1,2",options=header]
+|====
+| Type | Name | Version | URL 
+| Binary | Azure CLI | 2.48.1 | https://github.com/PowerShell/PowerShell 
+|====

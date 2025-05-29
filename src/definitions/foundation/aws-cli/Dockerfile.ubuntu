@@ -1,0 +1,13 @@
+ARG REGISTRY=docker.io
+ARG IMAGE_TAG=0.0.1-workstation
+ARG ORG=ensono
+
+FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
+
+# Use the following page to show the list of available AWS CLI versions
+ARG AWS_CLI_VERSION=2.27.24
+
+# Install the AWS CLI application
+COPY files/requirements.txt /tmp/requirements.txt
+COPY files/install.bash /usr/local/bin/install.bash
+RUN chmod +x /usr/local/bin/install.bash && /usr/local/bin/install.bash

@@ -21,6 +21,12 @@ pipelines:
         IMAGE_NAME: ensono/eir-foundation-builder
         DOCKER_BUILD_ARGS: -f ./src/definitions/foundation/builder/Dockerfile.ubuntu ./src/definitions/foundation/builder --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
 
+  build:foundation:aws-cli:
+    - task: build:image:container
+      variables:
+        IMAGE_NAME: ensono/eir-foundation-aws-cli
+        DOCKER_BUILD_ARGS: -f ./src/definitions/foundation/aws-cli/Dockerfile.ubuntu ./src/definitions/foundation/azure-cli --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
+
   build:foundation:azure-cli:
     - task: build:image:container
       variables:
@@ -35,11 +41,17 @@ pipelines:
 
   # Build the images using the tools container
   # This means that there is less to install on a local machine to get things working
-  build:infrastructure:
+  build:infrastructure-aws:
     - task: build:image:container
       variables:
-        IMAGE_NAME: ensono/eir-infrastructure
-        DOCKER_BUILD_ARGS: -f ./src/definitions/infrastructure/Dockerfile.ubuntu ./src/definitions/infrastructure --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
+        IMAGE_NAME: ensono/eir-infrastructure-aws
+        DOCKER_BUILD_ARGS: -f ./src/definitions/infrastructure-aws/Dockerfile.ubuntu ./src/definitions/infrastructure-aws --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
+
+  build:infrastructure-azure:
+    - task: build:image:container
+      variables:
+        IMAGE_NAME: ensono/eir-infrastructure-azure
+        DOCKER_BUILD_ARGS: -f ./src/definitions/infrastructure-azure/Dockerfile.ubuntu ./src/definitions/infrastructure-azure --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
 
   build:java:
     - task: build:image:container
