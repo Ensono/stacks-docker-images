@@ -16,3 +16,21 @@ This Docker image is built from the foundation PowerShell image and installs `do
 | Binary | Docker | 24.0.7 | https://download.docker.com/linux/static/stable
 | Extension | Docker Buildx | 0.12.0 | https://github.com/docker/buildx/releases
 |====
+
+
+[mermaid]
+----
+graph TD
+    A[ensono/eir-foundation-powershell] --> B[ensono/eir-foundation-builder]
+    A --> C[ensono/eir-foundation-tools]
+    A --> D[ensono/eir-foundation-azure-cli]
+    B --> E[ensono/eir-java]
+    C --> F[ensono/eir-infrastructure]
+    C --> G[ensono/eir-golang]
+    C --> H[ensono/eir-inspec]
+    C --> I[ensono/eir-kong]
+    D --> J[ensono/eir-data]
+    E --> K[ensono/eir-dotnet]
+    E --> L[ensono/eir-asciidoctor]
+    G --> M[ensono/eir-nodejs]
+----
