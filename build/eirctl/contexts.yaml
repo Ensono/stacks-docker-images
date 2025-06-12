@@ -1,0 +1,74 @@
+contexts:
+  powershell_docker:
+    container:
+      name: ensono/eir-foundation-builder
+      enable_dind: true
+      shell: pwsh
+      shell_args:
+        - -Command
+    envfile:
+      exclude:
+        - POSH_AZURE_SUBSCRIPTION
+
+    # executable:
+    #   bin: docker
+    #   args:
+    #     - run
+    #     - --env-file
+    #     - envfile
+    #     - --rm
+    #     - -v
+    #     - ${PWD}:/app
+    #     - -v
+    #     - /var/run/docker.sock:/var/run/docker.sock
+    #     - -w
+    #     - /app
+    #     - ensono/eir-foundation-builder:1.1.224
+    #     - pwsh
+    #     - -Command
+    # quote: "'"
+    # envfile:
+    #   exclude:
+    #     - home
+    #     - path
+    #     - POSH_AZURE_SUBSCRIPTION
+    #   generate: true
+
+  powershell:
+    executable:
+      bin: pwsh
+      args:
+        - -NoProfile
+        - -Command
+    quote: "'"
+
+  docsenv:
+    container:
+      name: ensono/eir-asciidoctor
+      shell: pwsh
+      shell_args:
+        - -Command
+    envfile:
+      exclude:
+        - POSH_AZURE_SUBSCRIPTION
+
+    # executable:
+    #   bin: docker
+    #   args:
+    #     - run
+    #     - --rm
+    #     - -v
+    #     - ${PWD}:/app
+    #     - -w
+    #     - /app
+    #     - --env-file
+    #     - envfile
+    #     - ensono/eir-asciidoctor:1.1.224
+    #     - pwsh
+    #     - -Command
+    # envfile:
+    #   exclude:
+    #     - home
+    #     - path
+    #     - POSH_AZURE_SUBSCRIPTION
+    #   generate: true
