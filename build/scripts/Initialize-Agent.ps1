@@ -102,6 +102,8 @@ if ($install_eirctl) {
     # Extract the tarball
     # tar zxf /tmp/eirctl.tar.gz -C /usr/local/bin eirctl
     chmod +x /usr/local/bin/eirctl
+
+    Get-ChildItem /usr/local/bin/eirctl
 }
 
 # Install EnsonoBuild
