@@ -19,7 +19,7 @@ steps:
         script: |
           $InformationPreference = "Continue"
           . build/scripts/Initialize-Agent.ps1 `
-            -EaskctlVersion ${{ parameters.EirctlVersion }} `
+            -EirctlVersion ${{ parameters.EirctlVersion }} `
             -EnsonoBuildVersion ${{ parameters.EnsonoBuildVersion }} `
             -DockerPushRMVersion ${{ parameters.DockerPushRMVersion }} `
             -YqVersion ${{ parameters.YqVersion }} `
