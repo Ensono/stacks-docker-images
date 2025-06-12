@@ -1,5 +1,5 @@
 parameters:
-  - name: TaskctlVersion
+  - name: EirctlVersion
     type: string
   - name: EnsonoBuildVersion
     type: string

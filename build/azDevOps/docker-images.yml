@@ -195,7 +195,7 @@ stages:
         steps:
           - template: templates/configure_agent.yml
             parameters:
-              TaskctlVersion: $(TaskctlVersion)
+              EirctlVersion: $(EirctlVersion)
               EnsonoBuildVersion: $(EnsonoBuildVersion)
               DockerPushRMVersion: $(DockerPushRMVersion)
               YqVersion: $(YqVersion)
@@ -264,7 +264,7 @@ stages:
         steps:
           - template: templates/configure_agent.yml
             parameters:
-              TaskctlVersion: $(TaskctlVersion)
+              EirctlVersion: $(EirctlVersion)
               EnsonoBuildVersion: $(EnsonoBuildVersion)
               DockerPushRMVersion: $(DockerPushRMVersion)
               YqVersion: $(YqVersion)
@@ -318,7 +318,7 @@ stages:
             steps:
               - template: templates/configure_agent.yml
                 parameters:
-                  TaskctlVersion: $(TaskctlVersion)
+                  EirctlVersion: $(EirctlVersion)
                   EnsonoBuildVersion: $(EnsonoBuildVersion)
                   DockerPushRMVersion: $(DockerPushRMVersion)
                   YqVersion: $(YqVersion)
@@ -350,7 +350,7 @@ stages:
             steps:
               - template: templates/configure_agent.yml
                 parameters:
-                  TaskctlVersion: $(TaskctlVersion)
+                  EirctlVersion: $(EirctlVersion)
                   EnsonoBuildVersion: $(EnsonoBuildVersion)
                   DockerPushRMVersion: $(DockerPushRMVersion)
                   YqVersion: $(YqVersion)
@@ -389,7 +389,7 @@ stages:
 
               - template: templates/configure_agent.yml
                 parameters:
-                  TaskctlVersion: $(TaskctlVersion)
+                  EirctlVersion: $(EirctlVersion)
                   EnsonoBuildVersion: $(EnsonoBuildVersion)
                   DockerPushRMVersion: $(DockerPushRMVersion)
                   YqVersion: $(YqVersion)
@@ -423,7 +423,7 @@ stages:
             steps:
               - template: templates/configure_agent.yml
                 parameters:
-                  TaskctlVersion: $(TaskctlVersion)
+                  EirctlVersion: $(EirctlVersion)
                   EnsonoBuildVersion: $(EnsonoBuildVersion)
                   DockerPushRMVersion: $(DockerPushRMVersion)
                   YqVersion: $(YqVersion)

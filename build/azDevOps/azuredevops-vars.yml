@@ -2,13 +2,13 @@
 # by the build
 variables:
   # Dependency versions
-  - name: TaskctlVersion
-    value: 2.0.5
+  - name: EirctlVersion
+    value: 0.6.5
   ## NOTE: This variable is also used in
   ## 'src/definitions/foundation/powershell/Dockerfile.ubuntu'. Please update
   ## it there also on version bumps.
   - name: EnsonoBuildVersion
-    value: 1.1.37
+    value: 1.2.19
   - name: DockerPushRMVersion
     value: 1.9.0
   - name: YqVersion

@@ -12,8 +12,8 @@ param (
     [Parameter(
         Mandatory = $true
     )]
-    # Version of taskctl to install
-    $TaskctlVersion,
+    # Version of eirctl to install
+    $eirctlVersion,
 
     [string]
     [Parameter(
@@ -57,51 +57,51 @@ $uname_arch = Invoke-Expression -Command "uname -m"
 if ($uname_arch -eq "x86_64") {
     $bin_arch = "amd64"
     $abbr_arch = "x64"
-    $taskctl_arch = "amd64"
+    $eirctl_arch = "amd64"
 }
 elseif (@("aarch64", "arm64") -contains $uname_arch) {
     $bin_arch = "arm64"
     $abbr_arch = $bin_arch
-    $taskctl_arch = "arm64"
+    $eirctl_arch = "arm64"
 }
 
-# Install Taskctl
+# Install eirctl
 # - if not exists, download and install
 # - if it does exist, check the version and update if necessary
-$install_taskctl = $false
-$taskctl_bin = "/usr/local/bin/taskctl"
-if (Test-Path -Path $taskctl_bin) {
+$install_eirctl = $false
+$eirctl_bin = "/usr/local/bin/eirctl"
+if (Test-Path -Path $eirctl_bin) {
 
-    Write-Information "Taskctl is installed, getting version"
+    Write-Information "eirctl is installed, getting version"
 
     # get the current version and compare the with the version to install
-    $version_string = Invoke-Expression -Command "taskctl --version"
+    $version_string = Invoke-Expression -Command "eirctl --version"
     $version = ($version_string -split " ")[2]
-    if ($version -ne $TaskctlVersion) {
+    if ($version -ne $eirctlVersion) {
 
-        Write-Information "Taskctl [$version] is out of date, updating to version $TaskctlVersion"
+        Write-Information "eirctl [$version] is out of date, updating to version $eirctlVersion"
 
-        $install_taskctl = $true
+        $install_eirctl = $true
     }
 
 }
 else {
 
-    Write-Information "Taskctl is not installed, installing version $TaskctlVersion"
+    Write-Information "eirctl is not installed, installing version $eirctlVersion"
 
-    $install_taskctl = $true
+    $install_eirctl = $true
 }
 
-if ($install_taskctl) {
+if ($install_eirctl) {
 
-    # Set the URL to download taskctl
-    $url = "https://github.com/Ensono/taskctl/releases/download/{0}/taskctl-linux-{1}" -f $TaskctlVersion, $taskctl_arch
+    # Set the URL to download eirctl
+    $url = "https://github.com/Ensono/eirctl/releases/download/{0}/eirctl-linux-{1}" -f $eirctlVersion, $eirctl_arch
 
-    Invoke-RestMethod -Uri $url -OutFile "/usr/local/bin/taskctl"
+    Invoke-RestMethod -Uri $url -OutFile "/usr/local/bin/eirctl"
 
     # Extract the tarball
-    # tar zxf /tmp/taskctl.tar.gz -C /usr/local/bin taskctl
-    chmod +x /usr/local/bin/taskctl
+    # tar zxf /tmp/eirctl.tar.gz -C /usr/local/bin eirctl
+    chmod +x /usr/local/bin/eirctl
 }
 
 # Install EnsonoBuild
@@ -190,6 +190,6 @@ chmod u+x /usr/local/bin/yq
 ## Replace registry and tag
 $yqCommand = '.contexts.powershell_docker.executable.args[] |= select(contains("ensono/eir-foundation-builder")) = "{0}/ensono/eir-foundation-builder:{1}"' -f $DockerContainerRegistryName, $BuildNumber
 Write-Information ("Executing yq with '{0}'" -f $yqCommand)
-yq -i $yqCommand build/taskctl/contexts.yaml
+yq -i $yqCommand build/eirctl/contexts.yaml
 
-Get-Content -Raw build/taskctl/contexts.yaml
+Get-Content -Raw build/eirctl/contexts.yaml
