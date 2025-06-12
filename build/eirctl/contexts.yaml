@@ -11,7 +11,7 @@ contexts:
         - POSH_AZURE_SUBSCRIPTION
 
   powershell:
-    Executable:
+    executable:
       bin: pwsh
       args:
         - -NoProfile
