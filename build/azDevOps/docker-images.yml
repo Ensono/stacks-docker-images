@@ -200,7 +200,7 @@ stages:
               DockerPushRMVersion: $(DockerPushRMVersion)
               YqVersion: $(YqVersion)
               # NOTE: These won't be set properly for this job...
-              # $(BuildNumber) is set below from `taskctl setup`
+              # $(BuildNumber) is set below from `eirctl setup`
               # $(DockerContainerRegistryName) is from a variable group not
               # defined here
               # The build doesn't currently use these as the TF runs on the host
@@ -212,14 +212,14 @@ stages:
             inputs:
               targetType: inline
               script: |
-                taskctl setup
+                eirctl setup
 
           - task: Bash@3
             displayName: Terraform Variables
             inputs:
               targetType: inline
               script: |
-                taskctl infrastructure_variables
+                eirctl infrastructure_variables
             env:
               STAGE: acr
               TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
@@ -238,7 +238,7 @@ stages:
             inputs:
               targetType: inline
               script: |
-                taskctl infrastructure
+                eirctl infrastructure
             env:
               CLOUD_PLATFORM: azure
               TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
@@ -279,7 +279,7 @@ stages:
             inputs:
               targetType: inline
               script: |
-                taskctl docs
+                eirctl docs
 
           # Upload the documentation
           - task: PublishBuildArtifacts@1
@@ -293,7 +293,7 @@ stages:
             inputs:
               targetType: inline
               script: |
-                taskctl generate:docker:overview
+                eirctl generate:docker:overview
 
           # Upload the overview documentation
           - task: PublishBuildArtifacts@1
@@ -330,7 +330,7 @@ stages:
                     inputs:
                       targetType: inline
                       script: |
-                        taskctl image-pull-foundation-builder
+                        eirctl image-pull-foundation-builder
                     displayName: Pull Pwsh Foundation Image
 
               - task: Bash@3
@@ -338,7 +338,7 @@ stages:
                 inputs:
                   targetType: inline
                   script: |
-                    taskctl ${{ stage.taskName }}
+                    eirctl ${{ stage.taskName }}
                 env:
                   DOCKER_IMAGE_NAME: ${{ stage.imageName }}
                   DOCKER_IMAGE_TAG: $(Build.BuildNumber)
@@ -362,7 +362,7 @@ stages:
                     inputs:
                       targetType: inline
                       script: |
-                        taskctl image-pull-foundation-builder
+                        eirctl image-pull-foundation-builder
                     displayName: Pull Pwsh Foundation Builder Image
 
               - task: Bash@3
@@ -370,7 +370,7 @@ stages:
                 inputs:
                   targetType: inline
                   script: |
-                    taskctl ${{ stage.taskName }}
+                    eirctl ${{ stage.taskName }}
                 env:
                   DOCKER_IMAGE_NAME: ${{ stage.imageName }}
                   DOCKER_IMAGE_TAG: $(Build.BuildNumber)
@@ -401,7 +401,7 @@ stages:
                 inputs:
                   targetType: inline
                   script: |
-                    taskctl create:docker:manifest
+                    eirctl create:docker:manifest
                 env:
                   DOCKER_IMAGE_NAME: ${{ stage.imageName }}
                   DOCKER_IMAGE_TAG: $(Build.BuildNumber)
@@ -434,12 +434,12 @@ stages:
                 inputs:
                   targetType: inline
                   script: |
-                    taskctl image-pull-foundation-builder
+                    eirctl image-pull-foundation-builder
                 displayName: Pull Pwsh Foundation Image
 
               - task: Bash@3
                 inputs:
                   targetType: inline
                   script: |
-                    taskctl publish:github
+                    eirctl publish:github
                 displayName: Publish Release

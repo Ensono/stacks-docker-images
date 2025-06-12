@@ -28,7 +28,7 @@ ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
 # Remove the package
 rm /tmp/powershell.tar.gz
 
-# Taskctl Runner ------------------------------------------------------------
+# Eirctl Runner ------------------------------------------------------------
 mkdir -p /usr/local/eirctl/bin
 curl --fail-with-body -L "https://github.com/Ensono/eirctl/releases/download/${EIRCTL_VERSION}/eirctl-linux-${BIN_ARCH}" -o /usr/local/eirctl/bin/eirctl
 chmod +x /usr/local/eirctl/bin/eirctl
