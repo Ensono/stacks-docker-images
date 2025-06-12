@@ -13,7 +13,7 @@ param (
         Mandatory = $true
     )]
     # Version of eirctl to install
-    $eirctlVersion,
+    $EirctlVersion,
 
     [string]
     [Parameter(
