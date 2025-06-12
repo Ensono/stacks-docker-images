@@ -29,9 +29,9 @@ ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
 rm /tmp/powershell.tar.gz
 
 # Taskctl Runner ------------------------------------------------------------
-mkdir -p /usr/local/taskctl/bin
-curl --fail-with-body -L "https://github.com/Ensono/taskctl/releases/download/${TASKCTL_VERSION}/taskctl-linux-${BIN_ARCH}" -o /usr/local/taskctl/bin/taskctl
-chmod +x /usr/local/taskctl/bin/taskctl
+mkdir -p /usr/local/eirctl/bin
+curl --fail-with-body -L "https://github.com/Ensono/eirctl/releases/download/${EIRCTL_VERSION}/eirctl-linux-${BIN_ARCH}" -o /usr/local/eirctl/bin/eirctl
+chmod +x /usr/local/eirctl/bin/eirctl
 # ---------------------------------------------------------------------------
 
 # Independent Runner module *************************************************
