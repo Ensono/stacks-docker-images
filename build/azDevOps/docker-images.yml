@@ -222,7 +222,7 @@ stages:
                 eirctl infrastructure_variables
             env:
               STAGE: acr
-              TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
+              EIRCTL_DEBUG: ${{ lower(parameters.debug) }}
               TF_FILE_LOCATION: deploy/terraform/azure/acr
 
               TF_VAR_name_company: $(name_company)
@@ -241,7 +241,7 @@ stages:
                 eirctl infrastructure
             env:
               CLOUD_PLATFORM: azure
-              TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
+              EIRCTL_DEBUG: ${{ lower(parameters.debug) }}
               TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
               TF_FILE_LOCATION: deploy/terraform/azure/acr
               STAGE: acr
