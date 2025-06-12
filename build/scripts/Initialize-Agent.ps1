@@ -104,6 +104,9 @@ if ($install_eirctl) {
     chmod +x /usr/local/bin/eirctl
 
     Get-ChildItem /usr/local/bin/eirctl
+
+    # Output the version of eirctl
+    eirctl -v
 }
 
 # Install EnsonoBuild
