@@ -193,7 +193,7 @@ Invoke-RestMethod @splat
 chmod u+x /usr/local/bin/yq
 
 ## Replace registry and tag
-$yqCommand = '.contexts.powershell_docker.executable.args[] |= select(contains("ensono/eir-foundation-builder")) = "{0}/ensono/eir-foundation-builder:{1}"' -f $DockerContainerRegistryName, $BuildNumber
+$yqCommand = '.contexts.powershell_docker.container.name |= select(contains("ensono/eir-foundation-builder")) = "{0}/ensono/eir-foundation-builder:{1}"' -f $DockerContainerRegistryName, $BuildNumber
 Write-Information ("Executing yq with '{0}'" -f $yqCommand)
 yq -i $yqCommand build/eirctl/contexts.yaml
 
