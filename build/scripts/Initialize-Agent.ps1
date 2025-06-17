@@ -72,6 +72,19 @@ elseif (@("aarch64", "arm64") -contains $uname_arch) {
     $eirctl_arch = "arm64"
 }
 
+# Install unzip on the agent, if it is not installed
+$unzip_installed = Get-Command -Name "unzip" -ErrorAction SilentlyContinue
+if ([String]::IsNullOrEmpty($unzip_installed)) {
+
+    Write-Information "Unzip is not installed, installing it now"
+    sudo apt-get update
+    sudo apt-get install -y unzip
+
+}
+else {
+    Write-Information "Unzip is already installed"
+}
+
 # Install eirctl
 # - if not exists, download and install
 # - if it does exist, check the version and update if necessary
