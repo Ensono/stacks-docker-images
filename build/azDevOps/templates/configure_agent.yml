@@ -20,11 +20,17 @@ steps:
         targetType: inline
         script: |
           $InformationPreference = "Continue"
-          . build/scripts/Initialize-Agent.ps1 `
-            -EirctlVersion ${{ parameters.EirctlVersion }} `
-            -TerraformVersion ${{ parameters.TerraformVersion }} `
-            -EnsonoBuildVersion ${{ parameters.EnsonoBuildVersion }} `
-            -DockerPushRMVersion ${{ parameters.DockerPushRMVersion }} `
-            -YqVersion ${{ parameters.YqVersion }} `
-            -BuildNumber ${{ parameters.BuildNumber }} `
-            -DockerContainerRegistryName ${{ parameters.DockerContainerRegistryName }}
+
+          $splat = @{
+            EirctlVersion = "${{ parameters.EirctlVersion }}"
+            TerraformVersion = "${{ parameters.TerraformVersion }}"
+            EnsonoBuildVersion = "${{ parameters.EnsonoBuildVersion }}"
+            DockerPushRMVersion = "${{ parameters.DockerPushRMVersion }}"
+            YqVersion = "${{ parameters.YqVersion }}"
+            BuildNumber = "${{ parameters.BuildNumber }}"
+            DockerContainerRegistryName = "${{ parameters.DockerContainerRegistryName }}"
+          }
+
+          $splat
+
+          . build/scripts/Initialize-Agent.ps1 @splat
