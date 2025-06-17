@@ -40,7 +40,7 @@ tasks:
     description: Build Docs for Stacks CLI
     context: docsenv
     command:
-      - Invoke-AsciiDoc -PDF -basepath /app -config /app/docs.json -debug
+      - Invoke-AsciiDoc -PDF -basepath /eirctl -config /eirctl/docs.json -debug
 
   infra:init:
     context: powershell
