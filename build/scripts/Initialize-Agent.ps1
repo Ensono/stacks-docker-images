@@ -139,7 +139,10 @@ if ($install_terraform) {
 
     $url = "https://releases.hashicorp.com/terraform/{0}/terraform_{0}_linux_{1}.zip" -f $TerraformVersion, $bin_arch
 
-    Invoke-RestMethod -Uri $url -OutFile "/usr/local/bin/terraform"
+    Invoke-RestMethod -Uri $url -OutFile "/tmp/terraform.zip"
+
+    # Extract Terraform from the zip file
+    unzip -j /tmp/terraform.zip -d /usr/local/bin terraform
 
     chmod +x /usr/local/bin/terraform
 
