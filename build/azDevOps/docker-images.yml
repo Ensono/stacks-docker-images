@@ -196,6 +196,7 @@ stages:
           - template: templates/configure_agent.yml
             parameters:
               EirctlVersion: $(EirctlVersion)
+              TerraformVersion: $(TerraformVersion)
               EnsonoBuildVersion: $(EnsonoBuildVersion)
               DockerPushRMVersion: $(DockerPushRMVersion)
               YqVersion: $(YqVersion)
