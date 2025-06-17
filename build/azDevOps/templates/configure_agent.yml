@@ -1,6 +1,8 @@
 parameters:
   - name: EirctlVersion
     type: string
+  - name: TerraformVersion
+    type: string
   - name: EnsonoBuildVersion
     type: string
   - name: DockerPushRMVersion
@@ -20,6 +22,7 @@ steps:
           $InformationPreference = "Continue"
           . build/scripts/Initialize-Agent.ps1 `
             -EirctlVersion ${{ parameters.EirctlVersion }} `
+            -TerraformVersion ${{ parameters.TerraformVersion }} `
             -EnsonoBuildVersion ${{ parameters.EnsonoBuildVersion }} `
             -DockerPushRMVersion ${{ parameters.DockerPushRMVersion }} `
             -YqVersion ${{ parameters.YqVersion }} `
