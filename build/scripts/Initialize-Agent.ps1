@@ -19,6 +19,13 @@ param (
     [Parameter(
         Mandatory = $true
     )]
+    # Version of terraform to install
+    $TerraformVersion,
+
+    [string]
+    [Parameter(
+        Mandatory = $true
+    )]
     # Version of EnsobBuild to install
     $EnsonoBuildVersion,
 
@@ -107,6 +114,36 @@ if ($install_eirctl) {
 
     # Output the version of eirctl
     eirctl -v
+}
+
+# Install Terraform
+# On ADO agents using Ubuntu 24.04 Terraform is not installed by default
+# This checks to see if Terraform is installed, and if not, installs it
+$terraform_path = Get-Command -Name "terraform" -ErrorAction SilentlyContinue
+$install_terraform = $false
+if ([String]::IsNullOrEmpty($terraform_path)) {
+
+    Write-Information "Terraform is not installed, installing version $TerraformVersion"
+    $install_terraform = $true
+}
+else {
+    Write-Information "Terraform is installed, checking version"
+    $version_object = Invoke-Expression -Command "terraform version -json" | ConvertFrom-Json
+    if ($version_object.terraform_version -ne $TerraformVersion) {
+        Write-Information "Terraform [$version] is not as expected, installing version $TerraformVersion"
+        $install_terraform = $true
+    }
+}
+
+if ($install_terraform) {
+
+    $url = "https://releases.hashicorp.com/terraform/{0}/terraform_{0}_linux_{1}.zip" -f $TerraformVersion, $bin_arch
+
+    Invoke-RestMethod -Uri $url -OutFile "/usr/local/bin/terraform"
+
+    chmod +x /usr/local/bin/terraform
+
+    terraform version
 }
 
 # Install EnsonoBuild
