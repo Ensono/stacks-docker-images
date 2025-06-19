@@ -7,7 +7,7 @@ set -euxo pipefail
 
 # Script to install python and the cloud CLI tools
 apt-get update
-apt-get install -y gnupg lsb-release
+apt-get install -y gnupg lsb-release python3-pip
 
 # Install AZ CLI
 mkdir -p /etc/apt/keyrings
