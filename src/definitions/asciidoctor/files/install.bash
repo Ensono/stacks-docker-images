@@ -43,7 +43,7 @@ apt-get install -y \
     libgbm1 \
     libxkbcommon0 \
     libasound2 \
-    rsvg-convert
+    librsvg2-bin
 
 # Install python packages
 pip install --no-cache-dir \
