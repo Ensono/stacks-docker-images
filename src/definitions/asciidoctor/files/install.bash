@@ -42,7 +42,8 @@ apt-get install -y \
     libxrandr2 \
     libgbm1 \
     libxkbcommon0 \
-    libasound2
+    libasound2 \
+    rsvg-convert
 
 # Install python packages
 pip install --no-cache-dir \
