@@ -13,7 +13,7 @@ FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
 # Defined above
 ARG JAVA_MAJOR
 
-ARG MAVEN_VERSION=3.8.8
+ARG MAVEN_VERSION=3.8.9
 ARG SONAR_SCANNER_VERSION=6.1.0.4477
 
 # Copy Java from the java image into this image
