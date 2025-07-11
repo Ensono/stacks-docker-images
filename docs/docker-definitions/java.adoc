@@ -15,5 +15,5 @@ The JVM is copied from the azul/zulu-openjdk image. This is done so that we do n
 [cols="1,2,1,2",options=header]
 |====
 | Type | Name | Version | URL
-| Binary | Maven | 3.8.8 | https://dlcdn.apache.org/maven/maven-3/3.8.8/binaries/apache-maven-3.8.8-bin.zip
+| Binary | Maven | 3.8.9 | https://dlcdn.apache.org/maven/maven-3/3.8.9/binaries/apache-maven-3.8.9-bin.zip
 |====
