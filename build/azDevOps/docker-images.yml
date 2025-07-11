@@ -62,18 +62,26 @@ parameters:
         imageName: ensono/eir-infrastructure
         docsPath: infrastructure
 
-      - stage: Java
-        displayName: "[CONTAINER] Java"
+      - stage: JavaAzul
+        displayName: "[CONTAINER] Java - Azul"
         dependsOn:
           - FoundationTools
-        taskName: build:java
-        imageName: ensono/eir-java
+        taskName: build:java_azul
+        imageName: ensono/eir-java-azul
+        docsPath: java
+
+      - stage: JavaOpenJDK
+        displayName: "[CONTAINER] Java - OpenJDK"
+        dependsOn:
+          - FoundationTools
+        taskName: build:java_openjdk
+        imageName: ensono/eir-java-openjdk
         docsPath: java
 
       - stage: DotNet
         displayName: "[CONTAINER] .NET"
         dependsOn:
-          - Java
+          - JavaOpenJDK
         taskName: build:dotnet
         imageName: ensono/eir-dotnet
         docsPath: dotnet
@@ -117,7 +125,7 @@ parameters:
       - stage: AsciiDoctor
         displayName: "[CONTAINER] AsciiDoctor"
         dependsOn:
-          - Java
+          - JavaOpenJDK
           - NodeJS
         taskName: build:asciidoctor
         imageName: ensono/eir-asciidoctor
@@ -128,6 +136,7 @@ parameters:
         dependsOn:
           - FoundationTools
           - FoundationAzureCli
+          - JavaOpenJDK
         taskName: build:data
         imageName: ensono/eir-azure-data
         docsPath: data

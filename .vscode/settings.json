@@ -1,0 +1,13 @@
+{
+    "yaml.schemas": {
+        "https://raw.githubusercontent.com/Ensono/taskctl/refs/heads/master/schemas/schema_v1.json": [
+            "**/build/taskctl/tasks.{yml,yaml}",
+            "**/build/taskctl/contexts.{yml,yaml}",
+            "taskctl.{yml,yaml}"
+        ],
+        "https://raw.githubusercontent.com/microsoft/azure-pipelines-vscode/master/service-schema.json": [
+            "file:///c%3A/Users/rseymour/workspaces/ensono/stacks/stacks-docker-images/build/azDevOps/docker-images.yml",
+            "file:///c%3A/Users/rseymour/workspaces/ensono/stacks/stacks-docker-images/build/azDevOps/azuredevops-vars.yml"
+        ]
+    }
+}

@@ -41,11 +41,17 @@ pipelines:
         IMAGE_NAME: ensono/eir-infrastructure
         DOCKER_BUILD_ARGS: -f ./src/definitions/infrastructure/Dockerfile.ubuntu ./src/definitions/infrastructure --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
 
-  build:java:
+  build:java_azul:
     - task: build:image:container
       variables:
-        IMAGE_NAME: ensono/eir-java
-        DOCKER_BUILD_ARGS: -f ./src/definitions/java/Dockerfile.ubuntu ./src/definitions/java --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
+        IMAGE_NAME: ensono/eir-java-azul
+        DOCKER_BUILD_ARGS: -f ./src/definitions/java/azul/Dockerfile.ubuntu ./src/definitions/java/azul --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
+
+  build:java_openjdk:
+    - task: build:image:container
+      variables:
+        IMAGE_NAME: ensono/eir-java-azul
+        DOCKER_BUILD_ARGS: -f ./src/definitions/java/openjdk/Dockerfile.ubuntu ./src/definitions/java/openjdk --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
 
   build:dotnet:
     - task: build:image:container
