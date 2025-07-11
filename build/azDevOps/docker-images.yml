@@ -128,6 +128,7 @@ parameters:
         dependsOn:
           - FoundationTools
           - FoundationAzureCli
+          - Java
         taskName: build:data
         imageName: ensono/eir-azure-data
         docsPath: data
