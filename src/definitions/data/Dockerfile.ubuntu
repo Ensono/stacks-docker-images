@@ -12,7 +12,7 @@ FROM ${REGISTRY}/${ORG}/eir-foundation-azure-cli:${IMAGE_TAG}
 COPY --from=tools /usr/local/jq /usr/local/jq
 
 # Copy Java from the java image
-COPY --from=java /usr/local/java/ /usr/local/java/
+COPY --from=base /usr/local/java/ /usr/local/java/
 
 # Run the install script to get the additional commands
 COPY files/install.bash /tmp/install.bash
