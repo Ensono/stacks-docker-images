@@ -110,6 +110,17 @@ Uses `EnsonoBuild` PowerShell module for:
 - Supports multi-platform builds and manifest creation
 - Documentation generation integrated into build process
 
+## Dogfooding
+
+- This repository attempts to use its own Docker images for builds and documentation generation wherever possible, ensuring that the images are robust and fit for purpose.
+
+```powershell
+## Replace registry and tag
+$yqCommand = '.contexts.powershell_docker.executable.args[] |= select(contains("ensono/eir-foundation-builder")) = "{0}/ensono/eir-foundation-builder:{1}"' -f $DockerContainerRegistryName, $BuildNumber
+Write-Information ("Executing yq with '{0}'" -f $yqCommand)
+yq -i $yqCommand build/taskctl/contexts.yaml
+```
+
 ## Documentation System
 
 - AsciiDoc-based using custom `ensono/eir-asciidoctor` image
