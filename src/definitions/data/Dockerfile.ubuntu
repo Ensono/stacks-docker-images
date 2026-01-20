@@ -4,10 +4,15 @@ ARG ORG=ensono
 
 FROM ${REGISTRY}/${ORG}/eir-foundation-tools:${IMAGE_TAG} AS tools
 
+FROM ${REGISTRY}/${ORG}/eir-java:${IMAGE_TAG} AS base
+
 FROM ${REGISTRY}/${ORG}/eir-foundation-azure-cli:${IMAGE_TAG}
 
 # Copy JQ from the tools library
 COPY --from=tools /usr/local/jq /usr/local/jq
+
+# Copy Java from the java image
+COPY --from=base /usr/local/java/ /usr/local/java/
 
 # Run the install script to get the additional commands
 COPY files/install.bash /tmp/install.bash
@@ -16,4 +21,4 @@ COPY files/requirements.txt /tmp/requirements.txt
 RUN chmod +x /tmp/install.bash && /tmp/install.bash
 
 # Set the PATH so that the tools can be accessed
-ENV PATH="${PATH}:/usr/local/jq/bin"
+ENV PATH="${PATH}:/usr/local/jq/bin:/usr/local/java/bin"
