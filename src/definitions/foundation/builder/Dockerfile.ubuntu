@@ -6,7 +6,7 @@ FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
 
 # Set versions for applications to install
 ARG DOCKER_BUILDX_VERSION="0.12.0"
-ARG DOCKER_VERSION="24.0.7"
+ARG DOCKER_VERSION="29.2.1"
 
 # Copy the install script over and then run it
 COPY files/install.bash /usr/local/bin/install.bash
