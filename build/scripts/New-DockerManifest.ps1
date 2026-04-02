@@ -106,8 +106,13 @@ foreach ($tag in $Tags) {
 Write-Host ("Logging into registry: {0}" -f $registry)
 Invoke-External -Command "docker login -u $username -p $password $registry" -Dryrun:$Dryrun
 
-foreach ($image in $images) {
-    Wait-ForDockerManifest -Image $image -Retries $ManifestCheckRetries -DelaySeconds $ManifestCheckDelaySeconds
+if (-not $Dryrun.IsPresent) {
+    foreach ($image in $images) {
+        Wait-ForDockerManifest -Image $image -Retries $ManifestCheckRetries -DelaySeconds $ManifestCheckDelaySeconds
+    }
+}
+else {
+    Write-Host "Skipping manifest-availability checks in dry-run mode"
 }
 
 Invoke-External -Command "docker manifest create `"${registry}/${Name}:${Version}`" $($images -join " ")" -Dryrun:$Dryrun
