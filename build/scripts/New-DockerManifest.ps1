@@ -47,9 +47,49 @@ param (
     # State if manifest should be tagged as Latest
     $Latest,
 
+    [int]
+    # Number of times to check whether source image manifests are visible
+    $ManifestCheckRetries = 12,
+
+    [int]
+    # Delay between manifest availability checks in seconds
+    $ManifestCheckDelaySeconds = 10,
+
     [string]
     $DocsPath
 )
+
+function Wait-ForDockerManifest {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]
+        $Image,
+
+        [Parameter(Mandatory = $true)]
+        [int]
+        $Retries,
+
+        [Parameter(Mandatory = $true)]
+        [int]
+        $DelaySeconds
+    )
+
+    for ($attempt = 1; $attempt -le $Retries; $attempt++) {
+        & docker manifest inspect $Image *> $null
+
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host ("Found image manifest: {0}" -f $Image)
+            return
+        }
+
+        if ($attempt -eq $Retries) {
+            throw ("Image manifest did not become available after {0} attempts: {1}" -f $Retries, $Image)
+        }
+
+        Write-Host ("Waiting for image manifest ({0}/{1}): {2}" -f $attempt, $Retries, $Image)
+        Start-Sleep -Seconds $DelaySeconds
+    }
+}
 
 # Define default values for parameters not set
 if ([string]::IsNullOrEmpty($registry)) {
@@ -65,6 +105,10 @@ foreach ($tag in $Tags) {
 # Login to the specified container registry
 Write-Host ("Logging into registry: {0}" -f $registry)
 Invoke-External -Command "docker login -u $username -p $password $registry" -Dryrun:$Dryrun
+
+foreach ($image in $images) {
+    Wait-ForDockerManifest -Image $image -Retries $ManifestCheckRetries -DelaySeconds $ManifestCheckDelaySeconds
+}
 
 Invoke-External -Command "docker manifest create `"${registry}/${Name}:${Version}`" $($images -join " ")" -Dryrun:$Dryrun
 
