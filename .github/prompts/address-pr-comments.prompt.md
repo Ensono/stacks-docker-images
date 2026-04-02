@@ -17,7 +17,7 @@ of one notification per reply.
 ## Prerequisites
 
 - GitHub CLI (`gh`) installed and authenticated
-- GitHub MCP server available with PR tools activated
+- `taskctl`, `docker`, and `pwsh` available for repo build/validation flows
 - Current branch matches the PR branch being addressed
 - Repository has uncommitted changes handled (stash or commit first)
 - Ensure `GH_PAGER` is set to `cat` to avoid pagination issues with less requiring user interaction
@@ -123,12 +123,12 @@ Create a structured todo list:
   "comments": [
     {
       "id": "thread_id",
-      "path": "src/lib.rs",
-      "line": 42,
+         "path": "build/scripts/New-DockerManifest.ps1",
+         "line": 57,
       "category": "Code Change",
-      "summary": "Add error handling for edge case",
+         "summary": "Handle dry-run behavior safely",
       "reviewer": "reviewer_username",
-      "action_plan": "Add match arm for empty input"
+         "action_plan": "Skip network-dependent manifest checks in dry-run mode"
     }
   ]
 }
@@ -148,8 +148,8 @@ For each comment requiring code changes:
    - If the fix requires new tests, add them first (Red-Green-Refactor)
 
 3. **Validate the change**:
-   - Run the project's standard formatting and linting commands
-   - Run the relevant test suite(s) using the repository's documented test commands
+   - Run repository validation commands via `taskctl` and/or the relevant `build/scripts/*.ps1` script path for the changed component
+   - For pipeline-related changes, run the nearest local equivalent (for example `taskctl setup`, image build pipelines, or docs generation) and confirm commands succeed
    - Ensure required checks pass locally before preparing replies
 
 4. **Prepare reply text** for each addressed comment:
@@ -293,8 +293,8 @@ Output a summary:
 
 | Commit  | Files                | Comments Addressed |
 | ------- | -------------------- | ------------------ |
-| abc1234 | src/lib.rs           | #1, #3             |
-| def5678 | tests/integration.rs | #2                 |
+| abc1234 | build/scripts/New-DockerManifest.ps1 | #1, #3             |
+| def5678 | docs/docker-definitions/data.adoc     | #2                 |
 
 ### Review Submission
 
@@ -334,11 +334,11 @@ Agent:
 1. Fetching PR #26 details...
 2. Found 3 unresolved review threads
 3. Categorizing comments:
-   - Comment 1: Code change needed in src/routing.rs:142
-   - Comment 2: Documentation update in docs/USAGE.md
+   - Comment 1: Code change needed in build/scripts/New-DockerManifest.ps1:57
+   - Comment 2: Documentation update in docs/docker-definitions/data.adoc
    - Comment 3: Clarification question (will reply)
 4. Implementing fixes...
-5. Running validation (fmt, clippy, tests)...
+5. Running validation (taskctl pipelines / relevant pwsh script checks)...
 6. Committing changes...
 7. Submitting one batched review...
 8. Summary: 2 code changes committed, 1 clarification included in the batched review
@@ -355,6 +355,9 @@ gh pr view <number> --comments
 
 # Get review threads (GraphQL)
 gh api graphql -f query='...'
+
+# Run repository setup/validation helpers
+taskctl setup
 
 # Create a pending review
 gh api repos/{owner}/{repo}/pulls/{pr}/reviews --method POST
