@@ -93,14 +93,37 @@ function Wait-ForDockerManifest {
     }
 }
 
-# Allow retry behavior to be controlled from pipeline variables without changing taskctl invocation.
-if (-not [string]::IsNullOrWhiteSpace($env:DOCKER_MANIFEST_CHECK_RETRIES)) {
-    $ManifestCheckRetries = [int]$env:DOCKER_MANIFEST_CHECK_RETRIES
+function Get-PositiveIntEnvOverride {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]
+        $EnvVarName,
+
+        [Parameter(Mandatory = $true)]
+        [int]
+        $CurrentValue
+    )
+
+    $rawValue = [Environment]::GetEnvironmentVariable($EnvVarName)
+    if ([string]::IsNullOrWhiteSpace($rawValue)) {
+        return $CurrentValue
+    }
+
+    $parsedValue = 0
+    if (-not [int]::TryParse($rawValue, [ref]$parsedValue)) {
+        throw ("Invalid value for {0}: '{1}'. Expected a positive integer." -f $EnvVarName, $rawValue)
+    }
+
+    if ($parsedValue -le 0) {
+        throw ("Invalid value for {0}: '{1}'. Value must be greater than zero." -f $EnvVarName, $rawValue)
+    }
+
+    return $parsedValue
 }
 
-if (-not [string]::IsNullOrWhiteSpace($env:DOCKER_MANIFEST_CHECK_DELAY_SECONDS)) {
-    $ManifestCheckDelaySeconds = [int]$env:DOCKER_MANIFEST_CHECK_DELAY_SECONDS
-}
+# Allow retry behavior to be controlled from pipeline variables without changing taskctl invocation.
+$ManifestCheckRetries = Get-PositiveIntEnvOverride -EnvVarName "DOCKER_MANIFEST_CHECK_RETRIES" -CurrentValue $ManifestCheckRetries
+$ManifestCheckDelaySeconds = Get-PositiveIntEnvOverride -EnvVarName "DOCKER_MANIFEST_CHECK_DELAY_SECONDS" -CurrentValue $ManifestCheckDelaySeconds
 
 Write-Host ("Manifest availability checks configured: retries={0}, delaySeconds={1}" -f $ManifestCheckRetries, $ManifestCheckDelaySeconds)
 
