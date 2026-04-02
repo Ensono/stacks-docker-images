@@ -174,8 +174,9 @@ For each comment requiring code changes:
    git add <files_for_comment_1>
    git commit -m "fix(scope): address review comment - <summary>
 
-   Addresses review comment by @reviewer on PR #<number>:
-   <quote first line of comment>
+      Addresses review comment from @reviewer on PR #<number>.
+      Feedback (sanitized summary, no secrets or customer data):
+      - <brief sanitized summary of the feedback>
 
    Changes:
    - <change 1>
