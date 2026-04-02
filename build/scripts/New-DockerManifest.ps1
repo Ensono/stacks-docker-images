@@ -49,7 +49,7 @@ param (
 
     [int]
     # Number of times to check whether source image manifests are visible
-    $ManifestCheckRetries = 12,
+    $ManifestCheckRetries = 24,
 
     [int]
     # Delay between manifest availability checks in seconds
@@ -83,6 +83,8 @@ function Wait-ForDockerManifest {
         }
 
         if ($attempt -eq $Retries) {
+            # Emit inspect output once at the end to help diagnose registry propagation/auth issues in CI logs.
+            & docker manifest inspect $Image
             throw ("Image manifest did not become available after {0} attempts: {1}" -f $Retries, $Image)
         }
 
@@ -90,6 +92,17 @@ function Wait-ForDockerManifest {
         Start-Sleep -Seconds $DelaySeconds
     }
 }
+
+# Allow retry behavior to be controlled from pipeline variables without changing taskctl invocation.
+if (-not [string]::IsNullOrWhiteSpace($env:DOCKER_MANIFEST_CHECK_RETRIES)) {
+    $ManifestCheckRetries = [int]$env:DOCKER_MANIFEST_CHECK_RETRIES
+}
+
+if (-not [string]::IsNullOrWhiteSpace($env:DOCKER_MANIFEST_CHECK_DELAY_SECONDS)) {
+    $ManifestCheckDelaySeconds = [int]$env:DOCKER_MANIFEST_CHECK_DELAY_SECONDS
+}
+
+Write-Host ("Manifest availability checks configured: retries={0}, delaySeconds={1}" -f $ManifestCheckRetries, $ManifestCheckDelaySeconds)
 
 # Define default values for parameters not set
 if ([string]::IsNullOrEmpty($registry)) {

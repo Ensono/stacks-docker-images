@@ -388,6 +388,8 @@ stages:
                 env:
                   DOCKER_IMAGE_NAME: ${{ stage.imageName }}
                   DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+                  DOCKER_MANIFEST_CHECK_RETRIES: $(DOCKER_MANIFEST_CHECK_RETRIES)
+                  DOCKER_MANIFEST_CHECK_DELAY_SECONDS: $(DOCKER_MANIFEST_CHECK_DELAY_SECONDS)
                   DOCS_PATH: ${{ stage.docsPath }}
 
   - ${{ if or(eq(parameters['force_deploy'], 'true'), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
