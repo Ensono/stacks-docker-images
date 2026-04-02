@@ -108,7 +108,7 @@ For each unresolved comment, categorize as:
 | Category          | Action Required                          |
 | ----------------- | ---------------------------------------- |
 | **Code Change**   | Modify source file at specified location |
-| **Documentation** | Update docs, comments, or Rustdoc        |
+| **Documentation** | Update docs, comments, or API docs       |
 | **Test Addition** | Add or modify test cases                 |
 | **Clarification** | Reply with explanation (no code change)  |
 | **Out of Scope**  | Mark for follow-up issue creation        |
@@ -139,18 +139,18 @@ Create a structured todo list:
 For each comment requiring code changes:
 
 1. **Read the relevant file context**:
-   - Use `read_file` tool to get surrounding context (±20 lines around the comment line)
+   - Use available file-viewing tools (IDE, repository browser, or helper tooling) to get surrounding context (±20 lines around the comment line)
    - Understand the current implementation
 
 2. **Implement the fix**:
-   - Use `replace_string_in_file` or `multi_replace_string_in_file` for edits
+   - Use file-editing mechanisms available in your environment (IDE/editor, GitHub UI, or repository-specific automation commands)
    - Follow Constitution principles (TDD, Clean Code, Security-First)
    - If the fix requires new tests, add them first (Red-Green-Refactor)
 
 3. **Validate the change**:
-   - Run `cargo fmt` to ensure formatting
-   - Run `cargo clippy` to check for warnings
-   - Run relevant tests: `cargo test --workspace`
+   - Run the project's standard formatting and linting commands
+   - Run the relevant test suite(s) using the repository's documented test commands
+   - Ensure required checks pass locally before preparing replies
 
 4. **Prepare reply text** for each addressed comment:
 
