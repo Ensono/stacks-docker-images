@@ -32,8 +32,51 @@ param (
 
     [switch]
     # State that the script would run in dryrun and not to execute any commands
-    $dryrun
+    $dryrun,
+
+    [int]
+    # Number of times to verify image exists in registry after push
+    $PushVerifyRetries = 5,
+
+    [int]
+    # Delay in seconds between push verification attempts
+    $PushVerifyDelaySeconds = 10
 )
+
+$ErrorActionPreference = "Stop"
+
+function Wait-ForDockerImagePush {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]
+        $Image,
+
+        [Parameter(Mandatory = $true)]
+        [int]
+        $Retries,
+
+        [Parameter(Mandatory = $true)]
+        [int]
+        $DelaySeconds
+    )
+
+    for ($attempt = 1; $attempt -le $Retries; $attempt++) {
+        & docker manifest inspect $Image *> $null
+
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host ("Verified image exists in registry: {0}" -f $Image)
+            return
+        }
+
+        if ($attempt -eq $Retries) {
+            & docker manifest inspect $Image
+            throw ("Image was not found in registry after push ({0} attempts): {1}" -f $Retries, $Image)
+        }
+
+        Write-Host ("Verifying image push ({0}/{1}): {2}" -f $attempt, $Retries, $Image)
+        Start-Sleep -Seconds $DelaySeconds
+    }
+}
 
 # Enable experimental builds
 $env:DOCKER_CLI_AKV2_EXPERIMENTAL="enabled"
@@ -79,5 +122,19 @@ Write-Host ("Building docker image: {0}" -f ($platform -join ","))
 Write-Host "docker build $($buildArgs -join " ")"
 Invoke-External -Command "docker build $($buildArgs -join " ")" -Dryrun:$dryrun
 
+# Verify the image was built locally before attempting push
+if (-not $dryrun.IsPresent) {
+    & docker image inspect $image_name *> $null
+    if ($LASTEXITCODE -ne 0) {
+        throw ("Docker build failed: image not found locally: {0}" -f $image_name)
+    }
+    Write-Host ("Verified image built locally: {0}" -f $image_name)
+}
+
 Write-Host ("Push docker image: {0}" -f $image_name)
 Invoke-External -Command "docker push ${image_name}" -Dryrun:$dryrun
+
+# Verify the image exists in the registry after push
+if (-not $dryrun.IsPresent) {
+    Wait-ForDockerImagePush -Image $image_name -Retries $PushVerifyRetries -DelaySeconds $PushVerifyDelaySeconds
+}
