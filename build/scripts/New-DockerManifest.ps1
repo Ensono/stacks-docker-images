@@ -40,7 +40,7 @@ param (
     $password = $env:DOCKER_PASSWORD,
 
     [switch]
-    # State that the scritp whould run in dryrun and not to execute any commands
+    # State that the script would run in dry run and not to execute any commands
     $Dryrun,
 
     [switch]
