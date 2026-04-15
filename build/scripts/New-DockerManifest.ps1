@@ -40,23 +40,99 @@ param (
     $password = $env:DOCKER_PASSWORD,
 
     [switch]
-    # State that the scritp whould run in dryrun and not to execute any commands
+    # State that the script would run in dryrun and not to execute any commands
     $Dryrun,
 
     [switch]
     # State if manifest should be tagged as Latest
     $Latest,
 
+    [int]
+    # Number of times to check whether source image manifests are visible
+    $ManifestCheckRetries = 24,
+
+    [int]
+    # Delay between manifest availability checks in seconds
+    $ManifestCheckDelaySeconds = 10,
+
     [string]
     $DocsPath
 )
+
+function Wait-ForDockerManifest {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]
+        $Image,
+
+        [Parameter(Mandatory = $true)]
+        [int]
+        $Retries,
+
+        [Parameter(Mandatory = $true)]
+        [int]
+        $DelaySeconds
+    )
+
+    for ($attempt = 1; $attempt -le $Retries; $attempt++) {
+        & docker manifest inspect $Image *> $null
+
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host ("Found image manifest: {0}" -f $Image)
+            return
+        }
+
+        if ($attempt -eq $Retries) {
+            # Emit inspect output once at the end to help diagnose registry propagation/auth issues in CI logs.
+            & docker manifest inspect $Image
+            throw ("Image manifest did not become available after {0} attempts: {1}" -f $Retries, $Image)
+        }
+
+        Write-Host ("Waiting for image manifest ({0}/{1}): {2}" -f $attempt, $Retries, $Image)
+        Start-Sleep -Seconds $DelaySeconds
+    }
+}
+
+function Get-PositiveIntEnvOverride {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]
+        $EnvVarName,
+
+        [Parameter(Mandatory = $true)]
+        [int]
+        $CurrentValue
+    )
+
+    $rawValue = [Environment]::GetEnvironmentVariable($EnvVarName)
+    if ([string]::IsNullOrWhiteSpace($rawValue)) {
+        return $CurrentValue
+    }
+
+    $parsedValue = 0
+    if (-not [int]::TryParse($rawValue, [ref]$parsedValue)) {
+        throw ("Invalid value for {0}: '{1}'. Expected a positive integer." -f $EnvVarName, $rawValue)
+    }
+
+    if ($parsedValue -le 0) {
+        throw ("Invalid value for {0}: '{1}'. Value must be greater than zero." -f $EnvVarName, $rawValue)
+    }
+
+    return $parsedValue
+}
+
+# Allow retry behavior to be controlled from pipeline variables without changing taskctl invocation.
+$ManifestCheckRetries = Get-PositiveIntEnvOverride -EnvVarName "DOCKER_MANIFEST_CHECK_RETRIES" -CurrentValue $ManifestCheckRetries
+$ManifestCheckDelaySeconds = Get-PositiveIntEnvOverride -EnvVarName "DOCKER_MANIFEST_CHECK_DELAY_SECONDS" -CurrentValue $ManifestCheckDelaySeconds
+
+Write-Host ("Manifest availability checks configured: retries={0}, delaySeconds={1}" -f $ManifestCheckRetries, $ManifestCheckDelaySeconds)
 
 # Define default values for parameters not set
 if ([string]::IsNullOrEmpty($registry)) {
     $registry = "docker.io"
 }
 
-# Iterate around the tages and build up the list of images
+# Iterate around the tags and build up the list of images
 $images = @()
 foreach ($tag in $Tags) {
     $images += "{0}/{1}:{2}-{3}" -f $registry, $Name, $Version, $tag
@@ -66,13 +142,22 @@ foreach ($tag in $Tags) {
 Write-Host ("Logging into registry: {0}" -f $registry)
 Invoke-External -Command "docker login -u $username -p $password $registry" -Dryrun:$Dryrun
 
+if (-not $Dryrun.IsPresent) {
+    foreach ($image in $images) {
+        Wait-ForDockerManifest -Image $image -Retries $ManifestCheckRetries -DelaySeconds $ManifestCheckDelaySeconds
+    }
+}
+else {
+    Write-Host "Skipping manifest-availability checks in dry-run mode"
+}
+
 Invoke-External -Command "docker manifest create `"${registry}/${Name}:${Version}`" $($images -join " ")" -Dryrun:$Dryrun
 
 # Now push the manifest to the registry
 Invoke-External -Command "docker manifest push `"${registry}/${Name}:${Version}`"" -Dryrun:$Dryrun
 
 if ($Latest.IsPresent) {
-    # Tag manifest with the latest tage
+    # Tag manifest with the latest tag
     Invoke-External -Command "docker manifest create `"${registry}/${Name}:latest`" $($images -join " ")" -Dryrun:$Dryrun
 
     Invoke-External -Command "docker manifest push `"${registry}/${Name}:latest`"" -Dryrun:$Dryrun
