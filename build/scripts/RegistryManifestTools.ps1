@@ -60,53 +60,47 @@ function Test-AcrImageAvailability {
 
     $fullImageReference = "{0}/{1}" -f $ImageParts.Registry, $acrImage
 
-    $loginOutput = ""
-    try {
-        $loginOutput = ($Password | & docker login $ImageParts.Registry --username $Username --password-stdin 2>&1 | Out-String).Trim()
-        $loginExitCode = $LASTEXITCODE
+    $loginOutput = ($Password | & docker login $ImageParts.Registry --username $Username --password-stdin 2>&1 | Out-String).Trim()
+    $loginExitCode = $LASTEXITCODE
 
-        if ($loginExitCode -ne 0) {
-            if ([string]::IsNullOrWhiteSpace($loginOutput)) {
-                $loginOutput = "docker login exited with code {0}" -f $loginExitCode
-            }
-
-            throw ("Failed to authenticate to ACR '{0}': {1}" -f $ImageParts.Registry, $loginOutput)
+    if ($loginExitCode -ne 0) {
+        if ([string]::IsNullOrWhiteSpace($loginOutput)) {
+            $loginOutput = "docker login exited with code {0}" -f $loginExitCode
         }
 
-        $commandOutput = (& docker manifest inspect $fullImageReference 2>&1 | Out-String).Trim()
-        $exitCode = $LASTEXITCODE
+        throw ("Failed to authenticate to ACR '{0}': {1}" -f $ImageParts.Registry, $loginOutput)
+    }
 
-        if ($exitCode -eq 0) {
-            return [pscustomobject]@{
-                Available = $true
-                Probe     = "docker manifest inspect"
-                Reason    = "Available"
-                Detail    = "Resolved image reference in ACR"
-            }
-        }
+    $commandOutput = (& docker manifest inspect $fullImageReference 2>&1 | Out-String).Trim()
+    $exitCode = $LASTEXITCODE
 
-        if ($commandOutput -match "(?i)unauthorized|authentication|authorization|denied|requested access to the resource is denied|no basic auth credentials") {
-            throw ("Failed to query ACR for '{0}': {1}" -f $acrImage, $commandOutput)
-        }
-
-        $reason = "Transient"
-        if ($commandOutput -match "(?i)manifest.*unknown|not found|does not exist|name_unknown|repository.*not found|no such manifest") {
-            $reason = "NotFound"
-        }
-
-        if ([string]::IsNullOrWhiteSpace($commandOutput)) {
-            $commandOutput = "docker manifest inspect exited with code {0}" -f $exitCode
-        }
-
+    if ($exitCode -eq 0) {
         return [pscustomobject]@{
-            Available = $false
+            Available = $true
             Probe     = "docker manifest inspect"
-            Reason    = $reason
-            Detail    = $commandOutput
+            Reason    = "Available"
+            Detail    = "Resolved image reference in ACR"
         }
     }
-    finally {
-        & docker logout $ImageParts.Registry *> $null
+
+    if ($commandOutput -match "(?i)unauthorized|authentication|authorization|denied|requested access to the resource is denied|no basic auth credentials") {
+        throw ("Failed to query ACR for '{0}': {1}" -f $acrImage, $commandOutput)
+    }
+
+    $reason = "Transient"
+    if ($commandOutput -match "(?i)manifest.*unknown|not found|does not exist|name_unknown|repository.*not found|no such manifest") {
+        $reason = "NotFound"
+    }
+
+    if ([string]::IsNullOrWhiteSpace($commandOutput)) {
+        $commandOutput = "docker manifest inspect exited with code {0}" -f $exitCode
+    }
+
+    return [pscustomobject]@{
+        Available = $false
+        Probe     = "docker manifest inspect"
+        Reason    = $reason
+        Detail    = $commandOutput
     }
 }
 
