@@ -36,20 +36,6 @@ function Get-ContainerImageReferenceParts {
     }
 }
 
-function Get-AcrRegistryName {
-    param (
-        [Parameter(Mandatory = $true)]
-        [string]
-        $Registry
-    )
-
-    if ($Registry -notlike "*.azurecr.io") {
-        throw ("Registry is not an Azure Container Registry login server: {0}" -f $Registry)
-    }
-
-    return $Registry.Substring(0, $Registry.IndexOf(".azurecr.io"))
-}
-
 function Test-AcrImageAvailability {
     param (
         [Parameter(Mandatory = $true)]
@@ -65,7 +51,6 @@ function Test-AcrImageAvailability {
         $Password
     )
 
-    $acrName = Get-AcrRegistryName -Registry $ImageParts.Registry
     $acrImage = if ($ImageParts.ReferenceKind -eq "digest") {
         "{0}@{1}" -f $ImageParts.Repository, $ImageParts.Reference
     }
@@ -73,36 +58,55 @@ function Test-AcrImageAvailability {
         "{0}:{1}" -f $ImageParts.Repository, $ImageParts.Reference
     }
 
-    $commandOutput = (& az acr repository show --name $acrName --image $acrImage --username $Username --password $Password --output none --only-show-errors 2>&1 | Out-String).Trim()
-    $exitCode = $LASTEXITCODE
+    $fullImageReference = "{0}/{1}" -f $ImageParts.Registry, $acrImage
 
-    if ($exitCode -eq 0) {
+    $loginOutput = ""
+    try {
+        $loginOutput = ($Password | & docker login $ImageParts.Registry --username $Username --password-stdin 2>&1 | Out-String).Trim()
+        $loginExitCode = $LASTEXITCODE
+
+        if ($loginExitCode -ne 0) {
+            if ([string]::IsNullOrWhiteSpace($loginOutput)) {
+                $loginOutput = "docker login exited with code {0}" -f $loginExitCode
+            }
+
+            throw ("Failed to authenticate to ACR '{0}': {1}" -f $ImageParts.Registry, $loginOutput)
+        }
+
+        $commandOutput = (& docker manifest inspect $fullImageReference 2>&1 | Out-String).Trim()
+        $exitCode = $LASTEXITCODE
+
+        if ($exitCode -eq 0) {
+            return [pscustomobject]@{
+                Available = $true
+                Probe     = "docker manifest inspect"
+                Reason    = "Available"
+                Detail    = "Resolved image reference in ACR"
+            }
+        }
+
+        if ($commandOutput -match "(?i)unauthorized|authentication|authorization|denied|requested access to the resource is denied|no basic auth credentials") {
+            throw ("Failed to query ACR for '{0}': {1}" -f $acrImage, $commandOutput)
+        }
+
+        $reason = "Transient"
+        if ($commandOutput -match "(?i)manifest.*unknown|not found|does not exist|name_unknown|repository.*not found|no such manifest") {
+            $reason = "NotFound"
+        }
+
+        if ([string]::IsNullOrWhiteSpace($commandOutput)) {
+            $commandOutput = "docker manifest inspect exited with code {0}" -f $exitCode
+        }
+
         return [pscustomobject]@{
-            Available = $true
-            Probe     = "az acr repository show"
-            Reason    = "Available"
-            Detail    = "Resolved image reference in ACR"
+            Available = $false
+            Probe     = "docker manifest inspect"
+            Reason    = $reason
+            Detail    = $commandOutput
         }
     }
-
-    if ($commandOutput -match "(?i)unauthorized|authentication|authorization|denied") {
-        throw ("Failed to query ACR for '{0}': {1}" -f $acrImage, $commandOutput)
-    }
-
-    $reason = "Transient"
-    if ($commandOutput -match "(?i)manifest.*unknown|not found|does not exist|name_unknown|repository.*not found") {
-        $reason = "NotFound"
-    }
-
-    if ([string]::IsNullOrWhiteSpace($commandOutput)) {
-        $commandOutput = "Azure CLI exited with code {0}" -f $exitCode
-    }
-
-    return [pscustomobject]@{
-        Available = $false
-        Probe     = "az acr repository show"
-        Reason    = $reason
-        Detail    = $commandOutput
+    finally {
+        & docker logout $ImageParts.Registry *> $null
     }
 }
 
@@ -162,14 +166,9 @@ function Test-RegistryManifestAvailability {
     )
 
     $imageParts = Get-ContainerImageReferenceParts -Image $Image
-    $azCommand = Get-Command -Name az -ErrorAction SilentlyContinue
 
-    if ($imageParts.Registry -like "*.azurecr.io" -and $null -ne $azCommand) {
+    if ($imageParts.Registry -like "*.azurecr.io") {
         return Test-AcrImageAvailability -ImageParts $imageParts -Username $Username -Password $Password
-    }
-
-    if ($imageParts.Registry -like "*.azurecr.io" -and $null -eq $azCommand) {
-        Write-Host ("Azure CLI is not available; falling back to docker manifest inspection for {0}" -f $Image)
     }
 
     return Test-DockerManifestAvailability -Image $Image
