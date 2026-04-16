@@ -2,6 +2,7 @@
 [CmdletBinding()]
 param (
 
+    [ValidateSet("linux/amd64", "linux/arm64")]
     [string[]]
     # Platforms that the image should be built for
     $platform = @("linux/amd64"),
@@ -102,6 +103,9 @@ try {
         }
         "linux/arm64" {
             $arch = "arm64"
+        }
+        default {
+            throw ("Unsupported platform '{0}'. Supported values are linux/amd64 and linux/arm64." -f $platform)
         }
     }
 
