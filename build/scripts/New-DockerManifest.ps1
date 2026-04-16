@@ -61,6 +61,8 @@ param (
     $DocsPath
 )
 
+. (Join-Path $PSScriptRoot "RegistryManifestTools.ps1")
+
 function Wait-ForDockerManifest {
     param (
         [Parameter(Mandatory = $true)]
@@ -73,24 +75,30 @@ function Wait-ForDockerManifest {
 
         [Parameter(Mandatory = $true)]
         [int]
-        $DelaySeconds
+        $DelaySeconds,
+
+        [Parameter(Mandatory = $true)]
+        [string]
+        $Username,
+
+        [Parameter(Mandatory = $true)]
+        [string]
+        $Password
     )
 
     for ($attempt = 1; $attempt -le $Retries; $attempt++) {
-        & docker manifest inspect $Image *> $null
+        $checkResult = Test-RegistryManifestAvailability -Image $Image -Username $Username -Password $Password
 
-        if ($LASTEXITCODE -eq 0) {
-            Write-Host ("Found image manifest: {0}" -f $Image)
+        if ($checkResult.Available) {
+            Write-Host ("Found image manifest via {0}: {1}" -f $checkResult.Probe, $Image)
             return
         }
 
         if ($attempt -eq $Retries) {
-            # Emit inspect output once at the end to help diagnose registry propagation/auth issues in CI logs.
-            & docker manifest inspect $Image
-            throw ("Image manifest did not become available after {0} attempts: {1}" -f $Retries, $Image)
+            throw ("Image manifest did not become available after {0} attempts via {1}: {2}. Last detail: {3}" -f $Retries, $checkResult.Probe, $Image, $checkResult.Detail)
         }
 
-        Write-Host ("Waiting for image manifest ({0}/{1}): {2}" -f $attempt, $Retries, $Image)
+        Write-Host ("Waiting for image manifest ({0}/{1}) via {2}: {3}" -f $attempt, $Retries, $checkResult.Probe, $Image)
         Start-Sleep -Seconds $DelaySeconds
     }
 }
@@ -133,6 +141,8 @@ $ManifestCheckDelaySeconds = Get-PositiveIntEnvOverride -EnvVarName "DOCKER_MANI
 
 Write-Host ("Manifest availability checks configured: retries={0}, delaySeconds={1}" -f $ManifestCheckRetries, $ManifestCheckDelaySeconds)
 
+$env:DOCKER_CLI_AKV2_EXPERIMENTAL="enabled"
+
 # Define default values for parameters not set
 if ([string]::IsNullOrEmpty($registry)) {
     $registry = "docker.io"
@@ -150,7 +160,7 @@ Invoke-External -Command "docker login -u $username -p $password $registry" -Dry
 
 if (-not $Dryrun.IsPresent) {
     foreach ($image in $images) {
-        Wait-ForDockerManifest -Image $image -Retries $ManifestCheckRetries -DelaySeconds $ManifestCheckDelaySeconds
+        Wait-ForDockerManifest -Image $image -Retries $ManifestCheckRetries -DelaySeconds $ManifestCheckDelaySeconds -Username $username -Password $password
     }
 }
 else {

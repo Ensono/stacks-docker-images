@@ -45,6 +45,8 @@ param (
     $PushVerifyDelaySeconds = 10
 )
 
+. (Join-Path $PSScriptRoot "RegistryManifestTools.ps1")
+
 $previousErrorActionPreference = $ErrorActionPreference
 
 function Wait-ForDockerImagePush {
@@ -59,23 +61,30 @@ function Wait-ForDockerImagePush {
 
         [Parameter(Mandatory = $true)]
         [int]
-        $DelaySeconds
+        $DelaySeconds,
+
+        [Parameter(Mandatory = $true)]
+        [string]
+        $Username,
+
+        [Parameter(Mandatory = $true)]
+        [string]
+        $Password
     )
 
     for ($attempt = 1; $attempt -le $Retries; $attempt++) {
-        & docker manifest inspect $Image *> $null
+        $checkResult = Test-RegistryManifestAvailability -Image $Image -Username $Username -Password $Password
 
-        if ($LASTEXITCODE -eq 0) {
-            Write-Host ("Verified image exists in registry: {0}" -f $Image)
+        if ($checkResult.Available) {
+            Write-Host ("Verified image exists in registry via {0}: {1}" -f $checkResult.Probe, $Image)
             return
         }
 
         if ($attempt -eq $Retries) {
-            & docker manifest inspect $Image
-            throw ("Image was not found in registry after push ({0} attempts): {1}" -f $Retries, $Image)
+            throw ("Image was not found in registry after push ({0} attempts via {1}): {2}. Last detail: {3}" -f $Retries, $checkResult.Probe, $Image, $checkResult.Detail)
         }
 
-        Write-Host ("Verifying image push ({0}/{1}): {2}" -f $attempt, $Retries, $Image)
+        Write-Host ("Verifying image push ({0}/{1}) via {2}: {3}" -f $attempt, $Retries, $checkResult.Probe, $Image)
         Start-Sleep -Seconds $DelaySeconds
     }
 }
@@ -141,7 +150,7 @@ try {
 
     # Verify the image exists in the registry after push
     if (-not $dryrun.IsPresent) {
-        Wait-ForDockerImagePush -Image $image_name -Retries $PushVerifyRetries -DelaySeconds $PushVerifyDelaySeconds
+        Wait-ForDockerImagePush -Image $image_name -Retries $PushVerifyRetries -DelaySeconds $PushVerifyDelaySeconds -Username $username -Password $password
     }
 }
 finally {
