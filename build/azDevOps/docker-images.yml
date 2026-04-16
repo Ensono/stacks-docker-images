@@ -78,15 +78,6 @@ parameters:
         imageName: ensono/eir-dotnet
         docsPath: dotnet
 
-      - stage: Go
-        displayName: "[CONTAINER] Go"
-        dependsOn:
-          - FoundationBuilder
-          - FoundationPowerShell
-        taskName: build:golang
-        imageName: ensono/eir-golang
-        docsPath: golang
-
       - stage: Inspec
         displayName: "[CONTAINER] Inspec"
         dependsOn:
