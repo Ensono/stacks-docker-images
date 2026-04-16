@@ -47,10 +47,12 @@ param (
     # State if manifest should be tagged as Latest
     $Latest,
 
+    [ValidateRange(1, [int]::MaxValue)]
     [int]
     # Number of times to check whether source image manifests are visible
     $ManifestCheckRetries = 24,
 
+    [ValidateRange(0, [int]::MaxValue)]
     [int]
     # Delay between manifest availability checks in seconds
     $ManifestCheckDelaySeconds = 10,
@@ -101,6 +103,10 @@ function Get-PositiveIntEnvOverride {
 
         [Parameter(Mandatory = $true)]
         [int]
+        $MinimumValue,
+
+        [Parameter(Mandatory = $true)]
+        [int]
         $CurrentValue
     )
 
@@ -111,19 +117,19 @@ function Get-PositiveIntEnvOverride {
 
     $parsedValue = 0
     if (-not [int]::TryParse($rawValue, [ref]$parsedValue)) {
-        throw ("Invalid value for {0}: '{1}'. Expected a positive integer." -f $EnvVarName, $rawValue)
+        throw ("Invalid value for {0}: '{1}'. Expected an integer greater than or equal to {2}." -f $EnvVarName, $rawValue, $MinimumValue)
     }
 
-    if ($parsedValue -le 0) {
-        throw ("Invalid value for {0}: '{1}'. Value must be greater than zero." -f $EnvVarName, $rawValue)
+    if ($parsedValue -lt $MinimumValue) {
+        throw ("Invalid value for {0}: '{1}'. Value must be greater than or equal to {2}." -f $EnvVarName, $rawValue, $MinimumValue)
     }
 
     return $parsedValue
 }
 
 # Allow retry behavior to be controlled from pipeline variables without changing taskctl invocation.
-$ManifestCheckRetries = Get-PositiveIntEnvOverride -EnvVarName "DOCKER_MANIFEST_CHECK_RETRIES" -CurrentValue $ManifestCheckRetries
-$ManifestCheckDelaySeconds = Get-PositiveIntEnvOverride -EnvVarName "DOCKER_MANIFEST_CHECK_DELAY_SECONDS" -CurrentValue $ManifestCheckDelaySeconds
+$ManifestCheckRetries = Get-PositiveIntEnvOverride -EnvVarName "DOCKER_MANIFEST_CHECK_RETRIES" -MinimumValue 1 -CurrentValue $ManifestCheckRetries
+$ManifestCheckDelaySeconds = Get-PositiveIntEnvOverride -EnvVarName "DOCKER_MANIFEST_CHECK_DELAY_SECONDS" -MinimumValue 0 -CurrentValue $ManifestCheckDelaySeconds
 
 Write-Host ("Manifest availability checks configured: retries={0}, delaySeconds={1}" -f $ManifestCheckRetries, $ManifestCheckDelaySeconds)
 

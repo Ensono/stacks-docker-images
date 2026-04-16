@@ -34,16 +34,18 @@ param (
     # State that the script would run in dryrun and not to execute any commands
     $dryrun,
 
+    [ValidateRange(1, [int]::MaxValue)]
     [int]
     # Number of times to verify image exists in registry after push
     $PushVerifyRetries = 5,
 
+    [ValidateRange(0, [int]::MaxValue)]
     [int]
     # Delay in seconds between push verification attempts
     $PushVerifyDelaySeconds = 10
 )
 
-$ErrorActionPreference = "Stop"
+$previousErrorActionPreference = $ErrorActionPreference
 
 function Wait-ForDockerImagePush {
     param (
@@ -78,63 +80,70 @@ function Wait-ForDockerImagePush {
     }
 }
 
-# Enable experimental builds
-$env:DOCKER_CLI_AKV2_EXPERIMENTAL="enabled"
+try {
+    $ErrorActionPreference = "Stop"
 
-# Determine the arch based on the platform info
-switch ($platform) {
-    "linux/amd64" {
-        $arch = "amd64"
+    # Enable experimental builds
+    $env:DOCKER_CLI_AKV2_EXPERIMENTAL="enabled"
+
+    # Determine the arch based on the platform info
+    switch ($platform) {
+        "linux/amd64" {
+            $arch = "amd64"
+        }
+        "linux/arm64" {
+            $arch = "arm64"
+        }
     }
-    "linux/arm64" {
-        $arch = "arm64"
+
+    # Define default values for parameters not set
+    if ([string]::IsNullOrEmpty($registry)) {
+        $registry = "docker.io"
+    }
+
+    # Create a list of the tags that are required
+    $tags = @()
+    # $tags += (" -t {0}/{1}:latest" -f $registry, $name)
+
+    $image_name = "{0}/{1}:{2}-{3}" -f $registry, $name, $tag, $arch
+
+    # Login to the specified container registry
+    Write-Host ("Logging into registry: {0}" -f $registry)
+    Invoke-External -Command "docker login -u ${username} -p ${password} ${registry}" -Dryrun:$dryrun
+
+    if (![string]::IsNullOrEmpty($tag)) {
+        $tags += ("-t {0}" -f $image_name)
+    }
+
+    # Build up the arguments for the full command
+    $buildArgs = @(($tags -join " "))
+
+    if (![string]::IsNullOrEmpty($arguments)) {
+        $buildArgs += $arguments
+    }
+
+    # Build and push the image
+    Write-Host ("Building docker image: {0}" -f ($platform -join ","))
+    Write-Host "docker build $($buildArgs -join " ")"
+    Invoke-External -Command "docker build $($buildArgs -join " ")" -Dryrun:$dryrun
+
+    # Verify the image was built locally before attempting push
+    if (-not $dryrun.IsPresent) {
+        & docker image inspect $image_name *> $null
+        if ($LASTEXITCODE -ne 0) {
+            throw ("Docker build failed: image not found locally: {0}" -f $image_name)
+        }
+        Write-Host ("Verified image built locally: {0}" -f $image_name)
+    }
+
+    Write-Host ("Push docker image: {0}" -f $image_name)
+    Invoke-External -Command "docker push ${image_name}" -Dryrun:$dryrun
+
+    # Verify the image exists in the registry after push
+    if (-not $dryrun.IsPresent) {
+        Wait-ForDockerImagePush -Image $image_name -Retries $PushVerifyRetries -DelaySeconds $PushVerifyDelaySeconds
     }
 }
-
-# Define default values for parameters not set
-if ([string]::IsNullOrEmpty($registry)) {
-    $registry = "docker.io"
-}
-
-# Create a list of the tags that are required
-$tags = @()
-# $tags += (" -t {0}/{1}:latest" -f $registry, $name)
-
-$image_name = "{0}/{1}:{2}-{3}" -f $registry, $name, $tag, $arch
-
-# Login to the specified container registry
-Write-Host ("Logging into registry: {0}" -f $registry)
-Invoke-External -Command "docker login -u ${username} -p ${password} ${registry}" -Dryrun:$dryrun
-
-if (![string]::IsNullOrEmpty($tag)) {
-    $tags += ("-t {0}" -f $image_name)
-}
-
-# Build up the arguments for the full command
-$buildArgs = @(($tags -join " "))
-
-if (![string]::IsNullOrEmpty($arguments)) {
-    $buildArgs += $arguments
-}
-
-# Build and push the image
-Write-Host ("Building docker image: {0}" -f ($platform -join ","))
-Write-Host "docker build $($buildArgs -join " ")"
-Invoke-External -Command "docker build $($buildArgs -join " ")" -Dryrun:$dryrun
-
-# Verify the image was built locally before attempting push
-if (-not $dryrun.IsPresent) {
-    & docker image inspect $image_name *> $null
-    if ($LASTEXITCODE -ne 0) {
-        throw ("Docker build failed: image not found locally: {0}" -f $image_name)
-    }
-    Write-Host ("Verified image built locally: {0}" -f $image_name)
-}
-
-Write-Host ("Push docker image: {0}" -f $image_name)
-Invoke-External -Command "docker push ${image_name}" -Dryrun:$dryrun
-
-# Verify the image exists in the registry after push
-if (-not $dryrun.IsPresent) {
-    Wait-ForDockerImagePush -Image $image_name -Retries $PushVerifyRetries -DelaySeconds $PushVerifyDelaySeconds
+finally {
+    $ErrorActionPreference = $previousErrorActionPreference
 }
