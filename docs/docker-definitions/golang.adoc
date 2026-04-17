@@ -19,6 +19,6 @@ Image that contains the Go program,ming language, which is used to build Ensono 
 | Binary | Go | 1.26.2 | https://go.dev/dl/#go1.26.2
 | Library | go-junit-report | latest | https://github.com/jstemmer/go-junit-report
 | Library | gocover-cobertura | latest | https://github.com/t-yuki/gocover-cobertura@latest
-| Library | gocov | latest | https://github.com/axw/gocov/gocov@latest
 | Library | gocov-xml | latest | https://github.com/AlekSi/gocov-xml@latest
+| Binary | gocyclo | latest | https://github.com/fzipp/gocyclo
 |====
