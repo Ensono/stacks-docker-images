@@ -42,7 +42,7 @@ install_go_tool() {
 	fi
 
 	# Fallback for environments where the default module proxy is unavailable.
-	retry_command 4 5 env GOPROXY=direct GOSUMDB=off /usr/local/go/bin/go install "${module}"
+	retry_command 4 5 env GOPROXY=direct /usr/local/go/bin/go install "${module}"
 }
 
 # Determine the architecture of the image

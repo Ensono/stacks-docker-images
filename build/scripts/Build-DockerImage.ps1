@@ -92,6 +92,7 @@ function Wait-ForDockerImagePush {
 
 try {
     $ErrorActionPreference = "Stop"
+    $loggedIn = $false
 
     # Enable experimental builds
     $env:DOCKER_CLI_AKV2_EXPERIMENTAL="enabled"
@@ -122,7 +123,8 @@ try {
 
     # Login to the specified container registry
     Write-Host ("Logging into registry: {0}" -f $registry)
-    Invoke-External -Command "docker login -u ${username} -p ${password} ${registry}" -Dryrun:$dryrun
+    Invoke-DockerRegistryLogin -Registry $registry -Username $username -Password $password -Dryrun:$dryrun
+    $loggedIn = -not $dryrun.IsPresent
 
     if (![string]::IsNullOrEmpty($tag)) {
         $tags += ("-t {0}" -f $image_name)
@@ -158,5 +160,9 @@ try {
     }
 }
 finally {
+    if ($loggedIn) {
+        Invoke-DockerRegistryLogout -Registry $registry
+    }
+
     $ErrorActionPreference = $previousErrorActionPreference
 }
