@@ -17,8 +17,9 @@ Image that contains the Go program,ming language, which is used to build Ensono 
 |====
 | Type | Name | Version | URL
 | Binary | Go | 1.26.2 | https://go.dev/dl/#go1.26.2
-| Library | go-junit-report | latest | https://github.com/jstemmer/go-junit-report
-| Library | gocover-cobertura | latest | https://github.com/t-yuki/gocover-cobertura@latest
-| Library | gocov-xml | latest | https://github.com/AlekSi/gocov-xml@latest
-| Binary | gocyclo | latest | https://github.com/fzipp/gocyclo
+| Library | go-junit-report | 1.0.0 | https://github.com/jstemmer/go-junit-report/releases/tag/v1.0.0
+| Library | gocover-cobertura | 20180217150009-aaee18c8195c | https://github.com/t-yuki/gocover-cobertura/tree/aaee18c8195c
+| Library | gocov-xml | 1.2.0 | https://github.com/AlekSi/gocov-xml/releases/tag/v1.2.0
+| Binary | gocyclo | 0.6.0 | https://github.com/fzipp/gocyclo/releases/tag/v0.6.0
+| Binary | govulncheck | 1.2.0 | https://pkg.go.dev/golang.org/x/vuln/cmd/govulncheck
 |====

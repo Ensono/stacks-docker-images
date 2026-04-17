@@ -2,6 +2,12 @@
 
 set -euxo pipefail
 
+GO_JUNIT_REPORT_VERSION="v1.0.0"
+GOCOVER_COBERTURA_VERSION="v0.0.0-20180217150009-aaee18c8195c"
+GOCOV_XML_VERSION="v1.2.0"
+GOCYCLO_VERSION="v0.6.0"
+GOVULNCHECK_VERSION="v1.2.0"
+
 retry_command() {
 	local retries="$1"
 	local delay_seconds="$2"
@@ -56,9 +62,12 @@ tar zxf /tmp/golang.tar.gz -C /usr/local
 rm -rf /tmp/*
 
 # Install the necessary packages to run unit tests for Stacks projects
-install_go_tool github.com/jstemmer/go-junit-report@latest
-install_go_tool github.com/t-yuki/gocover-cobertura@latest
-install_go_tool github.com/AlekSi/gocov-xml@latest
+install_go_tool github.com/jstemmer/go-junit-report@${GO_JUNIT_REPORT_VERSION}
+install_go_tool github.com/t-yuki/gocover-cobertura@${GOCOVER_COBERTURA_VERSION}
+install_go_tool github.com/AlekSi/gocov-xml@${GOCOV_XML_VERSION}
 
 # Install gocyclo for code complexity analysis
-install_go_tool github.com/fzipp/gocyclo/cmd/gocyclo@latest
+install_go_tool github.com/fzipp/gocyclo/cmd/gocyclo@${GOCYCLO_VERSION}
+
+# Install govulncheck for Go vulnerability scanning
+install_go_tool golang.org/x/vuln/cmd/govulncheck@${GOVULNCHECK_VERSION}
