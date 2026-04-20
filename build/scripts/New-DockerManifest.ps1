@@ -40,49 +40,159 @@ param (
     $password = $env:DOCKER_PASSWORD,
 
     [switch]
-    # State that the scritp whould run in dryrun and not to execute any commands
+    # State that the script would run in dryrun and not to execute any commands
     $Dryrun,
 
     [switch]
     # State if manifest should be tagged as Latest
     $Latest,
 
+    [ValidateRange(1, [int]::MaxValue)]
+    [int]
+    # Number of times to check whether source image manifests are visible
+    $ManifestCheckRetries = 24,
+
+    [ValidateRange(0, [int]::MaxValue)]
+    [int]
+    # Delay between manifest availability checks in seconds
+    $ManifestCheckDelaySeconds = 10,
+
     [string]
     $DocsPath
 )
+
+. (Join-Path $PSScriptRoot "RegistryManifestTools.ps1")
+
+function Wait-ForDockerManifest {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]
+        $Image,
+
+        [Parameter(Mandatory = $true)]
+        [int]
+        $Retries,
+
+        [Parameter(Mandatory = $true)]
+        [int]
+        $DelaySeconds,
+
+        [Parameter(Mandatory = $true)]
+        [string]
+        $Username,
+
+        [Parameter(Mandatory = $true)]
+        [string]
+        $Password
+    )
+
+    for ($attempt = 1; $attempt -le $Retries; $attempt++) {
+        $checkResult = Test-RegistryManifestAvailability -Image $Image -Username $Username -Password $Password
+
+        if ($checkResult.Available) {
+            Write-Host ("Found image manifest via {0}: {1}" -f $checkResult.Probe, $Image)
+            return
+        }
+
+        if ($attempt -eq $Retries) {
+            throw ("Image manifest did not become available after {0} attempts via {1}: {2}. Last detail: {3}" -f $Retries, $checkResult.Probe, $Image, $checkResult.Detail)
+        }
+
+        Write-Host ("Waiting for image manifest ({0}/{1}) via {2}: {3}" -f $attempt, $Retries, $checkResult.Probe, $Image)
+        Start-Sleep -Seconds $DelaySeconds
+    }
+}
+
+function Get-PositiveIntEnvOverride {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]
+        $EnvVarName,
+
+        [Parameter(Mandatory = $true)]
+        [int]
+        $MinimumValue,
+
+        [Parameter(Mandatory = $true)]
+        [int]
+        $CurrentValue
+    )
+
+    $rawValue = [Environment]::GetEnvironmentVariable($EnvVarName)
+    if ([string]::IsNullOrWhiteSpace($rawValue)) {
+        return $CurrentValue
+    }
+
+    $parsedValue = 0
+    if (-not [int]::TryParse($rawValue, [ref]$parsedValue)) {
+        throw ("Invalid value for {0}: '{1}'. Expected an integer greater than or equal to {2}." -f $EnvVarName, $rawValue, $MinimumValue)
+    }
+
+    if ($parsedValue -lt $MinimumValue) {
+        throw ("Invalid value for {0}: '{1}'. Value must be greater than or equal to {2}." -f $EnvVarName, $rawValue, $MinimumValue)
+    }
+
+    return $parsedValue
+}
+
+# Allow retry behavior to be controlled from pipeline variables without changing taskctl invocation.
+$ManifestCheckRetries = Get-PositiveIntEnvOverride -EnvVarName "DOCKER_MANIFEST_CHECK_RETRIES" -MinimumValue 1 -CurrentValue $ManifestCheckRetries
+$ManifestCheckDelaySeconds = Get-PositiveIntEnvOverride -EnvVarName "DOCKER_MANIFEST_CHECK_DELAY_SECONDS" -MinimumValue 0 -CurrentValue $ManifestCheckDelaySeconds
+
+Write-Host ("Manifest availability checks configured: retries={0}, delaySeconds={1}" -f $ManifestCheckRetries, $ManifestCheckDelaySeconds)
+
+$env:DOCKER_CLI_AKV2_EXPERIMENTAL="enabled"
 
 # Define default values for parameters not set
 if ([string]::IsNullOrEmpty($registry)) {
     $registry = "docker.io"
 }
 
-# Iterate around the tages and build up the list of images
+# Iterate around the tags and build up the list of images
 $images = @()
 foreach ($tag in $Tags) {
     $images += "{0}/{1}:{2}-{3}" -f $registry, $Name, $Version, $tag
 }
 
-# Login to the specified container registry
-Write-Host ("Logging into registry: {0}" -f $registry)
-Invoke-External -Command "docker login -u $username -p $password $registry" -Dryrun:$Dryrun
+$loggedIn = $false
+try {
+    if (-not $Dryrun.IsPresent) {
+        foreach ($image in $images) {
+            Wait-ForDockerManifest -Image $image -Retries $ManifestCheckRetries -DelaySeconds $ManifestCheckDelaySeconds -Username $username -Password $password
+        }
+    }
+    else {
+        Write-Host "Skipping manifest-availability checks in dry-run mode"
+    }
 
-Invoke-External -Command "docker manifest create `"${registry}/${Name}:${Version}`" $($images -join " ")" -Dryrun:$Dryrun
+    # Login to the specified container registry after availability checks.
+    Write-Host ("Logging into registry: {0}" -f $registry)
+    Invoke-DockerRegistryLogin -Registry $registry -Username $username -Password $password -Dryrun:$Dryrun
+    $loggedIn = -not $Dryrun.IsPresent
 
-# Now push the manifest to the registry
-Invoke-External -Command "docker manifest push `"${registry}/${Name}:${Version}`"" -Dryrun:$Dryrun
+    Invoke-External -Command "docker manifest create `"${registry}/${Name}:${Version}`" $($images -join " ")" -Dryrun:$Dryrun
 
-if ($Latest.IsPresent) {
-    # Tag manifest with the latest tage
-    Invoke-External -Command "docker manifest create `"${registry}/${Name}:latest`" $($images -join " ")" -Dryrun:$Dryrun
+    # Now push the manifest to the registry
+    Invoke-External -Command "docker manifest push `"${registry}/${Name}:${Version}`"" -Dryrun:$Dryrun
 
-    Invoke-External -Command "docker manifest push `"${registry}/${Name}:latest`"" -Dryrun:$Dryrun
+    if ($Latest.IsPresent) {
+        # Tag manifest with the latest tag
+        Invoke-External -Command "docker manifest create `"${registry}/${Name}:latest`" $($images -join " ")" -Dryrun:$Dryrun
+
+        Invoke-External -Command "docker manifest push `"${registry}/${Name}:latest`"" -Dryrun:$Dryrun
+    }
+
+    # Push the readme if the registry is docker.io
+    if ($registry -ieq "docker.io") {
+        $path_parts = $DocsPath -split "/"
+        $readme_path = [IO.Path]::Combine("markdown", [IO.Path]::Combine([IO.Path]::Combine($path_parts), "README.md"))
+
+        Write-Host ("Pushing README file: {0}" -f $readme_path)
+        Invoke-External -Command "docker pushrm --provider dockerhub ${registry}/${name} --file ${readme_path}" -Dryrun:$Dryrun
+    }
 }
-
-# Push the readme if the registry is docker.io
-if ($registry -ieq "docker.io") {
-    $path_parts = $DocsPath -split "/"
-    $readme_path = [IO.Path]::Combine("markdown", [IO.Path]::Combine([IO.Path]::Combine($path_parts), "README.md"))
-
-    Write-Host ("Pushing README file: {0}" -f $readme_path)
-    Invoke-External -Command "docker pushrm --provider dockerhub ${registry}/${name} --file ${readme_path}" -Dryrun:$Dryrun
+finally {
+    if ($loggedIn) {
+        Invoke-DockerRegistryLogout -Registry $registry
+    }
 }
