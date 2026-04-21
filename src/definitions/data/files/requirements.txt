@@ -1,8 +1,8 @@
 pytest==9.0.3
-pylint==3.0.3
+pylint==4.0.5
 pylint-exit==1.2.0
 pytest-azurepipelines==1.0.5
 pytest-cov==7.1.0
-poetry==2.3.3
+poetry==2.3.4
 databricks-cli==0.18.0
-tomli==2.0.1
+tomli==2.4.1
