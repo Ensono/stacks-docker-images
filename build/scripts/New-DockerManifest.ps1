@@ -144,8 +144,18 @@ foreach ($tag in $Tags) {
 
 # Login to the specified container registry
 Write-Host ("Logging into registry: {0}" -f $registry)
-Invoke-External -Command "docker login -u $username -p $password $registry" -Dryrun:$Dryrun
+if ($Dryrun.IsPresent) {
+    Write-Host ("DRYRUN: docker login -u {0} --password-stdin {1}" -f $username, $registry)
+}
+else {
+    $password | docker login -u $username --password-stdin $registry
 
+    if ($LASTEXITCODE -ne 0) {
+        throw ("docker login failed for registry: {0}" -f $registry)
+    }
+
+    $loggedIn = $true
+}
 if (-not $Dryrun.IsPresent) {
     foreach ($image in $images) {
         Wait-ForDockerManifest -Image $image -Retries $ManifestCheckRetries -DelaySeconds $ManifestCheckDelaySeconds
@@ -161,7 +171,7 @@ Invoke-External -Command "docker manifest create `"${registry}/${Name}:${Version
 Invoke-External -Command "docker manifest push `"${registry}/${Name}:${Version}`"" -Dryrun:$Dryrun
 
 if ($Latest.IsPresent) {
-    # Tag manifest with the latest tage
+    # Tag manifest with the latest tag
     Invoke-External -Command "docker manifest create `"${registry}/${Name}:latest`" $($images -join " ")" -Dryrun:$Dryrun
 
     Invoke-External -Command "docker manifest push `"${registry}/${Name}:latest`"" -Dryrun:$Dryrun
