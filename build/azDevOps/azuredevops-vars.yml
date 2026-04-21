@@ -50,6 +50,10 @@ variables:
   # Docker
   - name: DOCKER_IMAGE_TAG
     value: $(version_semver)
+  - name: DOCKER_MANIFEST_CHECK_RETRIES
+    value: 24
+  - name: DOCKER_MANIFEST_CHECK_DELAY_SECONDS
+    value: 10
 
   # GitHub Release
   - name: VERSION_NUMBER
