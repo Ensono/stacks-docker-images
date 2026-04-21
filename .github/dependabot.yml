@@ -14,54 +14,90 @@ updates:
   - package-ecosystem: terraform
     directory: /deploy/terraform/azure/acr
     multi-ecosystem-group: all-dependencies
+    patterns:
+      - "*"
   - package-ecosystem: pip
     directory: /src/definitions/data/files
     multi-ecosystem-group: all-dependencies
+    patterns:
+      - "*"
   - package-ecosystem: pip
     directory: /src/definitions/infrastructure/files
     multi-ecosystem-group: all-dependencies
+    patterns:
+      - "*"
   - package-ecosystem: docker
     directory: /src/definitions/asciidoctor
     multi-ecosystem-group: all-dependencies
+    patterns:
+      - "*"
   - package-ecosystem: docker
     directory: /src/definitions/bottlerocket-cis-bootstrap
     multi-ecosystem-group: all-dependencies
+    patterns:
+      - "*"
   - package-ecosystem: docker
     directory: /src/definitions/bottlerocket-cis-validation
     multi-ecosystem-group: all-dependencies
+    patterns:
+      - "*"
   - package-ecosystem: docker
     directory: /src/definitions/data
     multi-ecosystem-group: all-dependencies
+    patterns:
+      - "*"
   - package-ecosystem: docker
     directory: /src/definitions/dotnet
     multi-ecosystem-group: all-dependencies
+    patterns:
+      - "*"
   - package-ecosystem: docker
     directory: /src/definitions/foundation/azure-cli
     multi-ecosystem-group: all-dependencies
+    patterns:
+      - "*"
   - package-ecosystem: docker
     directory: /src/definitions/foundation/builder
     multi-ecosystem-group: all-dependencies
+    patterns:
+      - "*"
   - package-ecosystem: docker
     directory: /src/definitions/foundation/powershell
     multi-ecosystem-group: all-dependencies
+    patterns:
+      - "*"
   - package-ecosystem: docker
     directory: /src/definitions/foundation/tools
     multi-ecosystem-group: all-dependencies
+    patterns:
+      - "*"
   - package-ecosystem: docker
     directory: /src/definitions/golang
     multi-ecosystem-group: all-dependencies
+    patterns:
+      - "*"
   - package-ecosystem: docker
     directory: /src/definitions/infrastructure
     multi-ecosystem-group: all-dependencies
+    patterns:
+      - "*"
   - package-ecosystem: docker
     directory: /src/definitions/inspec
     multi-ecosystem-group: all-dependencies
+    patterns:
+      - "*"
   - package-ecosystem: docker
     directory: /src/definitions/java
     multi-ecosystem-group: all-dependencies
+    patterns:
+      - "*"
   - package-ecosystem: docker
     directory: /src/definitions/kong
     multi-ecosystem-group: all-dependencies
+    patterns:
+      - "*"
   - package-ecosystem: docker
     directory: /src/definitions/node
     multi-ecosystem-group: all-dependencies
+    patterns:
+      - "*"
