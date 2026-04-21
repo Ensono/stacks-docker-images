@@ -155,7 +155,7 @@ chmod +x /usr/local/envsubst/bin/envsubst
 
 # PowerShell Modules --------------------------------------------------------
 # PowerShell Azure **********************************************************
-pwsh -NoProfile -Command "Install-Module -Name Az -Scope AllUsers -Repository PSGallery -Force -RequiredVersion ${AZURE_AZ_MODULE_VERSON}"
+pwsh -NoProfile -Command "Install-Module -Name Az -Scope AllUsers -Repository PSGallery -Force -RequiredVersion ${AZURE_AZ_MODULE_VERSION}"
 # ***************************************************************************
 
 # Pester ********************************************************************
