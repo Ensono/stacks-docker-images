@@ -17,6 +17,7 @@ of one notification per reply.
 ## Prerequisites
 
 - GitHub CLI (`gh`) installed and authenticated
+- `taskctl`, `docker`, and `pwsh` available for repo build/validation flows
 - GitHub MCP server available with PR tools activated
 - Current branch matches the PR branch being addressed
 - Repository has uncommitted changes handled (stash or commit first)
@@ -108,7 +109,7 @@ For each unresolved comment, categorize as:
 | Category          | Action Required                          |
 | ----------------- | ---------------------------------------- |
 | **Code Change**   | Modify source file at specified location |
-| **Documentation** | Update docs, comments, or Rustdoc        |
+| **Documentation** | Update docs, comments, or API docs       |
 | **Test Addition** | Add or modify test cases                 |
 | **Clarification** | Reply with explanation (no code change)  |
 | **Out of Scope**  | Mark for follow-up issue creation        |
@@ -123,12 +124,12 @@ Create a structured todo list:
   "comments": [
     {
       "id": "thread_id",
-      "path": "src/lib.rs",
-      "line": 42,
+         "path": "build/scripts/New-DockerManifest.ps1",
+         "line": 57,
       "category": "Code Change",
-      "summary": "Add error handling for edge case",
+         "summary": "Handle dry-run behavior safely",
       "reviewer": "reviewer_username",
-      "action_plan": "Add match arm for empty input"
+         "action_plan": "Skip network-dependent manifest checks in dry-run mode"
     }
   ]
 }
@@ -139,18 +140,18 @@ Create a structured todo list:
 For each comment requiring code changes:
 
 1. **Read the relevant file context**:
-   - Use `read_file` tool to get surrounding context (±20 lines around the comment line)
+   - Use available file-viewing tools (IDE, repository browser, or helper tooling) to get surrounding context (±20 lines around the comment line)
    - Understand the current implementation
 
 2. **Implement the fix**:
-   - Use `replace_string_in_file` or `multi_replace_string_in_file` for edits
+   - Use file-editing mechanisms available in your environment (IDE/editor, GitHub UI, or repository-specific automation commands)
    - Follow Constitution principles (TDD, Clean Code, Security-First)
    - If the fix requires new tests, add them first (Red-Green-Refactor)
 
 3. **Validate the change**:
-   - Run `cargo fmt` to ensure formatting
-   - Run `cargo clippy` to check for warnings
-   - Run relevant tests: `cargo test --workspace`
+   - Run repository validation commands via `taskctl` and/or the relevant `build/scripts/*.ps1` script path for the changed component
+   - For pipeline-related changes, run the nearest local equivalent (for example `taskctl setup`, image build pipelines, or docs generation) and confirm commands succeed
+   - Ensure required checks pass locally before preparing replies
 
 4. **Prepare reply text** for each addressed comment:
 
@@ -174,8 +175,9 @@ For each comment requiring code changes:
    git add <files_for_comment_1>
    git commit -m "fix(scope): address review comment - <summary>
 
-   Addresses review comment by @reviewer on PR #<number>:
-   <quote first line of comment>
+      Addresses review comment from @reviewer on PR #<number>.
+      Feedback (sanitized summary, no secrets or customer data):
+      - <brief sanitized summary of the feedback>
 
    Changes:
    - <change 1>
@@ -293,8 +295,8 @@ Output a summary:
 
 | Commit  | Files                | Comments Addressed |
 | ------- | -------------------- | ------------------ |
-| abc1234 | src/lib.rs           | #1, #3             |
-| def5678 | tests/integration.rs | #2                 |
+| abc1234 | build/scripts/New-DockerManifest.ps1 | #1, #3             |
+| def5678 | docs/docker-definitions/data.adoc     | #2                 |
 
 ### Review Submission
 
@@ -334,11 +336,11 @@ Agent:
 1. Fetching PR #26 details...
 2. Found 3 unresolved review threads
 3. Categorizing comments:
-   - Comment 1: Code change needed in src/routing.rs:142
-   - Comment 2: Documentation update in docs/USAGE.md
+   - Comment 1: Code change needed in build/scripts/New-DockerManifest.ps1:57
+   - Comment 2: Documentation update in docs/docker-definitions/data.adoc
    - Comment 3: Clarification question (will reply)
 4. Implementing fixes...
-5. Running validation (fmt, clippy, tests)...
+5. Running validation (taskctl pipelines / relevant pwsh script checks)...
 6. Committing changes...
 7. Submitting one batched review...
 8. Summary: 2 code changes committed, 1 clarification included in the batched review
@@ -355,6 +357,9 @@ gh pr view <number> --comments
 
 # Get review threads (GraphQL)
 gh api graphql -f query='...'
+
+# Run repository setup/validation helpers
+taskctl setup
 
 # Create a pending review
 gh api repos/{owner}/{repo}/pulls/{pr}/reviews --method POST
