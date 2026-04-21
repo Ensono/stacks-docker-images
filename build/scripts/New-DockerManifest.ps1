@@ -47,10 +47,12 @@ param (
     # State if manifest should be tagged as Latest
     $Latest,
 
+    [ValidateRange(1, [int]::MaxValue)]
     [int]
     # Number of times to check whether source image manifests are visible
     $ManifestCheckRetries = 24,
 
+    [ValidateRange(1, [int]::MaxValue)]
     [int]
     # Delay between manifest availability checks in seconds
     $ManifestCheckDelaySeconds = 10,
@@ -66,10 +68,12 @@ function Wait-ForDockerManifest {
         $Image,
 
         [Parameter(Mandatory = $true)]
+        [ValidateRange(1, [int]::MaxValue)]
         [int]
         $Retries,
 
         [Parameter(Mandatory = $true)]
+        [ValidateRange(1, [int]::MaxValue)]
         [int]
         $DelaySeconds
     )
