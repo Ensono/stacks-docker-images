@@ -18,6 +18,7 @@ of one notification per reply.
 
 - GitHub CLI (`gh`) installed and authenticated
 - `taskctl`, `docker`, and `pwsh` available for repo build/validation flows
+- GitHub MCP server available with PR tools activated
 - Current branch matches the PR branch being addressed
 - Repository has uncommitted changes handled (stash or commit first)
 - Ensure `GH_PAGER` is set to `cat` to avoid pagination issues with less requiring user interaction

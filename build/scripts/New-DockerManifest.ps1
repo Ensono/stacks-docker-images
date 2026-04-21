@@ -132,7 +132,7 @@ if ([string]::IsNullOrEmpty($registry)) {
     $registry = "docker.io"
 }
 
-# Iterate around the tages and build up the list of images
+# Iterate around the tags and build up the list of images
 $images = @()
 foreach ($tag in $Tags) {
     $images += "{0}/{1}:{2}-{3}" -f $registry, $Name, $Version, $tag
@@ -162,12 +162,8 @@ if ($Latest.IsPresent) {
 
     Invoke-External -Command "docker manifest push `"${registry}/${Name}:latest`"" -Dryrun:$Dryrun
 }
-
-# Push the readme if the registry is docker.io
-if ($registry -ieq "docker.io") {
-    $path_parts = $DocsPath -split "/"
-    $readme_path = [IO.Path]::Combine("markdown", [IO.Path]::Combine([IO.Path]::Combine($path_parts), "README.md"))
-
-    Write-Host ("Pushing README file: {0}" -f $readme_path)
-    Invoke-External -Command "docker pushrm --provider dockerhub ${registry}/${name} --file ${readme_path}" -Dryrun:$Dryrun
+finally {
+    if ($loggedIn) {
+        Invoke-DockerRegistryLogout -Registry $registry
+    }
 }

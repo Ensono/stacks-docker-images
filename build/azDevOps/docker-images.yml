@@ -361,6 +361,7 @@ stages:
 
           - job: create_manifest
             displayName: Create Multi-Arch Manifest
+            condition: succeeded()
             dependsOn:
               - BuildImage_amd64
               - BuildImage_arm64
