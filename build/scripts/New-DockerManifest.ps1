@@ -55,10 +55,7 @@ param (
     [ValidateRange(1, [int]::MaxValue)]
     [int]
     # Delay between manifest availability checks in seconds
-    $ManifestCheckDelaySeconds = 10,
-
-    [string]
-    $DocsPath
+    $ManifestCheckDelaySeconds = 10
 )
 
 function Wait-ForDockerManifest {
@@ -142,6 +139,7 @@ foreach ($tag in $Tags) {
     $images += "{0}/{1}:{2}-{3}" -f $registry, $Name, $Version, $tag
 }
 
+try {
 # Login to the specified container registry
 Write-Host ("Logging into registry: {0}" -f $registry)
 if ($Dryrun.IsPresent) {
@@ -176,8 +174,8 @@ if ($Latest.IsPresent) {
 
     Invoke-External -Command "docker manifest push `"${registry}/${Name}:latest`"" -Dryrun:$Dryrun
 }
-finally {
+} finally {
     if ($loggedIn) {
-        Invoke-DockerRegistryLogout -Registry $registry
+        & docker logout $registry
     }
 }
