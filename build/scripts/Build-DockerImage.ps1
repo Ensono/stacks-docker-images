@@ -174,6 +174,9 @@ try {
     # Verify the image exists in the registry after push
     if (-not $dryrun.IsPresent) {
         Wait-ForDockerImagePush -Image $image_name -Retries $PushVerifyRetries -DelaySeconds $PushVerifyDelaySeconds -Username $username -Password $password
+
+        # Release local image immediately after a verified push to keep agent disk usage low.
+        Invoke-DockerCommand -Command "docker image rm -f ${image_name}" -Dryrun:$dryrun
     }
 }
 finally {

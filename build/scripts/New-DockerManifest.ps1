@@ -197,9 +197,22 @@ if ($Latest.IsPresent) {
     Invoke-DockerCommand -Command "docker manifest push `"${registry}/${Name}:latest`"" -Dryrun:$Dryrun
 }
 } finally {
+    $manifestOperationExitCode = $global:LASTEXITCODE
+
     if ($loggedIn) {
-        & docker logout $registry
+        try {
+            $null = (& docker logout $registry 2>&1 | Out-String)
+
+            if ($LASTEXITCODE -ne 0) {
+                Write-Warning ("docker logout failed for registry: {0}" -f $registry)
+            }
+        }
+        catch {
+            Write-Warning ("docker logout raised an error for registry: {0}" -f $registry)
+        }
     }
+
+    $global:LASTEXITCODE = $manifestOperationExitCode
 
     $ErrorActionPreference = $previousErrorActionPreference
 }
