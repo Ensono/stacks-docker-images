@@ -49,6 +49,24 @@ param (
 . (Join-Path $PSScriptRoot "RegistryManifestTools.ps1")
 
 $previousErrorActionPreference = $ErrorActionPreference
+$ErrorActionPreference = "Stop"
+
+function Invoke-DockerCommand {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]
+        $Command,
+
+        [switch]
+        $Dryrun
+    )
+
+    Invoke-External -Command $Command -Dryrun:$Dryrun
+
+    if (-not $Dryrun.IsPresent -and $LASTEXITCODE -ne 0) {
+        throw ("Docker command failed with exit code {0}: {1}" -f $LASTEXITCODE, $Command)
+    }
+}
 
 function Wait-ForDockerImagePush {
     param (
@@ -90,10 +108,9 @@ function Wait-ForDockerImagePush {
     }
 }
 
-try {
-    $ErrorActionPreference = "Stop"
-    $loggedIn = $false
+$loggedIn = $false
 
+try {
     # Enable experimental builds
     $env:DOCKER_CLI_AKV2_EXPERIMENTAL="enabled"
 
@@ -140,7 +157,7 @@ try {
     # Build and push the image
     Write-Host ("Building docker image: {0}" -f ($platform -join ","))
     Write-Host "docker build $($buildArgs -join " ")"
-    Invoke-External -Command "docker build $($buildArgs -join " ")" -Dryrun:$dryrun
+    Invoke-DockerCommand -Command "docker build $($buildArgs -join " ")" -Dryrun:$dryrun
 
     # Verify the image was built locally before attempting push
     if (-not $dryrun.IsPresent) {
@@ -152,7 +169,7 @@ try {
     }
 
     Write-Host ("Push docker image: {0}" -f $image_name)
-    Invoke-External -Command "docker push ${image_name}" -Dryrun:$dryrun
+    Invoke-DockerCommand -Command "docker push ${image_name}" -Dryrun:$dryrun
 
     # Verify the image exists in the registry after push
     if (-not $dryrun.IsPresent) {

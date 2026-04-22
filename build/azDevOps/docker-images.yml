@@ -313,6 +313,7 @@ stages:
                     inputs:
                       targetType: inline
                       script: |
+                        set -euo pipefail
                         taskctl image-pull-foundation-builder
                     displayName: Pull Pwsh Foundation Image
 
@@ -321,11 +322,24 @@ stages:
                 inputs:
                   targetType: inline
                   script: |
+                    set -euo pipefail
                     taskctl ${{ stage.taskName }}
                 env:
                   DOCKER_IMAGE_NAME: ${{ stage.imageName }}
                   DOCKER_IMAGE_TAG: $(Build.BuildNumber)
                   PLATFORM: linux/amd64
+
+              - task: PowerShell@2
+                displayName: Cleanup Docker State
+                condition: always()
+                inputs:
+                  targetType: inline
+                  pwsh: true
+                  script: |
+                    & ./build/scripts/Cleanup-DockerState.ps1 -arch amd64
+                env:
+                  DOCKER_IMAGE_NAME: ${{ stage.imageName }}
+                  DOCKER_IMAGE_TAG: $(Build.BuildNumber)
 
           - job: BuildImage_arm64
             displayName: Build Image - arm64
@@ -345,6 +359,7 @@ stages:
                     inputs:
                       targetType: inline
                       script: |
+                        set -euo pipefail
                         taskctl image-pull-foundation-builder
                     displayName: Pull Pwsh Foundation Builder Image
 
@@ -353,11 +368,24 @@ stages:
                 inputs:
                   targetType: inline
                   script: |
+                    set -euo pipefail
                     taskctl ${{ stage.taskName }}
                 env:
                   DOCKER_IMAGE_NAME: ${{ stage.imageName }}
                   DOCKER_IMAGE_TAG: $(Build.BuildNumber)
                   PLATFORM: linux/arm64
+
+              - task: PowerShell@2
+                displayName: Cleanup Docker State
+                condition: always()
+                inputs:
+                  targetType: inline
+                  pwsh: true
+                  script: |
+                    & ./build/scripts/Cleanup-DockerState.ps1 -arch arm64
+                env:
+                  DOCKER_IMAGE_NAME: ${{ stage.imageName }}
+                  DOCKER_IMAGE_TAG: $(Build.BuildNumber)
 
           - job: create_manifest
             displayName: Create Multi-Arch Manifest
@@ -385,6 +413,7 @@ stages:
                 inputs:
                   targetType: inline
                   script: |
+                    set -euo pipefail
                     taskctl create:docker:manifest
                 env:
                   DOCKER_IMAGE_NAME: ${{ stage.imageName }}
@@ -392,6 +421,18 @@ stages:
                   DOCKER_MANIFEST_CHECK_RETRIES: $(DOCKER_MANIFEST_CHECK_RETRIES)
                   DOCKER_MANIFEST_CHECK_DELAY_SECONDS: $(DOCKER_MANIFEST_CHECK_DELAY_SECONDS)
                   DOCS_PATH: ${{ stage.docsPath }}
+
+              - task: PowerShell@2
+                displayName: Cleanup Docker State
+                condition: always()
+                inputs:
+                  targetType: inline
+                  pwsh: true
+                  script: |
+                    & ./build/scripts/Cleanup-DockerState.ps1
+                env:
+                  DOCKER_IMAGE_NAME: ${{ stage.imageName }}
+                  DOCKER_IMAGE_TAG: $(Build.BuildNumber)
 
   - ${{ if or(eq(parameters['force_deploy'], 'true'), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
       - stage: Release

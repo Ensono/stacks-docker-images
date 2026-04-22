@@ -18,23 +18,35 @@ tasks:
     description: Build the foundation image on the machine without using a container
     command:
       - |
-        . ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name ${env:DOCKER_IMAGE_NAME} -Tag ${env:DOCKER_IMAGE_TAG} -Arguments "{{ .DOCKER_BUILD_ARGS }}"
+        $ErrorActionPreference = "Stop"
+        & ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name ${env:DOCKER_IMAGE_NAME} -Tag ${env:DOCKER_IMAGE_TAG} -Arguments "{{ .DOCKER_BUILD_ARGS }}"
+        if ($LASTEXITCODE -ne 0) {
+          exit $LASTEXITCODE
+        }
 
   build:image:container:
     context: powershell_docker
     description: Build the foundation image on the machine using the tools container
     command:
       - |
+        $ErrorActionPreference = "Stop"
         $sep = (Test-Path -Path "C:\") ? ";" : ":"
         $env:PSModulePath += "${sep}/home/vsts/modules"
         Import-Module EnsonoBuild
-        . ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name ${env:DOCKER_IMAGE_NAME} -Tag ${env:DOCKER_IMAGE_TAG} -Arguments "{{ .DOCKER_BUILD_ARGS }}"
+        & ./build/scripts/Build-DockerImage.ps1 -platform $env:PLATFORM -Name ${env:DOCKER_IMAGE_NAME} -Tag ${env:DOCKER_IMAGE_TAG} -Arguments "{{ .DOCKER_BUILD_ARGS }}"
+        if ($LASTEXITCODE -ne 0) {
+          exit $LASTEXITCODE
+        }
 
   create:docker:manifest:
     context: powershell
     description: Create the Docker manifest for the images
     command: |
-      . ./build/scripts/New-DockerManifest.ps1 -Latest
+      $ErrorActionPreference = "Stop"
+      & ./build/scripts/New-DockerManifest.ps1 -Latest
+      if ($LASTEXITCODE -ne 0) {
+        exit $LASTEXITCODE
+      }
 
   _docs:
     description: Build Docs for Stacks CLI
