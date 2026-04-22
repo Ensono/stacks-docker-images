@@ -52,8 +52,9 @@ try {
     }
 
     Invoke-DockerCleanupCommand -Arguments @("container", "prune", "--force") -IgnoreExitCode -Description "docker container prune --force"
-    Invoke-DockerCleanupCommand -Arguments @("image", "prune", "--all", "--force") -Description "docker image prune --all --force"
-    Invoke-DockerCleanupCommand -Arguments @("builder", "prune", "--all", "--force") -Description "docker builder prune --all --force"
+    Invoke-DockerCleanupCommand -Arguments @("image", "prune", "--all", "--force") -IgnoreExitCode -Description "docker image prune --all --force"
+    Invoke-DockerCleanupCommand -Arguments @("volume", "prune", "--force") -IgnoreExitCode -Description "docker volume prune --force"
+    Invoke-DockerCleanupCommand -Arguments @("builder", "prune", "--all", "--force") -IgnoreExitCode -Description "docker builder prune --all --force"
 
     Write-Host "Docker disk usage after cleanup:"
     Invoke-DockerCleanupCommand -Arguments @("system", "df") -IgnoreExitCode -Description "docker system df"

@@ -299,6 +299,17 @@ stages:
             displayName: Build Image - amd64
             pool: $(build_pool_amd64)
             steps:
+              - task: PowerShell@2
+                displayName: Pre-Cleanup Docker State
+                inputs:
+                  targetType: inline
+                  pwsh: true
+                  script: |
+                    & ./build/scripts/Cleanup-DockerState.ps1 -arch amd64
+                env:
+                  DOCKER_IMAGE_NAME: ${{ stage.imageName }}
+                  DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+
               - template: templates/configure_agent.yml
                 parameters:
                   TaskctlVersion: $(TaskctlVersion)
@@ -332,6 +343,7 @@ stages:
               - task: PowerShell@2
                 displayName: Cleanup Docker State
                 condition: always()
+                continueOnError: true
                 inputs:
                   targetType: inline
                   pwsh: true
@@ -345,6 +357,17 @@ stages:
             displayName: Build Image - arm64
             pool: $(build_pool_arm64)
             steps:
+              - task: PowerShell@2
+                displayName: Pre-Cleanup Docker State
+                inputs:
+                  targetType: inline
+                  pwsh: true
+                  script: |
+                    & ./build/scripts/Cleanup-DockerState.ps1 -arch arm64
+                env:
+                  DOCKER_IMAGE_NAME: ${{ stage.imageName }}
+                  DOCKER_IMAGE_TAG: $(Build.BuildNumber)
+
               - template: templates/configure_agent.yml
                 parameters:
                   TaskctlVersion: $(TaskctlVersion)
@@ -378,6 +401,7 @@ stages:
               - task: PowerShell@2
                 displayName: Cleanup Docker State
                 condition: always()
+                continueOnError: true
                 inputs:
                   targetType: inline
                   pwsh: true
@@ -425,6 +449,7 @@ stages:
               - task: PowerShell@2
                 displayName: Cleanup Docker State
                 condition: always()
+                continueOnError: true
                 inputs:
                   targetType: inline
                   pwsh: true
