@@ -58,6 +58,26 @@ param (
     $ManifestCheckDelaySeconds = 10
 )
 
+$previousErrorActionPreference = $ErrorActionPreference
+$ErrorActionPreference = "Stop"
+
+function Invoke-DockerCommand {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]
+        $Command,
+
+        [switch]
+        $Dryrun
+    )
+
+    Invoke-External -Command $Command -Dryrun:$Dryrun
+
+    if (-not $Dryrun.IsPresent -and $LASTEXITCODE -ne 0) {
+        throw ("Docker command failed with exit code {0}: {1}" -f $LASTEXITCODE, $Command)
+    }
+}
+
 function Wait-ForDockerManifest {
     param (
         [Parameter(Mandatory = $true)]
@@ -139,6 +159,8 @@ foreach ($tag in $Tags) {
     $images += "{0}/{1}:{2}-{3}" -f $registry, $Name, $Version, $tag
 }
 
+$loggedIn = $false
+
 try {
 # Login to the specified container registry
 Write-Host ("Logging into registry: {0}" -f $registry)
@@ -163,19 +185,34 @@ else {
     Write-Host "Skipping manifest-availability checks in dry-run mode"
 }
 
-Invoke-External -Command "docker manifest create `"${registry}/${Name}:${Version}`" $($images -join " ")" -Dryrun:$Dryrun
+Invoke-DockerCommand -Command "docker manifest create `"${registry}/${Name}:${Version}`" $($images -join " ")" -Dryrun:$Dryrun
 
 # Now push the manifest to the registry
-Invoke-External -Command "docker manifest push `"${registry}/${Name}:${Version}`"" -Dryrun:$Dryrun
+Invoke-DockerCommand -Command "docker manifest push `"${registry}/${Name}:${Version}`"" -Dryrun:$Dryrun
 
 if ($Latest.IsPresent) {
     # Tag manifest with the latest tag
-    Invoke-External -Command "docker manifest create `"${registry}/${Name}:latest`" $($images -join " ")" -Dryrun:$Dryrun
+    Invoke-DockerCommand -Command "docker manifest create `"${registry}/${Name}:latest`" $($images -join " ")" -Dryrun:$Dryrun
 
-    Invoke-External -Command "docker manifest push `"${registry}/${Name}:latest`"" -Dryrun:$Dryrun
+    Invoke-DockerCommand -Command "docker manifest push `"${registry}/${Name}:latest`"" -Dryrun:$Dryrun
 }
 } finally {
+    $manifestOperationExitCode = $global:LASTEXITCODE
+
     if ($loggedIn) {
-        & docker logout $registry
+        try {
+            $null = (& docker logout $registry 2>&1 | Out-String)
+
+            if ($LASTEXITCODE -ne 0) {
+                Write-Warning ("docker logout failed for registry: {0}" -f $registry)
+            }
+        }
+        catch {
+            Write-Warning ("docker logout raised an error for registry: {0}" -f $registry)
+        }
     }
+
+    $global:LASTEXITCODE = $manifestOperationExitCode
+
+    $ErrorActionPreference = $previousErrorActionPreference
 }

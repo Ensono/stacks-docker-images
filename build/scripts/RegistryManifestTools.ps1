@@ -78,7 +78,17 @@ function Invoke-DockerRegistryLogout {
         $Registry
     )
 
-    $null = (& docker logout $Registry 2>&1 | Out-String)
+    $previousExitCode = $global:LASTEXITCODE
+
+    try {
+        $null = (& docker logout $Registry 2>&1 | Out-String)
+    }
+    catch {
+        Write-Warning ("docker logout raised an error for registry: {0}" -f $Registry)
+    }
+    finally {
+        $global:LASTEXITCODE = $previousExitCode
+    }
 }
 
 function Test-AcrImageAvailability {

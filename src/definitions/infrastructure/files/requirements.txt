@@ -1,2 +1,2 @@
-yamllint==1.35.1
-checkov==3.2.332
+yamllint==1.38.0
+checkov==3.2.524

@@ -8,7 +8,7 @@ resource "random_string" "namesuffix" {
 }
 
 module "default_label" {
-  source          = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.24.1"
+  source          = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.25.0"
   namespace       = format("%s-%s", substr(var.name_company, 0, 16), substr(var.name_project, 0, 16))
   name            = "${lookup(local.location_name_map, var.location)}-${substr(var.name_component, 0, 16)}"
   attributes      = concat([random_string.namesuffix.result], var.attributes)
