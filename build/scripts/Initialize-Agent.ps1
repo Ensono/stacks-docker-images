@@ -60,6 +60,9 @@ if ($unameArch -eq "x86_64") {
 elseif (@("aarch64", "arm64") -contains $unameArch) {
     $binArch = "arm64"
 }
+else {
+    throw "Unsupported architecture returned by 'uname -m': '$unameArch'. Supported architectures are: x86_64, aarch64, arm64."
+}
 
 # Install Eirctl
 # - if not exists, download and install

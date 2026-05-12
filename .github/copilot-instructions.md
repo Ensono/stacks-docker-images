@@ -135,7 +135,7 @@ yq -i $yqCommand build/eirctl/contexts.yaml
 eirctl build:foundation:powershell --dry-run
 
 # Debug build in container context
-docker run --rm -v ${PWD}:/eirctl -w /eiectl ensono/eir-foundation-builder:latest pwsh
+docker run --rm -v ${PWD}:/eirctl -w /eirctl ensono/eir-foundation-builder:latest pwsh
 
 # Generate docs locally
 eirctl docs

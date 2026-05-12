@@ -5,14 +5,18 @@ parameters:
     displayName: Force build and publish to Live
     type: boolean
     default: false
+
   - name: upload
     displayName: Upload generated files
     type: boolean
     default: false
+
   - name: debug
     displayName: Turn on debug for the Independent Runner
     type: boolean
     default: false
+
+  # tag::stages_parameter[]
   - name: stages
     displayName: Container Image Stages
     type: object
@@ -150,6 +154,7 @@ parameters:
         taskName: build:bottlerocket_validation
         imageName: ensono/bottlerocket-cis-validation
         docsPath: bottlerocket-cis-validation
+# end::stages_parameter[]
 
 pr:
   - main

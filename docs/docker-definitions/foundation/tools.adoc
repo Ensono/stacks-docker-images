@@ -56,7 +56,7 @@ https://github.com/terraform-linters/tflint/releases/download/v{version_tflint}/
 | PS Module | Arm-ttk | 20260213 2+| -
 | PS Module | Pester | 5.7.1 2+| -
 | PS Module | PowerShell-Yaml | 0.4.12 2+| -
-| PS Module | PSScriptAnalyzer 2+| 1.25.0 2+| -
+| PS Module | PSScriptAnalyzer | 1.25.0 2+| -
 |====
 
 Three versions of Terraform are installed. This is to support migration of Terraform from one version to another. Version `1.14.0` is configured as the default version, using a symlink to the `/usr/local/terraform/1.14.0/bin` directory.

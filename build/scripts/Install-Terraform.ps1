@@ -49,7 +49,7 @@ Remove-FileIfExists -File ${terraformZip}
 Remove-FileIfExists -File ${terraformSums}
 Remove-FileIfExists -File ${terraformSig}
 
-# Download Hasicorp Public Key and install it
+# Download Hashicorp Public Key and install it
 Write-Host "INFO: Downloading the Terraform Public Key"
 Invoke-WebRequest `
 	-Uri https://keybase.io/hashicorp/pgp_keys.asc `

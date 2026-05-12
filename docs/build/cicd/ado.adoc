@@ -35,10 +35,13 @@ One of the things that Docker Hub allows is an overview to be published. This is
 [cols="1,1",options=header,stripes=even]
 |===
 | AsciiDoctor File | README destination
+| {src_docs_path}/foundation/azure-cli.adoc | {dst_docs_path}/foundation/azure-cli/README.md
+| {src_docs_path}/foundation/builder.adoc | {dst_docs_path}/foundation/builder/README.md
 | {src_docs_path}/foundation/powershell.adoc | {dst_docs_path}/foundation/powershell/README.md
 | {src_docs_path}/foundation/tools.adoc | {dst_docs_path}/foundation/tools/README.md
-| {src_docs_path}/foundation/azure-cli.adoc | {dst_docs_path}/foundation/azure-cli/README.md
 | {src_docs_path}/asciidoctor.adoc | {dst_docs_path}/asciidoctor/README.md
+| {src_docs_path}/bottlerocket-cis-bootstrap.adoc | {dst_docs_path}/bottlerocket-cis-bootstrap/README.md
+| {src_docs_path}/bottlerocket-cis-validation.adoc | {dst_docs_path}/bottlerocket-cis-validation/README.md
 | {src_docs_path}/data.adoc | {dst_docs_path}/data/README.md
 | {src_docs_path}/dotnet.adoc | {dst_docs_path}/dotnet/README.md
 | {src_docs_path}/golang.adoc | {dst_docs_path}/golang/README.md
@@ -46,6 +49,7 @@ One of the things that Docker Hub allows is an overview to be published. This is
 | {src_docs_path}/inspec.adoc | {dst_docs_path}/inspec/README.md
 | {src_docs_path}/java.adoc | {dst_docs_path}/java/README.md
 | {src_docs_path}/kong.adoc | {dst_docs_path}/kong/README.md
+| {src_docs_path}/node.adoc | {dst_docs_path}/node/README.md
 |===
 
 As these README.md files are generated from the main documentation branch, the pattern `src/definitions/**/README.md` has been added to the `.gitignore` file so that they are not checked in automatically.

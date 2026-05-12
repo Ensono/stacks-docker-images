@@ -12,7 +12,7 @@ tasks:
     command:
       - Import-Module EnsonoBuild
       - Update-BuildNumber
-    # Set variable DOCKER_IMAGE_TAG; i.e. 0.2.1
+      # Set variable DOCKER_IMAGE_TAG; i.e. 0.2.1
 
   build:image:local:
     context: powershell
@@ -50,7 +50,7 @@ tasks:
     context: powershell
     description: Installs terraform for later use
     command: |
-      & ./build/scripts/Install-Terraform -Version ${env:TERRAFORM_VERSION}
+      & ./build/scripts/Install-Terraform.ps1 -Version ${env:TERRAFORM_VERSION}
     required:
       env:
         - TERRAFORM_VERSION
@@ -59,9 +59,10 @@ tasks:
     context: powershell
     description: Initialise Terraform for chosen templates
     command: |
-      $ErrorActionPreference = 'Stop'
+      $ErrorActionPreference = "Stop"
       Invoke-Terraform -Init -Path $env:TF_FILE_LOCATION -Arguments $env:TF_BACKEND_INIT -debug
-      Invoke-Terraform -Workspace -Arguments $env:ENV_NAME -Path $env:TF_FILE_LOCATION
+      # TODO: Why no workspace?
+      # Invoke-Terraform -Workspace -Arguments $env:ENV_NAME -Path $env:TF_FILE_LOCATION
 
   infra:vars:
     context: powershell

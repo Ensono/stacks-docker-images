@@ -1,8 +1,9 @@
 == EIR Golang
 
-Image that contains the Go program,ming language, which is used to build Ensono Stacks applications:
+Image that contains the Go programming language, which is used to build Ensono Stacks applications:
 
-- Stacks CLI - https://githgub.com/Ensono/stacks-cli
+- Eirctl - https://github.com/Ensono/eirctl
+- Stacks CLI - https://github.com/Ensono/stacks-cli
 - MRBuild - https://github.com/Ensono/mrbuild
 
 === Specs
