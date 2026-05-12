@@ -13,11 +13,11 @@ Total_Num_Of_Checks=26
 function checkSysctlConfig()
 {
     for str in ${sysctlList[@]}; do
-       v1=$(sysctl $str | awk '{print $3}' )
-       if [[ "$v1" != $expectedValue ]] 
-       then
-        return 0
-       fi
+        v1=$(sysctl $str | awk '{print $3}' )
+        if [[ "$v1" != $expectedValue ]]
+        then
+            return 0
+        fi
     done
     return 1
 }
@@ -63,10 +63,10 @@ checkSysctlConfig
 
 
 if [ "$?" -eq "1" ]; then
-  echo "[PASS] $RECOMMENDATION"
+    echo "[PASS] $RECOMMENDATION"
     Num_Of_Checks_Passed=$((Num_Of_Checks_Passed+1))
 else
-  echo "[FAIL] $RECOMMENDATION"
+    echo "[FAIL] $RECOMMENDATION"
 fi
 
 RECOMMENDATION="1.4.2 Ensure address space layout randomization (ASLR) is enabled (Automated)"
@@ -76,10 +76,10 @@ checkSysctlConfig
 
 
 if [ "$?" -eq "1" ]; then
-  echo "[PASS] $RECOMMENDATION"
+    echo "[PASS] $RECOMMENDATION"
     Num_Of_Checks_Passed=$((Num_Of_Checks_Passed+1))
 else
-  echo "[FAIL] $RECOMMENDATION"
+    echo "[FAIL] $RECOMMENDATION"
 fi
 
 RECOMMENDATION="1.4.3 Ensure unprivileged eBPF is disabled (Automated)"
@@ -89,10 +89,10 @@ checkSysctlConfig
 
 
 if [ "$?" -eq "1" ]; then
-  echo "[PASS] $RECOMMENDATION"
+    echo "[PASS] $RECOMMENDATION"
     Num_Of_Checks_Passed=$((Num_Of_Checks_Passed+1))
 else
-  echo "[FAIL] $RECOMMENDATION"
+    echo "[FAIL] $RECOMMENDATION"
 fi
 
 RECOMMENDATION="1.4.4 Ensure user namespaces are disabled (Automated)"
@@ -102,10 +102,10 @@ checkSysctlConfig
 
 
 if [ "$?" -eq "1" ]; then
-  echo "[PASS] $RECOMMENDATION"
+    echo "[PASS] $RECOMMENDATION"
     Num_Of_Checks_Passed=$((Num_Of_Checks_Passed+1))
 else
-  echo "[FAIL] $RECOMMENDATION"
+    echo "[FAIL] $RECOMMENDATION"
 fi
 
 RECOMMENDATION="1.5.1 Ensure SELinux is configured (Automated)"
@@ -152,10 +152,10 @@ checkSysctlConfig
 
 
 if [ "$?" -eq "1" ]; then
-  echo "[PASS] $RECOMMENDATION"
+    echo "[PASS] $RECOMMENDATION"
     Num_Of_Checks_Passed=$((Num_Of_Checks_Passed+1))
 else
-  echo "[FAIL] $RECOMMENDATION"
+    echo "[FAIL] $RECOMMENDATION"
 fi
 
 RECOMMENDATION="3.2.1 Ensure source routed packets are not accepted (Automated)"
@@ -165,10 +165,10 @@ checkSysctlConfig
 
 
 if [ "$?" -eq "1" ]; then
-  echo "[PASS] $RECOMMENDATION"
+    echo "[PASS] $RECOMMENDATION"
     Num_Of_Checks_Passed=$((Num_Of_Checks_Passed+1))
 else
-  echo "[FAIL] $RECOMMENDATION"
+    echo "[FAIL] $RECOMMENDATION"
 fi
 
 RECOMMENDATION="3.2.2 Ensure ICMP redirects are not accepted (Automated)"
