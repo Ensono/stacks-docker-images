@@ -15,5 +15,7 @@ The JVM is copied from the azul/zulu-openjdk image. This is done so that we do n
 [cols="1,2,1,2",options=header]
 |====
 | Type | Name | Version | URL
-| Binary | Maven | 3.8.9 | https://dlcdn.apache.org/maven/maven-3/3.8.9/binaries/apache-maven-3.8.9-bin.zip
+| Binary | Java (Azul Zulu OpenJDK) | 17.0.19 | https://hub.docker.com/r/azul/zulu-openjdk[azul/zulu-openjdk]
+| Binary | Maven | 3.9.15 | https://dlcdn.apache.org/maven/maven-3/3.9.15/binaries/apache-maven-3.9.15-bin.zip
+| Binary | Sonar Scanner CLI | 8.1.0.6389 | https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-8.1.0.6389.zip
 |====

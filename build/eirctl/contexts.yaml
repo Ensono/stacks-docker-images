@@ -1,0 +1,37 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Ensono/eirctl/refs/heads/main/schemas/schema_v1.json
+contexts:
+  powershell_docker:
+    container:
+      name: ensono/eir-foundation-builder:1.2.81
+      enable_dind: true
+      enable_mount: true
+      shell: pwsh
+      shell_args:
+        - -Command
+    envfile:
+      exclude:
+        - HOME
+        - PATH
+        - POSH_AZURE_SUBSCRIPTION
+
+  powershell:
+    executable:
+      bin: pwsh
+      args:
+        - -NoProfile
+        - -Command
+    quote: "'"
+
+  docsenv:
+    container:
+      name: ensono/eir-asciidoctor:1.2.81
+      enable_mount: true
+      shell: pwsh
+      shell_args:
+        - -Command
+    envfile:
+      exclude:
+        - HOME
+        - PATH
+        - POSH_AZURE_SUBSCRIPTION

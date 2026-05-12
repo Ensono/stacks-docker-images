@@ -17,7 +17,7 @@ of one notification per reply.
 ## Prerequisites
 
 - GitHub CLI (`gh`) installed and authenticated
-- `taskctl`, `docker`, and `pwsh` available for repo build/validation flows
+- `eirctl`, `docker`, and `pwsh` available for repo build/validation flows
 - GitHub MCP server available with PR tools activated
 - Current branch matches the PR branch being addressed
 - Repository has uncommitted changes handled (stash or commit first)
@@ -149,8 +149,8 @@ For each comment requiring code changes:
    - If the fix requires new tests, add them first (Red-Green-Refactor)
 
 3. **Validate the change**:
-   - Run repository validation commands via `taskctl` and/or the relevant `build/scripts/*.ps1` script path for the changed component
-   - For pipeline-related changes, run the nearest local equivalent (for example `taskctl setup`, image build pipelines, or docs generation) and confirm commands succeed
+   - Run repository validation commands via `eirctl` and/or the relevant `build/scripts/*.ps1` script path for the changed component
+   - For pipeline-related changes, run the nearest local equivalent (for example `eirctl setup`, image build pipelines, or docs generation) and confirm commands succeed
    - Ensure required checks pass locally before preparing replies
 
 4. **Prepare reply text** for each addressed comment:
@@ -340,7 +340,7 @@ Agent:
    - Comment 2: Documentation update in docs/docker-definitions/data.adoc
    - Comment 3: Clarification question (will reply)
 4. Implementing fixes...
-5. Running validation (taskctl pipelines / relevant pwsh script checks)...
+5. Running validation (eirctl pipelines / relevant pwsh script checks)...
 6. Committing changes...
 7. Submitting one batched review...
 8. Summary: 2 code changes committed, 1 clarification included in the batched review
@@ -359,7 +359,7 @@ gh pr view <number> --comments
 gh api graphql -f query='...'
 
 # Run repository setup/validation helpers
-taskctl setup
+eirctl setup
 
 # Create a pending review
 gh api repos/{owner}/{repo}/pulls/{pr}/reviews --method POST

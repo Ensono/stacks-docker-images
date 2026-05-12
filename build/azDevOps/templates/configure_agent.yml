@@ -1,5 +1,5 @@
 parameters:
-  - name: TaskctlVersion
+  - name: EirctlVersion
     type: string
   - name: EnsonoBuildVersion
     type: string
@@ -19,7 +19,7 @@ steps:
         script: |
           $InformationPreference = "Continue"
           . build/scripts/Initialize-Agent.ps1 `
-            -TaskctlVersion ${{ parameters.TaskctlVersion }} `
+            -EirctlVersion ${{ parameters.EirctlVersion }} `
             -EnsonoBuildVersion ${{ parameters.EnsonoBuildVersion }} `
             -DockerPushRMVersion ${{ parameters.DockerPushRMVersion }} `
             -YqVersion ${{ parameters.YqVersion }} `

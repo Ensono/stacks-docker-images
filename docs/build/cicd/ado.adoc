@@ -3,7 +3,7 @@
 
 === Azure DevOps
 
-A pipeline has been configured for Azure DevOps, which calls `taskctl`, and runs the tasks.
+A pipeline has been configured for Azure DevOps, which calls `eirctl`, and runs the tasks.
 
 A number of parameters have been defined which allow the behaviour of the pipeline to be changed at run time.
 
@@ -12,10 +12,10 @@ A number of parameters have been defined which allow the behaviour of the pipeli
 | Name | Description | Default Value
 | `force_deploy` | Typically an image is only pushed to Docker hub when it is run from the `main` branch, however by using this parameter it is possible to force the deployment from a branch | icon:fas-times[]
 | `upload` | Upload generated files as an artifact of the build. | icon:fas-times[]
-| `debug` | Turn on debug output for `taskctl` | icon:fas-times[]
-| `stages` | A list of objects that define what pipeline from `taskctl` needs to be run.
+| `debug` | Turn on debug output for `eirctl` | icon:fas-times[]
+| `stages` | A list of objects that define what pipeline from `eirctl` needs to be run.
 
-It has been specified like this so that the stages can be iterated over, rather than having to be declarative on all stages. | <<Azure DevOps Pipeline Stages>> 
+It has been specified like this so that the stages can be iterated over, rather than having to be declarative on all stages. | <<Azure DevOps Pipeline Stages>>
 |===
 
 The object that contains the stages also contains the dependencies between the different stages. This means that all of the Docker images are built in the correct order. This order can be seen when the pipeline runs in Azure DevOps, this very closely reflects the dependency map as shown in <<docker-image-dependencies>> figure.
@@ -52,13 +52,13 @@ As these README.md files are generated from the main documentation branch, the p
 
 The reason for doing the conversion from AsciiDoctor to Markdown, rather than the other way around, is that documentation can be taken by other processes and built - if the Markdown had to be converted this would need to be taken into account in the retrieval process making things harder to manage.
 
-The process that manages the generation of the README files is a PowerShell script that is called by Taskctl as part of the build.
+The process that manages the generation of the README files is a PowerShell script that is called by Eirctl as part of the build.
 
 .Task for generating Docker overview files
 [options=header,stripes=even]
 |===
-| Taskctl Task | PowerShell Script | Script Reference
+| Eirctl Task | PowerShell Script | Script Reference
 | `generate:docker:overview` | `build/scripts/Set-DockerOverview.ps1` | <<Set-DockerOverview Script>>
 |===
 
-NOTE: The `generate:docker:overview` is set as part of the Taskctl `docs` pipeline
+NOTE: The `generate:docker:overview` is set as part of the Eirctl `docs` pipeline

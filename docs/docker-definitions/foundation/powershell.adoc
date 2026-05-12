@@ -38,5 +38,5 @@ https://matthorgan.xyz/blog/powershell-handling-native-applications/ | $true
 | Type | Name | Version | URL
 | Binary | PowerShell | 7.4.1 | https://github.com/PowerShell/PowerShell
 | Module | EnsonoBuild | 1.0.43 | https://github.com/Ensono/independent-runner
-| Binary | Taskctl | 1.5.3 | https://github.com/Ensono/taskctl
+| Binary | Eirctl | 0.10.1 | https://github.com/Ensono/eirctl
 |====

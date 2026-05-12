@@ -48,7 +48,7 @@ This PR introduces comprehensive AI agent guidance documentation and updates the
 - Created `.github/copilot-instructions.md` with project-specific guidance covering:
 
   - Image hierarchy and dependency chain (`foundation/powershell` → `foundation/builder` → specialized images)
-  - Taskctl-based build system with context switching (local vs containerized builds)
+  - Eirctl-based build system with context switching (local vs containerized builds)
   - PowerShell module integration and environment variable management
   - Critical debugging commands and development workflows
 
@@ -91,7 +91,7 @@ This PR introduces comprehensive AI agent guidance documentation and updates the
 
 **Docker Image Updates**:
 
-1. Build the updated .NET image locally: `taskctl build:dotnet`
+1. Build the updated .NET image locally: `eirctl build:dotnet`
 2. Verify SonarScanner 11.0.0 is properly installed in the container
 3. Test ReportGenerator 5.4.17 functionality with sample .NET projects
 4. Confirm no breaking changes in the tool interface or output formats
