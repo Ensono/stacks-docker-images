@@ -4,11 +4,11 @@ param (
 
     [string]
     # Base directory
-    $base = "/app/docs/docker-definitions",
+    $base = "/eirctl/docs/docker-definitions",
 
     [string]
     # Output root
-    $output = "/app/markdown",
+    $output = "/eirctl/markdown",
 
     [string]
     # Temporary directory

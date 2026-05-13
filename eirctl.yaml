@@ -1,6 +1,8 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Ensono/eirctl/refs/heads/main/schemas/schema_v1.json
 import:
-  - ./build/taskctl/contexts.yaml
-  - ./build/taskctl/tasks.yaml
+  - ./build/eirctl/contexts.yaml
+  - ./build/eirctl/tasks.yaml
 
 pipelines:
   setup:
@@ -106,7 +108,12 @@ pipelines:
     - task: _docs
       depends_on: setup
 
-  # Pipeline to ensure that the infrastructure is valid
+  # Pipelines to ensure that the infrastructure is valid
+  infrastructure-agent:
+    - task: infra:prepare
+    - pipeline: infrastructure
+      depends_on: infra:prepare
+
   infrastructure:
     - task: infra:init
     - task: infra:plan

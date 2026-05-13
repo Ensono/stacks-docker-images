@@ -1,5 +1,5 @@
 parameters:
-  - name: TaskctlVersion
+  - name: EirctlVersion
     type: string
   - name: EnsonoBuildVersion
     type: string
@@ -12,16 +12,16 @@ parameters:
   - name: DockerContainerRegistryName
     type: string
 steps:
-    - task: PowerShell@2
-      displayName: Configure Agent
-      inputs:
-        targetType: inline
-        script: |
-          $InformationPreference = "Continue"
-          . build/scripts/Initialize-Agent.ps1 `
-            -TaskctlVersion ${{ parameters.TaskctlVersion }} `
-            -EnsonoBuildVersion ${{ parameters.EnsonoBuildVersion }} `
-            -DockerPushRMVersion ${{ parameters.DockerPushRMVersion }} `
-            -YqVersion ${{ parameters.YqVersion }} `
-            -BuildNumber ${{ parameters.BuildNumber }} `
-            -DockerContainerRegistryName ${{ parameters.DockerContainerRegistryName }}
+  - task: PowerShell@2
+    displayName: Configure Agent
+    inputs:
+      targetType: inline
+      script: |
+        $InformationPreference = "Continue"
+        . build/scripts/Initialize-Agent.ps1 `
+          -EirctlVersion ${{ parameters.EirctlVersion }} `
+          -EnsonoBuildVersion ${{ parameters.EnsonoBuildVersion }} `
+          -DockerPushRMVersion ${{ parameters.DockerPushRMVersion }} `
+          -YqVersion ${{ parameters.YqVersion }} `
+          -BuildNumber ${{ parameters.BuildNumber }} `
+          -DockerContainerRegistryName ${{ parameters.DockerContainerRegistryName }}

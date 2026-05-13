@@ -12,14 +12,14 @@ param (
     [Parameter(
         Mandatory = $true
     )]
-    # Version of taskctl to install
-    $TaskctlVersion,
+    # Version of eirctl to install
+    $EirctlVersion,
 
     [string]
     [Parameter(
         Mandatory = $true
     )]
-    # Version of EnsobBuild to install
+    # Version of EnsonoBuild to install
     $EnsonoBuildVersion,
 
     [string]
@@ -53,104 +53,99 @@ param (
 )
 
 # Determine the architecture that is being used
-$uname_arch = Invoke-Expression -Command "uname -m"
-if ($uname_arch -eq "x86_64") {
-    $bin_arch = "amd64"
-    $abbr_arch = "x64"
-    $taskctl_arch = "amd64"
+$unameArch = Invoke-Expression -Command "uname -m"
+if ($unameArch -eq "x86_64") {
+    $binArch = "amd64"
 }
-elseif (@("aarch64", "arm64") -contains $uname_arch) {
-    $bin_arch = "arm64"
-    $abbr_arch = $bin_arch
-    $taskctl_arch = "arm64"
-}
-
-# Install Taskctl
-# - if not exists, download and install
-# - if it does exist, check the version and update if necessary
-$install_taskctl = $false
-$taskctl_bin = "/usr/local/bin/taskctl"
-if (Test-Path -Path $taskctl_bin) {
-
-    Write-Information "Taskctl is installed, getting version"
-
-    # get the current version and compare the with the version to install
-    $version_string = Invoke-Expression -Command "taskctl --version"
-    $version = ($version_string -split " ")[2]
-    if ($version -ne $TaskctlVersion) {
-
-        Write-Information "Taskctl [$version] is out of date, updating to version $TaskctlVersion"
-
-        $install_taskctl = $true
-    }
-
+elseif (@("aarch64", "arm64") -contains $unameArch) {
+    $binArch = "arm64"
 }
 else {
-
-    Write-Information "Taskctl is not installed, installing version $TaskctlVersion"
-
-    $install_taskctl = $true
+    throw "Unsupported architecture returned by 'uname -m': '$unameArch'. Supported architectures are: x86_64, aarch64, arm64."
 }
 
-if ($install_taskctl) {
+# Install Eirctl
+# - if not exists, download and install
+# - if it does exist, check the version and update if necessary
+$installEirctl = $false
+$eirctlBin = "/usr/local/bin/eirctl"
+if (Test-Path -Path $eirctlBin) {
+    Write-Information "Eirctl is installed, getting version"
 
-    # Set the URL to download taskctl
-    $url = "https://github.com/Ensono/taskctl/releases/download/{0}/taskctl-linux-{1}" -f $TaskctlVersion, $taskctl_arch
+    # Get the current version and compare the with the version to install
+    $versionString = Invoke-Expression -Command "eirctl --version"
+    $rawVersion = ($versionString -split " ")[2]
+    $version = ($rawVersion -split "-")[0]
+    if ($version -ne $EirctlVersion) {
 
-    Invoke-RestMethod -Uri $url -OutFile "/usr/local/bin/taskctl"
+        Write-Information "Eirctl [$rawVersion] is out of date, updating to version $EirctlVersion"
 
-    # Extract the tarball
-    # tar zxf /tmp/taskctl.tar.gz -C /usr/local/bin taskctl
-    chmod +x /usr/local/bin/taskctl
+        $installEirctl = $true
+    }
+}
+else {
+    Write-Information "Eirctl is not installed, installing version $EirctlVersion"
+    $installEirctl = $true
+}
+
+if ($installEirctl) {
+    Write-Information "Downloading Eirctl, version $EirctlVersion"
+    $url = "https://github.com/Ensono/eirctl/releases/download/{0}/eirctl-linux-{1}" -f $EirctlVersion, $binArch
+
+    Invoke-RestMethod -Uri $url -OutFile "/usr/local/bin/eirctl"
+
+    chmod +x /usr/local/bin/eirctl
+
+    /usr/local/bin/eirctl --version
 }
 
 # Install EnsonoBuild
 # Ensure that the Module directory exists
-$module_path = "{0}/.local/share/powershell/Modules/EnsonoBuild" -f $home
-if (!(Test-Path -Path $module_path)) {
+$modulePath = "{0}/.local/share/powershell/Modules/EnsonoBuild" -f $home
+if (!(Test-Path -Path $modulePath)) {
     Write-Information "Creating EnsonoBuild module directory"
-    New-Item -Path $module_path -Force -Type Directory
+    New-Item -Path $modulePath -Force -Type Directory
 }
 
 # Download the EnsonoBuild module files
-$module_files = @(
+$moduleFiles = @(
     ("https://github.com/Ensono/independent-runner/releases/download/v{0}/EnsonoBuild.psd1" -f $EnsonoBuildVersion),
     ("https://github.com/Ensono/independent-runner/releases/download/v{0}/EnsonoBuild.psm1" -f $EnsonoBuildVersion)
 )
 
 Write-Information "Installing EnsonoBuild module"
-foreach ($module_file in $module_files) {
+foreach ($moduleFile in $moduleFiles) {
 
     # Get the filename of the file being downloaded
-    $filename = Split-Path -Path $module_file -Leaf
+    $filename = Split-Path -Path $moduleFile -Leaf
 
-    Write-Information ("Downloading module file '{0}' from {1}" -f $filename, $module_file)
+    Write-Information ("Downloading module file '{0}' from {1}" -f $filename, $moduleFile)
 
-    $output_path = Join-Path -Path $module_path -ChildPath $filename
-    Invoke-RestMethod -Uri $module_file -Outfile $output_path
+    $outputPath = Join-Path -Path $modulePath -ChildPath $filename
+    Invoke-RestMethod -Uri $moduleFile -Outfile $outputPath
 }
 
 # PowerShell modules
 # Set the list of powershell modules to install
-$powershell_modules = @(
+$powershellModules = @(
     "Powershell-Yaml"
 )
 
-foreach ($powershell_module in $powershell_modules) {
-    Install-Module -Name $powershell_module -Scope CurrentUser -Repository PSGallery -Force
+foreach ($powershellModule in $powershellModules) {
+    Install-Module -Name $powershellModule -Scope CurrentUser -Repository PSGallery -Force
 }
 
 # Install Docker plugins
-$plugins_path = "{0}/.docker/cli-plugins" -f $env:HOME
+$pluginsPath = "{0}/.docker/cli-plugins" -f $env:HOME
 
-if (!(Test-Path -Path $plugins_path)) {
-    New-Item -Path $plugins_path -Force -Type Directory
+if (!(Test-Path -Path $pluginsPath)) {
+    New-Item -Path $pluginsPath -Force -Type Directory
 }
 
 $plugins = @{
     "docker-pushrm" = @{
-        "uri"     = "https://github.com/christian-korneck/docker-pushrm/releases/download/v{0}/docker-pushrm_linux_{1}" -f $DockerPushRMVersion, $bin_arch
-        "outfile" = Join-Path -Path $plugins_path -ChildPath "docker-pushrm"
+        "uri"     = "https://github.com/christian-korneck/docker-pushrm/releases/download/v{0}/docker-pushrm_linux_{1}" -f $DockerPushRMVersion, $binArch
+        "outfile" = Join-Path -Path $pluginsPath -ChildPath "docker-pushrm"
     }
 }
 
@@ -178,7 +173,7 @@ foreach ($plugin in $plugins.GetEnumerator()) {
 # Install 'yq' and munge the 'powershell_docker' context in the 'contexts.yaml'
 # file with the build number...
 $splat = @{
-    Uri     = "https://github.com/mikefarah/yq/releases/download/v{0}/yq_linux_{1}" -f $YqVersion, $bin_arch
+    Uri     = "https://github.com/mikefarah/yq/releases/download/v{0}/yq_linux_{1}" -f $YqVersion, $binArch
     OutFile = "/usr/local/bin/yq"
 }
 
@@ -188,8 +183,8 @@ Invoke-RestMethod @splat
 chmod u+x /usr/local/bin/yq
 
 ## Replace registry and tag
-$yqCommand = '.contexts.powershell_docker.executable.args[] |= select(contains("ensono/eir-foundation-builder")) = "{0}/ensono/eir-foundation-builder:{1}"' -f $DockerContainerRegistryName, $BuildNumber
+$yqCommand = '.contexts.powershell_docker.container.name = "{0}/ensono/eir-foundation-builder:{1}"' -f $DockerContainerRegistryName, $BuildNumber
 Write-Information ("Executing yq with '{0}'" -f $yqCommand)
-yq -i $yqCommand build/taskctl/contexts.yaml
+yq -i $yqCommand build/eirctl/contexts.yaml
 
-Get-Content -Raw build/taskctl/contexts.yaml
+Get-Content -Raw build/eirctl/contexts.yaml

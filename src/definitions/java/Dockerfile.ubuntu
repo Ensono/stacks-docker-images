@@ -3,7 +3,7 @@ ARG IMAGE_TAG=0.0.1-workstation
 ARG ORG=ensono
 
 ARG JAVA_MAJOR=17
-ARG JAVA_VERSION=${JAVA_MAJOR}.0.12
+ARG JAVA_VERSION=${JAVA_MAJOR}.0.19
 
 # Pull in Azul Java from image
 FROM azul/zulu-openjdk:${JAVA_VERSION} AS java
@@ -13,8 +13,8 @@ FROM ${REGISTRY}/${ORG}/eir-foundation-powershell:${IMAGE_TAG}
 # Defined above
 ARG JAVA_MAJOR
 
-ARG MAVEN_VERSION=3.8.9
-ARG SONAR_SCANNER_VERSION=6.1.0.4477
+ARG MAVEN_VERSION=3.9.15
+ARG SONAR_SCANNER_VERSION=8.1.0.6389
 
 # Copy Java from the java image into this image
 COPY --from=java /usr/lib/jvm/zulu${JAVA_MAJOR} /usr/local/java/

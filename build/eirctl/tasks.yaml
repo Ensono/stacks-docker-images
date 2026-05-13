@@ -1,4 +1,5 @@
-# Compilation tasks
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Ensono/eirctl/refs/heads/main/schemas/schema_v1.json
 tasks:
   image-pull-foundation-builder:
     context: powershell_docker
@@ -11,7 +12,7 @@ tasks:
     command:
       - Import-Module EnsonoBuild
       - Update-BuildNumber
-    # Set variable DOCKER_IMAGE_TAG; i.e. 0.2.1
+      # Set variable DOCKER_IMAGE_TAG; i.e. 0.2.1
 
   build:image:local:
     context: powershell
@@ -43,14 +44,25 @@ tasks:
     description: Build Docs for Stacks CLI
     context: docsenv
     command:
-      - Invoke-AsciiDoc -PDF -basepath /app -config /app/docs.json -debug
+      - Build-Documentation -Config /eirctl/docs.json -Type pdf
+
+  infra:prepare:
+    context: powershell
+    description: Installs terraform for later use
+    command: |
+      & ./build/scripts/Install-Terraform.ps1 -Version ${env:TERRAFORM_VERSION}
+    required:
+      env:
+        - TERRAFORM_VERSION
 
   infra:init:
     context: powershell
     description: Initialise Terraform for chosen templates
-    command:
-      - Invoke-Terraform -Init -Path $env:TF_FILE_LOCATION -Arguments $env:TF_BACKEND_INIT -debug
-      - Invoke-Terraform -Workspace -Arguments $env:ENV_NAME -Path $env:TF_FILE_LOCATION
+    command: |
+      $ErrorActionPreference = "Stop"
+      Invoke-Terraform -Init -Path $env:TF_FILE_LOCATION -Arguments $env:TF_BACKEND_INIT -debug
+      # TODO: Why no workspace?
+      # Invoke-Terraform -Workspace -Arguments $env:ENV_NAME -Path $env:TF_FILE_LOCATION
 
   infra:vars:
     context: powershell

@@ -5,14 +5,18 @@ parameters:
     displayName: Force build and publish to Live
     type: boolean
     default: false
+
   - name: upload
     displayName: Upload generated files
     type: boolean
     default: false
+
   - name: debug
     displayName: Turn on debug for the Independent Runner
     type: boolean
     default: false
+
+  # tag::stages_parameter[]
   - name: stages
     displayName: Container Image Stages
     type: object
@@ -150,6 +154,7 @@ parameters:
         taskName: build:bottlerocket_validation
         imageName: ensono/bottlerocket-cis-validation
         docsPath: bottlerocket-cis-validation
+# end::stages_parameter[]
 
 pr:
   - main
@@ -178,12 +183,12 @@ stages:
         steps:
           - template: templates/configure_agent.yml
             parameters:
-              TaskctlVersion: $(TaskctlVersion)
+              EirctlVersion: $(EirctlVersion)
               EnsonoBuildVersion: $(EnsonoBuildVersion)
               DockerPushRMVersion: $(DockerPushRMVersion)
               YqVersion: $(YqVersion)
               # NOTE: These won't be set properly for this job...
-              # $(BuildNumber) is set below from `taskctl setup`
+              # $(BuildNumber) is set below from `eirctl setup`
               # $(DockerContainerRegistryName) is from a variable group not
               # defined here
               # The build doesn't currently use these as the TF runs on the host
@@ -195,17 +200,17 @@ stages:
             inputs:
               targetType: inline
               script: |
-                taskctl setup
+                eirctl setup
 
           - task: Bash@3
             displayName: Terraform Variables
             inputs:
               targetType: inline
               script: |
-                taskctl infrastructure_variables
+                eirctl infrastructure_variables
             env:
               STAGE: acr
-              TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
+              EIRCTL_DEBUG: ${{ lower(parameters.debug) }}
               TF_FILE_LOCATION: deploy/terraform/azure/acr
 
               TF_VAR_name_company: $(name_company)
@@ -221,12 +226,13 @@ stages:
             inputs:
               targetType: inline
               script: |
-                taskctl infrastructure
+                eirctl infrastructure-agent
             env:
               CLOUD_PLATFORM: azure
-              TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
+              EIRCTL_DEBUG: ${{ lower(parameters.debug) }}
               TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
               TF_FILE_LOCATION: deploy/terraform/azure/acr
+              TERRAFORM_VERSION: $(TerraformVersion)
               STAGE: acr
 
       - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
@@ -247,7 +253,7 @@ stages:
         steps:
           - template: templates/configure_agent.yml
             parameters:
-              TaskctlVersion: $(TaskctlVersion)
+              EirctlVersion: $(EirctlVersion)
               EnsonoBuildVersion: $(EnsonoBuildVersion)
               DockerPushRMVersion: $(DockerPushRMVersion)
               YqVersion: $(YqVersion)
@@ -262,7 +268,7 @@ stages:
             inputs:
               targetType: inline
               script: |
-                taskctl docs
+                eirctl docs
 
           # Upload the documentation
           - task: PublishBuildArtifacts@1
@@ -276,7 +282,7 @@ stages:
             inputs:
               targetType: inline
               script: |
-                taskctl generate:docker:overview
+                eirctl generate:docker:overview
 
           # Upload the overview documentation
           - task: PublishBuildArtifacts@1
@@ -312,7 +318,7 @@ stages:
 
               - template: templates/configure_agent.yml
                 parameters:
-                  TaskctlVersion: $(TaskctlVersion)
+                  EirctlVersion: $(EirctlVersion)
                   EnsonoBuildVersion: $(EnsonoBuildVersion)
                   DockerPushRMVersion: $(DockerPushRMVersion)
                   YqVersion: $(YqVersion)
@@ -325,7 +331,7 @@ stages:
                       targetType: inline
                       script: |
                         set -euo pipefail
-                        taskctl image-pull-foundation-builder
+                        eirctl image-pull-foundation-builder
                     displayName: Pull Pwsh Foundation Image
 
               - task: Bash@3
@@ -334,7 +340,7 @@ stages:
                   targetType: inline
                   script: |
                     set -euo pipefail
-                    taskctl ${{ stage.taskName }}
+                    eirctl ${{ stage.taskName }}
                 env:
                   DOCKER_IMAGE_NAME: ${{ stage.imageName }}
                   DOCKER_IMAGE_TAG: $(Build.BuildNumber)
@@ -370,7 +376,7 @@ stages:
 
               - template: templates/configure_agent.yml
                 parameters:
-                  TaskctlVersion: $(TaskctlVersion)
+                  EirctlVersion: $(EirctlVersion)
                   EnsonoBuildVersion: $(EnsonoBuildVersion)
                   DockerPushRMVersion: $(DockerPushRMVersion)
                   YqVersion: $(YqVersion)
@@ -383,7 +389,7 @@ stages:
                       targetType: inline
                       script: |
                         set -euo pipefail
-                        taskctl image-pull-foundation-builder
+                        eirctl image-pull-foundation-builder
                     displayName: Pull Pwsh Foundation Builder Image
 
               - task: Bash@3
@@ -392,7 +398,7 @@ stages:
                   targetType: inline
                   script: |
                     set -euo pipefail
-                    taskctl ${{ stage.taskName }}
+                    eirctl ${{ stage.taskName }}
                 env:
                   DOCKER_IMAGE_NAME: ${{ stage.imageName }}
                   DOCKER_IMAGE_TAG: $(Build.BuildNumber)
@@ -425,7 +431,7 @@ stages:
 
               - template: templates/configure_agent.yml
                 parameters:
-                  TaskctlVersion: $(TaskctlVersion)
+                  EirctlVersion: $(EirctlVersion)
                   EnsonoBuildVersion: $(EnsonoBuildVersion)
                   DockerPushRMVersion: $(DockerPushRMVersion)
                   YqVersion: $(YqVersion)
@@ -438,7 +444,7 @@ stages:
                   targetType: inline
                   script: |
                     set -euo pipefail
-                    taskctl create:docker:manifest
+                    eirctl create:docker:manifest
                 env:
                   DOCKER_IMAGE_NAME: ${{ stage.imageName }}
                   DOCKER_IMAGE_TAG: $(Build.BuildNumber)
@@ -475,7 +481,7 @@ stages:
             steps:
               - template: templates/configure_agent.yml
                 parameters:
-                  TaskctlVersion: $(TaskctlVersion)
+                  EirctlVersion: $(EirctlVersion)
                   EnsonoBuildVersion: $(EnsonoBuildVersion)
                   DockerPushRMVersion: $(DockerPushRMVersion)
                   YqVersion: $(YqVersion)
@@ -486,12 +492,12 @@ stages:
                 inputs:
                   targetType: inline
                   script: |
-                    taskctl image-pull-foundation-builder
+                    eirctl image-pull-foundation-builder
                 displayName: Pull Pwsh Foundation Image
 
               - task: Bash@3
                 inputs:
                   targetType: inline
                   script: |
-                    taskctl publish:github
+                    eirctl publish:github
                 displayName: Publish Release

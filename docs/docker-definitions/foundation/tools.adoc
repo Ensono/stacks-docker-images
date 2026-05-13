@@ -1,15 +1,16 @@
-:version_envsubst: 1.4.2
-:version_ghcli: 2.40.1
-:version_helm: 3.15.4
-:version_jq: 1.7.1
-:version_kluctl: 2.22.1
-:version_kubectl: 1.23.14
-:version_kustomize: 5.2.1
-:version_tenv: 3.1.0
-:version_terraform_15: 1.5.7
-:version_terraform_19: 1.9.3
-:version_tflint: 0.54.0
-:version_terraform_docs: 0.19.0
+:version_envsubst: 1.4.3
+:version_ghcli: 2.92.0
+:version_helm: 3.20.0
+:version_jq: 1.8.1
+:version_kluctl: 2.27.0
+:version_kubectl: 1.34.7
+:version_kustomize: 5.8.1
+:version_tenv: 4.12.2
+:version_terraform_110: 1.10.4
+:version_terraform_111: 1.11.4
+:version_terraform_114: 1.14.0
+:version_tflint: 0.62.0
+:version_terraform_docs: 0.24.0
 
 == EIR Foundation Tools
 
@@ -34,25 +35,28 @@ All applications are installed by copying and then running the `files/install.sh
 | Binary | GitHub CLI | {version_ghcli} | https://github.com/cli/cli/releases/download/v{version_ghcli}/gh_{version_ghcli}_linux_amd64.tar.gz | https://github.com/cli/cli/releases/download/v{version_ghcli}/gh_{version_ghcli}_linux_arm64.tar.gz
 | Binary | Helm | {version_helm} | https://get.helm.sh/helm-v{version_helm}-linux-amd64.tar.gz | https://get.helm.sh/helm-v{version_helm}-linux-arm64.tar.gz
 | Binary | JQ | {version_jq} | https://github.com/jqlang/jq/releases/download/jq-{version_jq}/jq-linux-amd64 | https://github.com/jqlang/jq/releases/download/jq-{version_jq}/jq-linux-arm64
-| Binary | Kluctl | {version_kluctl} | https://github.com/kluctl/kluctl/releases/download/{version_kluctl}/kluctl_{version_kluctl}_linux_amd64.tar.gz | https://github.com/kluctl/kluctl/releases/download/{version_kluctl}/kluctl_{version_kluctl}_linux_amd64.tar.gz
+| Binary | Kluctl | {version_kluctl} | https://github.com/kluctl/kluctl/releases/download/{version_kluctl}/kluctl_{version_kluctl}_linux_amd64.tar.gz | https://github.com/kluctl/kluctl/releases/download/{version_kluctl}/kluctl_{version_kluctl}_linux_arm64.tar.gz
 | Binary | Kubectl | {version_kubectl} | https://dl.k8s.io/release/v{version_kubectl}/bin/linux/amd64/kubectl | https://dl.k8s.io/release/v{version_kubectl}/bin/linux/arm64/kubectl
 | Binary | Kustomize | {version_kustomize} | https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v{version_kustomize}/kustomize_v{version_kustomize}_linux_amd64.tar.gz | https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v{version_kustomize}/kustomize_v{version_kustomize}_linux_arm64.tar.gz
 | Binary | TEnv | {version_tenv} | https://github.com/tofuutils/tenv/releases/download/v{version_tenv}/tenv_v{version_tenv}_Linux_x86_64.tar.gz | https://github.com/tofuutils/tenv/releases/download/v{version_tenv}/tenv_v{version_tenv}_Linux_arm64.tar.gz
-| Binary | Terraform | {version_terraform_15}
-{version_terraform_19} |
-https://releases.hashicorp.com/terraform/{version_terraform_15}/terraform_{version_terraform_15}_linux_x86_64.zip 
-https://releases.hashicorp.com/terraform/{version_terraform_19}/terraform_{version_terraform_19}_linux_x86_64.zip |
-https://releases.hashicorp.com/terraform/{version_terraform_15}/terraform_{version_terraform_15}_linux_arm64.zip 
-https://releases.hashicorp.com/terraform/{version_terraform_19}/terraform_{version_terraform_19}_linux_arm64.zip 
-| Binary | Terraform Docs | {version_terraform_docs} | https://github.com/terraform-docs/terraform-docs/releases/download/v{version_terraform_docs}/terraform-docs-v{version_terraform_docs}-linux-amd64.tar.gz | 
+| Binary | Terraform | {version_terraform_110}
+{version_terraform_111}
+{version_terraform_114} |
+https://releases.hashicorp.com/terraform/{version_terraform_110}/terraform_{version_terraform_110}_linux_amd64.zip
+https://releases.hashicorp.com/terraform/{version_terraform_111}/terraform_{version_terraform_111}_linux_amd64.zip
+https://releases.hashicorp.com/terraform/{version_terraform_114}/terraform_{version_terraform_114}_linux_amd64.zip |
+https://releases.hashicorp.com/terraform/{version_terraform_110}/terraform_{version_terraform_110}_linux_arm64.zip
+https://releases.hashicorp.com/terraform/{version_terraform_111}/terraform_{version_terraform_111}_linux_arm64.zip
+https://releases.hashicorp.com/terraform/{version_terraform_114}/terraform_{version_terraform_114}_linux_arm64.zip
+| Binary | Terraform Docs | {version_terraform_docs} | https://github.com/terraform-docs/terraform-docs/releases/download/v{version_terraform_docs}/terraform-docs-v{version_terraform_docs}-linux-amd64.tar.gz |
 https://github.com/terraform-docs/terraform-docs/releases/download/v{version_terraform_docs}/terraform-docs-v{version_terraform_docs}-linux-arm64.tar.gz
-| Binary | TFLint | {version_tflint} | https://github.com/terraform-linters/tflint/releases/download/${terraform_tflint}/tflint_linux_aamd64.zip |
-https://github.com/terraform-linters/tflint/releases/download/v{terraform_tflint}/tflint_linux_arm64.zip
-| PS Module | Az | 10.0.0 2+| -
-| PS Module | Arm-ttk | 20231122 2+| -
-| PS Module | Pester | 5.4.1 2+| -
-| PS Module | PowerShell-Yaml | 2+| - 
-| PS Module | PSScriptAnalyzer 2+| 1.22.0 2+| -
+| Binary | TFLint | {version_tflint} | https://github.com/terraform-linters/tflint/releases/download/v{version_tflint}/tflint_linux_amd64.zip |
+https://github.com/terraform-linters/tflint/releases/download/v{version_tflint}/tflint_linux_arm64.zip
+| PS Module | Az | 15.6.0 2+| -
+| PS Module | Arm-ttk | 20260213 2+| -
+| PS Module | Pester | 5.7.1 2+| -
+| PS Module | PowerShell-Yaml | 0.4.12 2+| -
+| PS Module | PSScriptAnalyzer | 1.25.0 2+| -
 |====
 
-Two versions of Terraform are installed. This is to support migration of Terraform from one version to another. Version `1.5.7` is configured as the default version, using a symlink to the `/usr/local/terraform/1.5.7/bin` directory.
+Three versions of Terraform are installed. This is to support migration of Terraform from one version to another. Version `1.14.0` is configured as the default version, using a symlink to the `/usr/local/terraform/1.14.0/bin` directory.

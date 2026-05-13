@@ -142,7 +142,7 @@ function Get-PositiveIntEnvOverride {
     return $parsedValue
 }
 
-# Allow retry behavior to be controlled from pipeline variables without changing taskctl invocation.
+# Allow retry behavior to be controlled from pipeline variables without changing eirctl invocation.
 $ManifestCheckRetries = Get-PositiveIntEnvOverride -EnvVarName "DOCKER_MANIFEST_CHECK_RETRIES" -CurrentValue $ManifestCheckRetries
 $ManifestCheckDelaySeconds = Get-PositiveIntEnvOverride -EnvVarName "DOCKER_MANIFEST_CHECK_DELAY_SECONDS" -CurrentValue $ManifestCheckDelaySeconds
 

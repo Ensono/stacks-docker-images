@@ -27,9 +27,9 @@ ARG ORG=ensono
 FROM ${REGISTRY}/${ORG}/eir-java:${IMAGE_TAG} AS base
 ```
 
-### Build Workflow (Taskctl)
+### Build Workflow (Eirctl)
 
-All builds use `taskctl` with YAML configuration. Key patterns:
+All builds use `eirctl` with YAML configuration. Key patterns:
 
 - **Foundation images**: Built locally first (no container dependency)
 - **Specialized images**: Built using `powershell_docker` context (inside `eir-foundation-builder`)
@@ -39,23 +39,23 @@ All builds use `taskctl` with YAML configuration. Key patterns:
 
 ```bash
 # Build foundation (local machine)
-taskctl build:foundation:powershell
-taskctl build:foundation:builder
+eirctl build:foundation:powershell
+eirctl build:foundation:builder
 
 # Build specialized (in container)
-taskctl build:dotnet
-taskctl build:java
+eirctl build:dotnet
+eirctl build:java
 ```
 
 ## Key Configuration Files
 
-### `taskctl.yaml` - Build Orchestration
+### `eirctl.yaml` - Build Orchestration
 
 - Defines pipelines for each image with proper dependencies
 - Uses templated variables: `IMAGE_NAME`, `DOCKER_BUILD_ARGS`, `DOCKER_IMAGE_TAG`
 - Context switching between local (`powershell`) and containerized (`powershell_docker`) builds
 
-### `build/taskctl/contexts.yaml` - Execution Environments
+### `build/eirctl/contexts.yaml` - Execution Environments
 
 - `powershell_docker`: Runs inside `ensono/eir-foundation-builder` container
 - `powershell`: Runs on host machine with pwsh
@@ -74,7 +74,7 @@ taskctl build:java
 
 1. Create `src/definitions/{name}/Dockerfile.ubuntu`
 2. Add `files/` directory with install scripts
-3. Update `taskctl.yaml` with new pipeline entry
+3. Update `eirctl.yaml` with new pipeline entry
 4. Add Azure DevOps stage in `build/azDevOps/docker-images.yml`
 5. Create documentation in `docs/docker-definitions/{name}.adoc`
 
@@ -116,9 +116,9 @@ Uses `EnsonoBuild` PowerShell module for:
 
 ```powershell
 ## Replace registry and tag
-$yqCommand = '.contexts.powershell_docker.executable.args[] |= select(contains("ensono/eir-foundation-builder")) = "{0}/ensono/eir-foundation-builder:{1}"' -f $DockerContainerRegistryName, $BuildNumber
+$yqCommand = '.contexts.powershell_docker.container.name = "{0}/ensono/eir-foundation-builder:{1}"' -f $DockerContainerRegistryName, $BuildNumber
 Write-Information ("Executing yq with '{0}'" -f $yqCommand)
-yq -i $yqCommand build/taskctl/contexts.yaml
+yq -i $yqCommand build/eirctl/contexts.yaml
 ```
 
 ## Documentation System
@@ -132,17 +132,17 @@ yq -i $yqCommand build/taskctl/contexts.yaml
 
 ```bash
 # Check image dependencies
-taskctl build:foundation:powershell --dry-run
+eirctl build:foundation:powershell --dry-run
 
 # Debug build in container context
-docker run --rm -v ${PWD}:/app -w /app ensono/eir-foundation-builder:latest pwsh
+docker run --rm -v ${PWD}:/eirctl -w /eirctl ensono/eir-foundation-builder:latest pwsh
 
 # Generate docs locally
-taskctl docs
+eirctl docs
 
 # Validate Terraform configuration
-taskctl infrastructure_variables
-taskctl infra:plan
+eirctl infrastructure_variables
+eirctl infra:plan
 ```
 
 ## Environment Variables

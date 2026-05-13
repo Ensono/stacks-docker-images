@@ -3,11 +3,13 @@
   "output": "{{ basepath }}/outputs/docs/{{ format }}",
   "trunkBranch": "main",
   "path": "{{ basepath }}/docs/index.adoc",
-  "libs": [
-    "asciidoctor-diagram",
-    "asciidoctor-chart",
-    "/usr/local/ensono/lib/glob-include-processor.rb"
-  ],
+  "libs": {
+    "asciidoc": [
+      "asciidoctor-diagram",
+      "asciidoctor-chart",
+      "/usr/local/ensono/lib/glob-include-processor.rb"
+    ]
+  },
   "pdf": {
     "attributes": [
       "pdf-theme={{ basepath }}/build/config/pdf/theme.yml",

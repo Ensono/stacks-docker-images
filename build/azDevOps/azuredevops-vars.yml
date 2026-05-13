@@ -2,17 +2,19 @@
 # by the build
 variables:
   # Dependency versions
-  - name: TaskctlVersion
-    value: 2.0.5
+  - name: EirctlVersion
+    value: 0.10.1
   ## NOTE: This variable is also used in
   ## 'src/definitions/foundation/powershell/Dockerfile.ubuntu'. Please update
   ## it there also on version bumps.
   - name: EnsonoBuildVersion
-    value: 1.1.37
+    value: 1.2.35
   - name: DockerPushRMVersion
     value: 1.9.0
   - name: YqVersion
-    value: 4.44.3
+    value: 4.53.2
+  - name: TerraformVersion
+    value: 1.14.0
 
   # DEFAULT IMAGE RUNNER
   - name: build_pool_amd64

@@ -11,4 +11,8 @@ markdown/
 .env
 
 src/definitions/**/README.md
-.taskctl
+
+# Eirctl
+eirctl.env
+.eirctl/*
+!.erictl/.gitkeep
