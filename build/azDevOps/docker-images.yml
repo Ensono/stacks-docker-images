@@ -20,7 +20,6 @@ parameters:
       - stage: FoundationPowerShell
         displayName: "[CONTAINER] Foundation - PowerShell"
         dependsOn:
-          - Documentation
           - Infrastructure
         taskName: build:foundation:powershell
         imageName: ensono/eir-foundation-powershell
@@ -29,7 +28,6 @@ parameters:
       - stage: FoundationBuilder
         displayName: "[CONTAINER] Foundation - Builder"
         dependsOn:
-          - Documentation
           - FoundationPowerShell
         taskName: build:foundation:builder
         imageName: ensono/eir-foundation-builder
