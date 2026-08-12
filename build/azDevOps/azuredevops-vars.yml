@@ -3,7 +3,7 @@
 variables:
   # Dependency versions
   - name: EirctlVersion
-    value: 0.6.5
+    value: 0.11.9
   ## NOTE: This variable is also used in
   ## 'src/definitions/foundation/powershell/Dockerfile.ubuntu'. Please update
   ## it there also on version bumps.
@@ -14,13 +14,13 @@ variables:
   - name: YqVersion
     value: 4.44.3
   - name: TerraformVersion
-    value: 1.9.4
+    value: 1.15.8
 
   # DEFAULT IMAGE RUNNER
   - name: build_pool_amd64
-    value: Stacks Builders - amd64
+    value: stacks-build-agents-x64
   - name: build_pool_arm64
-    value: Stacks Builders - arm64
+    value: stacks-build-agents-arm64
 
   - name: name_company
     value: ensono
