@@ -3,19 +3,24 @@
   "output": "{{ basepath }}/outputs/docs/{{ format }}",
   "trunkBranch": "main",
   "path": "{{ basepath }}/docs/index.adoc",
-  "libs": [
-    "asciidoctor-diagram",
-    "asciidoctor-chart",
-    "/usr/local/ensono/lib/glob-include-processor.rb"
-  ],
-  "pdf": {
-    "attributes": [
-      "pdf-theme={{ basepath }}/build/config/pdf/theme.yml",
-      "pdf-fontsdir=\"{{ basepath }}/docs/styles/fonts;GEM_FONTS_DIR\"",
-      "allow-uri-read",
-      "blockdiag=/usr/bin/blockdiag",
-      "skip-front-matter"
+  "formats": ["pdf"],
+  "libs": {
+    "asciidoc": [
+      "asciidoctor-diagram",
+      "asciidoctor-chart",
+      "/usr/local/ensono/lib/glob-include-processor.rb"
     ]
+  },
+  "pdf": {
+    "attributes": {
+      "asciidoctor": [
+        "pdf-theme={{ basepath }}/build/config/pdf/theme.yml",
+        "pdf-fontsdir=\"{{ basepath }}/docs/styles/fonts;GEM_FONTS_DIR\"",
+        "allow-uri-read",
+        "blockdiag=/usr/bin/blockdiag",
+        "skip-front-matter"
+      ]
+    }
   },
   "html": {
     "attributes": [
