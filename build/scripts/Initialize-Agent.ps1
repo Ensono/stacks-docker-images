@@ -115,7 +115,7 @@ else {
 if ($install_eirctl) {
 
     # Set the URL to download eirctl
-    $url = "https://github.com/Ensono/eirctl/releases/download/{0}/eirctl-linux-{1}" -f $eirctlVersion, $eirctl_arch
+    $url = "https://github.com/Ensono/eirctl/releases/download/v{0}/eirctl-linux-{1}" -f $eirctlVersion, $eirctl_arch
 
     Invoke-RestMethod -Uri $url -OutFile "/usr/local/bin/eirctl"
 
