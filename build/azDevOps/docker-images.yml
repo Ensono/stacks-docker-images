@@ -187,7 +187,31 @@ variables:
 
 # Configure the stages
 stages:
+  - stage: AgentSetup
+    displayName: Agent Setup
+    jobs:
+      - job: ConfigureAgent
+        steps:
+          - task: Bash@3
+            displayName: Install PowerShell
+            inputs:
+              targetType: inline
+              script: |
+                if command -v pwsh &> /dev/null; then
+                  echo "PowerShell is already installed: $(pwsh --version)"
+                else
+                  sudo apt-get update
+                  source /etc/os-release
+                  wget -q "https://packages.microsoft.com/config/ubuntu/$PowerShellVersion/packages-microsoft-prod.deb"
+                  sudo dpkg -i packages-microsoft-prod.deb
+                  rm packages-microsoft-prod.deb
+                  sudo apt-get update
+                  sudo apt-get install -y powershell
+                fi
+
   - stage: Infrastructure
+    dependsOn:
+      - AgentSetup
     variables:
       - group: azure-sp-creds
     jobs:
@@ -262,6 +286,7 @@ stages:
   - stage: Documentation
     displayName: Documentation
     dependsOn:
+      - AgentSetup
     jobs:
       - job: GenerateDocumentation
         steps:
