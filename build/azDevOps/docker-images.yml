@@ -261,6 +261,7 @@ stages:
 
   - stage: Documentation
     displayName: Documentation
+    dependsOn:
     jobs:
       - job: GenerateDocumentation
         steps:
