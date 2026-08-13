@@ -19,7 +19,7 @@ variables:
     value: 7.6.3
 
   # DEFAULT IMAGE RUNNER
-  - name: build_pool_amd64
+  - name: build_pool_x64
     value: stacks-build-agents-x64
   - name: build_pool_arm64
     value: stacks-build-agents-arm64

@@ -318,9 +318,9 @@ stages:
           - ${{ else }}:
               - group: stacks-acr-creds
         jobs:
-          - job: BuildImage_amd64
-            displayName: Build Image - amd64
-            pool: $(build_pool_amd64)
+          - job: BuildImage_x64
+            displayName: Build Image - x64
+            pool: $(build_pool_x64)
             steps:
               - template: templates/configure_agent.yml
                 parameters:
@@ -391,7 +391,7 @@ stages:
           - job: create_manifest
             displayName: Create Multi-Arch Manifest
             dependsOn:
-              - BuildImage_amd64
+              - BuildImage_x64
               - BuildImage_arm64
             steps:
               - task: DownloadPipelineArtifact@2
