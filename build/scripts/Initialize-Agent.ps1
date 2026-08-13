@@ -86,7 +86,6 @@ else {
 }
 
 # Ensure home directory bin folder exists
-Write-Information ("[ENV] PATH: {0}" -f $env:PATH)
 $bin_path = "{0}/.local/bin" -f $env:HOME
 if ($env:USER -ne "root") {
     if (-not (Test-Path -Path $bin_path)) {
@@ -97,6 +96,13 @@ if ($env:USER -ne "root") {
 else {
     $bin_path = "/usr/local/bin"
 }
+
+# Ensure the bin path is in the PATH environment variable
+if (-not ($env:PATH -like "*$bin_path*")) {
+    $env:PATH = "{0}:{1}" -f $bin_path, $env:PATH
+}
+
+Write-Information ("[ENV] PATH: {0}" -f $env:PATH)
 
 # Install eirctl
 # - if not exists, download and install
