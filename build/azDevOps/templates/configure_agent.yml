@@ -9,9 +9,13 @@ parameters:
     type: string
   - name: YqVersion
     type: string
+  - name: PowerShellVersion
+    type: string
   - name: BuildNumber
     type: string
   - name: DockerContainerRegistryName
+    type: string
+  - name: PlatformArch
     type: string
 steps:
     - task: Bash@3
@@ -22,9 +26,13 @@ steps:
           if command -v pwsh &> /dev/null; then
             echo "PowerShell is already installed: $(pwsh --version)"
           else
+
+            # Download the powershell .tar.gz archive
+            curl -o /tmp/powershell.tar.gz -L https://github.com/PowerShell/PowerShell/releases/download/v${{ parameters.PowerShellVersion }}/powershell-${{ parameters.PowerShellVersion }}-linux-${{ parameters.PlatformArch }}.tar.gz
+
             sudo apt-get update
             source /etc/os-release
-            wget -q "https://packages.microsoft.com/config/ubuntu/$PowerShellVersion/packages-microsoft-prod.deb"
+            wget -q "https://packages.microsoft.com/config/ubuntu/$${{ parameters.PowerShellVersion }}/packages-microsoft-prod.deb"
             sudo dpkg -i packages-microsoft-prod.deb
             rm packages-microsoft-prod.deb
             sudo apt-get update

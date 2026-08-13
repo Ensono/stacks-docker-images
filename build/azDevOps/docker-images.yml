@@ -327,6 +327,7 @@ stages:
                   YqVersion: $(YqVersion)
                   BuildNumber: $(Build.BuildNumber)
                   DockerContainerRegistryName: $(DOCKER_CONTAINER_REGISTRY_NAME)
+                  PlatformArch: x64
 
               - ${{ if not(in(stage.stage, 'FoundationPowerShell', 'FoundationBuilder')) }}:
                   - task: Bash@3
@@ -360,6 +361,7 @@ stages:
                   YqVersion: $(YqVersion)
                   BuildNumber: $(Build.BuildNumber)
                   DockerContainerRegistryName: $(DOCKER_CONTAINER_REGISTRY_NAME)
+                  PlatformArch: arm64
 
               - ${{ if not(in(stage.stage, 'FoundationPowerShell', 'FoundationBuilder')) }}:
                   - task: Bash@3
