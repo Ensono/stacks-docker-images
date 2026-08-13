@@ -199,6 +199,8 @@ stages:
               EnsonoBuildVersion: $(EnsonoBuildVersion)
               DockerPushRMVersion: $(DockerPushRMVersion)
               YqVersion: $(YqVersion)
+              PowerShellVersion: $(PowerShellVersion)
+              PlatformArch: x64
               # NOTE: These won't be set properly for this job...
               # $(BuildNumber) is set below from `eirctl setup`
               # $(DockerContainerRegistryName) is from a variable group not
@@ -271,6 +273,8 @@ stages:
               DockerPushRMVersion: $(DockerPushRMVersion)
               YqVersion: $(YqVersion)
               BuildNumber: $(Build.BuildNumber)
+              PowerShellVersion: $(PowerShellVersion)
+              PlatformArch: x64
               # NOTE: This variable isn't imported into this job, we don't use
               # it for this job anyway...
               DockerContainerRegistryName: "notused"
@@ -404,6 +408,8 @@ stages:
                   YqVersion: $(YqVersion)
                   BuildNumber: $(Build.BuildNumber)
                   DockerContainerRegistryName: $(DOCKER_CONTAINER_REGISTRY_NAME)
+                  PowerShellVersion: $(PowerShellVersion)
+                  PlatformArch: x64
 
               - task: Bash@3
                 displayName: Create Multi-Arch Manifest
@@ -439,6 +445,8 @@ stages:
                   YqVersion: $(YqVersion)
                   BuildNumber: $(Build.BuildNumber)
                   DockerContainerRegistryName: $(DOCKER_CONTAINER_REGISTRY_NAME)
+                  PowerShellVersion: $(PowerShellVersion)
+                  PlatformArch: x64
 
               - task: Bash@3
                 inputs:
