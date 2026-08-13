@@ -86,6 +86,7 @@ else {
 }
 
 # Ensure home directory bin folder exists
+Write-Information ("[ENV] PATH: {0}" -f $env:PATH)
 $bin_path = "{0}/bin" -f $env:HOME
 if ($env:USER -ne "root") {
     if (-not (Test-Path -Path $bin_path)) {
