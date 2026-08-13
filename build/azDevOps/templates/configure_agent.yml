@@ -28,7 +28,12 @@ steps:
           else
 
             # Download the powershell .tar.gz archive
-            curl -o /tmp/powershell.tar.gz -L https://github.com/PowerShell/PowerShell/releases/download/v${{ parameters.PowerShellVersion }}/powershell-${{ parameters.PowerShellVersion }}-linux-${{ parameters.PlatformArch }}.tar.gz
+            URL="https://github.com/PowerShell/PowerShell/releases/download/v${{ parameters.PowerShellVersion }}/powershell-${{ parameters.PowerShellVersion }}-linux-${{ parameters.PlatformArch }}.tar.gz"
+            echo "Downloading PowerShell: $URL"
+            curl -o /tmp/powershell.tar.gz -L $URL
+
+            # List the downloaded file
+            ls -l /tmp
 
             sudo apt-get update
             source /etc/os-release
