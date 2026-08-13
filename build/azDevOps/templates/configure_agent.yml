@@ -32,16 +32,21 @@ steps:
             echo "Downloading PowerShell: $URL"
             curl -o /tmp/powershell.tar.gz -L $URL
 
-            # List the downloaded file
-            ls -l /tmp
+            # Make the directory to extract powershell to
+            echo "Creating powershell directory: /opt/microsoft/powershell/7"
+            sudo mkdir -p /opt/microsoft/powershell/7
 
-            sudo apt-get update
-            source /etc/os-release
-            wget -q "https://packages.microsoft.com/config/ubuntu/${{ parameters.PowerShellVersion }}/packages-microsoft-prod.deb"
-            sudo dpkg -i packages-microsoft-prod.deb
-            rm packages-microsoft-prod.deb
-            sudo apt-get update
-            sudo apt-get install -y powershell
+            # Extract the archive into the directory
+            echo "Extracting powershell"
+            sudo tar -xzf /tmp/powershell.tar.gz -C /opt/microsoft/powershell/7
+
+            # Ensure that pwsh is executable
+            echo "Making pwsh executable"
+            sudo chmod +x /opt/microsoft/powershell/7/pwsh
+
+            # Create symlink so pwsh is in the path
+            echo "Creating symlink for pwsh"
+            sudo ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
           fi
 
     - task: PowerShell@2
