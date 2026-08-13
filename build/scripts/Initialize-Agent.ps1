@@ -85,11 +85,23 @@ else {
     Write-Information "Unzip is already installed"
 }
 
+# Ensure home directory bin folder exists
+$bin_path = "{0}/bin" -f $env:HOME
+if ($env:USER -ne "root") {
+    if (-not (Test-Path -Path $bin_path)) {
+        Write-Information "Creating bin directory in home directory"
+        New-Item -Path $bin_path -Force -Type Directory
+    }
+}
+else {
+    $bin_path = "/usr/local/bin"
+}
+
 # Install eirctl
 # - if not exists, download and install
 # - if it does exist, check the version and update if necessary
 $install_eirctl = $false
-$eirctl_bin = "{0}/bin/eirctl" -f $env:HOME
+$eirctl_bin = "{0}/eirctl" -f $bin_path
 if (Test-Path -Path $eirctl_bin) {
 
     Write-Information "eirctl is installed, getting version"
@@ -154,10 +166,10 @@ if ($install_terraform) {
     Invoke-RestMethod -Uri $url -OutFile "/tmp/terraform.zip"
 
     # Extract Terraform from the zip file
-    $cmd = "unzip -j /tmp/terraform.zip -d {0}/bin terraform" -f $env:HOME
+    $cmd = "unzip -j /tmp/terraform.zip -d {0} terraform" -f $bin_path
     Invoke-Expression -Command $cmd
 
-    $cmd = "chmod +x {0}/bin/terraform" -f $env:HOME
+    $cmd = "chmod +x {0}/terraform" -f $bin_path
     Invoke-Expression -Command $cmd
 
     terraform version
@@ -238,13 +250,13 @@ foreach ($plugin in $plugins.GetEnumerator()) {
 # file with the build number...
 $splat = @{
     Uri     = "https://github.com/mikefarah/yq/releases/download/v{0}/yq_linux_{1}" -f $YqVersion, $bin_arch
-    OutFile = "{0}/bin/yq" -f $env:HOME
+    OutFile = "{0}/yq" -f $bin_path
 }
 
 Write-Information ("Downloading from: {0}" -f $splat.Uri)
 Invoke-RestMethod @splat
 
-$cmd = "chmod u+x {0}/bin/yq" -f $env:HOME
+$cmd = "chmod u+x {0}/yq" -f $bin_path
 Invoke-Expression -Command $cmd
 
 ## Replace registry and tag
