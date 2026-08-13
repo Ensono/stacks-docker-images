@@ -89,7 +89,7 @@ else {
 # - if not exists, download and install
 # - if it does exist, check the version and update if necessary
 $install_eirctl = $false
-$eirctl_bin = "/usr/local/bin/eirctl"
+$eirctl_bin = "{0}/bin/eirctl" -f $env:HOME
 if (Test-Path -Path $eirctl_bin) {
 
     Write-Information "eirctl is installed, getting version"
@@ -117,13 +117,12 @@ if ($install_eirctl) {
     # Set the URL to download eirctl
     $url = "https://github.com/Ensono/eirctl/releases/download/v{0}/eirctl-linux-{1}" -f $eirctlVersion, $eirctl_arch
 
-    Invoke-RestMethod -Uri $url -OutFile "/usr/local/bin/eirctl"
+    Invoke-RestMethod -Uri $url -OutFile $eirctl_bin
 
-    # Extract the tarball
-    # tar zxf /tmp/eirctl.tar.gz -C /usr/local/bin eirctl
-    chmod +x /usr/local/bin/eirctl
+    $cmd = "chmod +x {0}" -f $eirctl_bin
+    Invoke-Expression -Command $cmd
 
-    Get-ChildItem /usr/local/bin/eirctl
+    Get-ChildItem $eirctl_bin
 
     # Output the version of eirctl
     eirctl -v
@@ -155,9 +154,11 @@ if ($install_terraform) {
     Invoke-RestMethod -Uri $url -OutFile "/tmp/terraform.zip"
 
     # Extract Terraform from the zip file
-    unzip -j /tmp/terraform.zip -d /usr/local/bin terraform
+    $cmd = "unzip -j /tmp/terraform.zip -d {0}/bin terraform" -f $env:HOME
+    Invoke-Expression -Command $cmd
 
-    chmod +x /usr/local/bin/terraform
+    $cmd = "chmod +x {0}/bin/terraform" -f $env:HOME
+    Invoke-Expression -Command $cmd
 
     terraform version
 }
@@ -237,13 +238,14 @@ foreach ($plugin in $plugins.GetEnumerator()) {
 # file with the build number...
 $splat = @{
     Uri     = "https://github.com/mikefarah/yq/releases/download/v{0}/yq_linux_{1}" -f $YqVersion, $bin_arch
-    OutFile = "/usr/local/bin/yq"
+    OutFile = "{0}/bin/yq" -f $env:HOME
 }
 
 Write-Information ("Downloading from: {0}" -f $splat.Uri)
 Invoke-RestMethod @splat
 
-chmod u+x /usr/local/bin/yq
+$cmd = "chmod u+x {0}/bin/yq" -f $env:HOME
+Invoke-Expression -Command $cmd
 
 ## Replace registry and tag
 $yqCommand = '.contexts.powershell_docker.container.name |= select(contains("ensono/eir-foundation-builder")) = "{0}/ensono/eir-foundation-builder:{1}"' -f $DockerContainerRegistryName, $BuildNumber
