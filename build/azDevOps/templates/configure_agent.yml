@@ -32,7 +32,7 @@ steps:
 
             sudo apt-get update
             source /etc/os-release
-            wget -q "https://packages.microsoft.com/config/ubuntu/$${{ parameters.PowerShellVersion }}/packages-microsoft-prod.deb"
+            wget -q "https://packages.microsoft.com/config/ubuntu/${{ parameters.PowerShellVersion }}/packages-microsoft-prod.deb"
             sudo dpkg -i packages-microsoft-prod.deb
             rm packages-microsoft-prod.deb
             sudo apt-get update
