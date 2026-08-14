@@ -90,7 +90,7 @@ $bin_path = "{0}/.local/bin" -f $env:HOME
 if ($env:USER -ne "root") {
     if (-not (Test-Path -Path $bin_path)) {
         Write-Information "Creating bin directory in home directory"
-        New-Item -Path $bin_path -Force -Type Directory
+        New-Item -Path $bin_path -Force -Type Directory | Out-Null
     }
 }
 else {
@@ -101,6 +101,9 @@ else {
 if (-not ($env:PATH -like "*$bin_path*")) {
     $env:PATH = "{0}:{1}" -f $bin_path, $env:PATH
 }
+
+# Emit a pipeline variable that prepends the bin path to the main path
+Write-Host "##vso[task.prependpath]$bin_path"
 
 Write-Information ("[ENV] PATH: {0}" -f $env:PATH)
 
