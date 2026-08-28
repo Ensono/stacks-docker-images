@@ -20,6 +20,7 @@ parameters:
 steps:
     - task: Bash@3
       displayName: Install PowerShell
+      condition: false
       inputs:
         targetType: inline
         script: |
@@ -48,6 +49,8 @@ steps:
             echo "Creating symlink for pwsh"
             sudo ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
           fi
+
+
 
     - task: PowerShell@2
       displayName: Configure Agent
