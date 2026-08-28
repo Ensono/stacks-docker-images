@@ -30,7 +30,7 @@ rm /tmp/powershell.tar.gz
 
 # Eirctl Runner ------------------------------------------------------------
 mkdir -p /usr/local/eirctl/bin
-curl --fail-with-body -L "https://github.com/Ensono/eirctl/releases/download/${EIRCTL_VERSION}/eirctl-linux-${BIN_ARCH}" -o /usr/local/eirctl/bin/eirctl
+curl --fail-with-body -L "https://github.com/Ensono/eirctl/releases/download/v${EIRCTL_VERSION}/eirctl-linux-${BIN_ARCH}" -o /usr/local/eirctl/bin/eirctl
 chmod +x /usr/local/eirctl/bin/eirctl
 # ---------------------------------------------------------------------------
 
