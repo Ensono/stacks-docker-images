@@ -7,7 +7,7 @@ ARG POWERSHELL_VERSION=7.5.2
 # 'build/azDevOps/azuredevops-vars.yml'. Please update it there also on version
 # bumps.
 ARG ENSONOBUILD_VERSION=1.2.35
-ARG TASKCTL_VERSION=2.0.5
+ARG EIRCTL_VERSION=0.11.9
 
 ARG TIMEZONE="Europe/London"
 
