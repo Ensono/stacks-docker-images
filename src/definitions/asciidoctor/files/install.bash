@@ -42,18 +42,30 @@ apt-get install -y \
     libxrandr2 \
     libgbm1 \
     libxkbcommon0 \
-    libasound2 \
-    librsvg2-bin
+    libasound2-dev \
+    librsvg2-bin \
+    libffi-dev \
+    fonts-lyx
 
-# Install python packages
-pip install --no-cache-dir \
+# Install Python tools in an isolated virtual environment.
+DEBIAN_FRONTEND=noninteractive apt-get install -y python3-venv
+python3 -m venv /opt/venv
+/opt/venv/bin/pip install --no-cache-dir \
     actdiag \
     'blockdiag[pdf]' \
     nwdiag \
     seqdiag \
-    pillow==9.5.0
+    pillow
 
 echo "gem: --no-document" > /etc/gemrc
+
+cat > /usr/local/bin/cmake-mathematical <<'EOF'
+#!/bin/bash
+exec /usr/bin/cmake -DCMAKE_POLICY_VERSION_MINIMUM=3.5 "$@"
+EOF
+chmod +x /usr/local/bin/cmake-mathematical
+ln -s /usr/local/bin/cmake-mathematical /tmp/cmake
+export PATH="/tmp:${PATH}"
 
 # Install ruby gems
 gem install \
@@ -83,8 +95,41 @@ gem install \
     barby \
     rqrcode \
     prawn-icon \
-    bigdecimal \
-    rmagick
+    bigdecimal
+
+rm /tmp/cmake
+
+cat > /tmp/rmagick-mkmf-logging.rb <<'EOF'
+require "mkmf"
+
+module MakeMakefile
+    def message(*messages)
+        if messages.length == 1 && messages[0].is_a?(String)
+            printf("%s", messages[0])
+            Logging.message("%s", messages[0])
+        else
+            printf(*messages)
+            Logging.message(*messages)
+        end
+    end
+
+    module Logging
+        class << self
+            alias_method :message_without_percent_escape, :message
+
+            def message(*messages)
+                if messages.length == 1 && messages[0].is_a?(String)
+                    message_without_percent_escape("%s", messages[0])
+                else
+                    message_without_percent_escape(*messages)
+                end
+            end
+    end
+    end
+end
+EOF
+RUBYOPT="-r/tmp/rmagick-mkmf-logging" gem install rmagick
+rm /tmp/rmagick-mkmf-logging.rb
 
 # Install mermaid-cli using node
 export PATH="${PATH}:/usr/local/node/bin"
