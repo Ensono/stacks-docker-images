@@ -18,8 +18,6 @@ tar zxf /tmp/golang.tar.gz -C /usr/local
 # Remove downloaded
 rm -rf /tmp/*
 
-# Install the necssary pacakges to run unitests for Stacks projects
+# Install the necessary packages to run unittests for Stacks projects
 /usr/local/go/bin/go install github.com/jstemmer/go-junit-report@latest
-/usr/local/go/bin/go install github.com/t-yuki/gocover-cobertura@latest
-/usr/local/go/bin/go install github.com/axw/gocov/gocov@latest
-/usr/local/go/bin/go install github.com/AlekSi/gocov-xml@latest
+/usr/local/go/bin/go install github.com/boumenot/gocover-cobertura@latest
