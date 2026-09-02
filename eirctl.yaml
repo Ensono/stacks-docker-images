@@ -83,6 +83,12 @@ pipelines:
         IMAGE_NAME: ensono/eir-asciidoctor
         DOCKER_BUILD_ARGS: -f ./src/definitions/asciidoctor/Dockerfile.ubuntu ./src/definitions/asciidoctor --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
 
+  build:asciidoctorjs:
+    - task: build:image:container
+      variables:
+        IMAGE_NAME: ensono/eir-asciidoctor-js
+        DOCKER_BUILD_ARGS: -f ./src/definitions/asciidoctor-js/Dockerfile.ubuntu ./src/definitions/asciidoctor-js --build-arg IMAGE_TAG=${env:DOCKER_IMAGE_TAG} --build-arg REGISTRY=${env:DOCKER_CONTAINER_REGISTRY_NAME}
+
   build:data:
     - task: build:image:container
       variables:

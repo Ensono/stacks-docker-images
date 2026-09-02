@@ -1,0 +1,21 @@
+ARG IMAGE_TAG=0.0.1-workstation
+ARG REGISTRY=docker.io
+ARG ORG=ensono
+
+# Get a copy of Node from the Node image, so that it is
+# available to run mermaid
+FROM ${REGISTRY}/${ORG}/eir-nodejs:${IMAGE_TAG} AS node
+
+ENV PUPPETEER_SKIP_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium \
+    NODE_PATH=/usr/local/lib/node_modules
+
+COPY files/puppeteer.json /etc/puppeteer.json
+COPY files/lib /usr/local/ensono/lib
+
+# Copy the install script over and then run it
+COPY files/install.bash /usr/local/bin/install.bash
+RUN chmod +x /usr/local/bin/install.bash && /usr/local/bin/install.bash
+
+USER asciidoctor
+WORKDIR /home/asciidoctor

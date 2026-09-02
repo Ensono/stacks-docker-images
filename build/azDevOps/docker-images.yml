@@ -139,6 +139,14 @@ parameters:
         imageName: ensono/eir-asciidoctor
         docsPath: asciidoctor
 
+      - stage: AsciiDoctorJS
+        displayName: "[CONTAINER] AsciiDoctor JS"
+        dependsOn:
+          - NodeJS
+        taskName: build:asciidoctorjs
+        imageName: ensono/eir-asciidoctor-js
+        docsPath: asciidoctor
+
       - stage: AzureData
         displayName: "[CONTAINER] Azure Data"
         dependsOn:
