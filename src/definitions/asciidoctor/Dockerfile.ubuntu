@@ -26,7 +26,7 @@ ARG HUGO_VERSION=0.123.7
 ARG PANDOC_VERSION=3.1.12.2
 
 # NOTE: This must be a version in the Node Dockerfile `src/definitions/node/Dockerfile.ubuntu`
-ARG DEFAULT_NODE_VERSION=v20.17.0
+ARG DEFAULT_NODE_VERSION=v24.20.0
 
 # Copy Node from the node Image
 # NOTE: The path to the versions is set by `NVM_ROOT` in the Node Dockerfile `src/definitions/node/Dockerfile.ubuntu`
