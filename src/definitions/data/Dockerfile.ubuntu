@@ -21,4 +21,5 @@ COPY files/requirements.txt /tmp/requirements.txt
 RUN chmod +x /tmp/install.bash && /tmp/install.bash
 
 # Set the PATH so that the tools can be accessed
-ENV PATH="${PATH}:/usr/local/jq/bin:/usr/local/java/bin"
+ENV VIRTUAL_ENV="/opt/venv"
+ENV PATH="${VIRTUAL_ENV}/bin:${PATH}:/usr/local/jq/bin:/usr/local/java/bin"

@@ -12,6 +12,9 @@ apt-get install -y \
 az extension add --name datafactory
 
 # Install the necessary python extension
-pip3 install -r /tmp/requirements.txt
+apt-get update
+DEBIAN_FRONTEND=noninteractive apt-get install -y python3-venv
+python3 -m venv /opt/venv
+/opt/venv/bin/pip install --no-cache-dir -r /tmp/requirements.txt
 
 rm -r /tmp/requirements.txt
